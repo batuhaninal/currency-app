@@ -1,0 +1,74 @@
+@model PaginationBaseResult
+@using Microsoft.AspNetCore.WebUtilities
+
+@{
+    var query = Context.Request.Query.ToDictionary(k => k.Key, v => v.Value.ToString());
+    var currentPageSize = Model.PageSize.ToString();
+    var availableSizes = new[] { "10", "20", "50", "100" }.ToList();
+    if (!availableSizes.Contains(currentPageSize))
+    {
+        availableSizes.Add(currentPageSize);
+    }
+}
+
+@if (Model.TotalPages > 0)
+{
+    <div class="d-flex justify-content-between align-items-center">
+        <!-- PageSize Dropdown -->
+        <form method="get" class="d-inline">
+            <label class="me-2">Sayfa boyutu:</label>
+            <select name="pageSize" onchange="this.form.submit()" class="form-select form-select-sm d-inline w-auto">
+                @foreach (var size in availableSizes)
+                {
+                    if (currentPageSize == size)
+                    {
+                        <option value="@size" selected="selected">@size</option>
+                    }
+                    else
+                    {
+                        <option value="@size">@size</option>
+                    }
+                }
+            </select>
+
+            @* Diğer query parametrelerini koru *@
+            @foreach (var param in Context.Request.Query)
+            {
+                if (param.Key != "pageSize")
+                {
+                    <input type="hidden" name="@param.Key" value="@param.Value" />
+                }
+            }
+        </form>
+
+        <p>@string.Format("({0}-{1}) arası gösteriliyor. Toplamda {2} kayıt bulunmaktadır.", ((Model.PageIndex -1) * Model.PageSize) + 1, Model.PageIndex * Model.PageSize, Model.TotalCount)</p>
+
+        <!-- Sayfalama Butonları -->
+        <ul class="pagination pagination-sm m-0">
+            @{
+                query["pageIndex"] = (Model.PageIndex - 1).ToString();
+                var prevUrl = QueryHelpers.AddQueryString(Context.Request.Path, query);
+            }
+            <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                <a class="page-link" href="@prevUrl" tabindex="-1">&laquo;</a>
+            </li>
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                query["pageIndex"] = i.ToString();
+                var pageUrl = QueryHelpers.AddQueryString(Context.Request.Path, query);
+                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                    <a class="page-link" href="@pageUrl">@i</a>
+                </li>
+            }
+
+            @{
+                query["pageIndex"] = (Model.PageIndex + 1).ToString();
+                var nextUrl = QueryHelpers.AddQueryString(Context.Request.Path, query);
+            }
+            <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                <a class="page-link" href="@nextUrl">&raquo;</a>
+            </li>
+        </ul>
+    </div>
+}

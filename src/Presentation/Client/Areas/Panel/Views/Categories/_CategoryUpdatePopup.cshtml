@@ -1,0 +1,36 @@
+@model CategoryInfoResponse
+@{
+    Layout = null;
+}
+<div class="modal fade" id="update-category-popup" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class='modal-header bg-warning'>
+                <h5 class="modal-title">Kategori Güncelle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-area="Panel" asp-controller="Categories" asp-action="UpdateOperation" asp-route-categoryId="@Model.CategoryId" method="post">
+                <div class="modal-body" id="modal-body">
+                    <input type="hidden" asp-for="@Model.CategoryId" />
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label">Kategori Adı</label>
+                        <input type="text" class="form-control" id="category-title" asp-for="Title" />
+                    </div>
+                    <div class="mb-3">
+                        <p><b>Oluşturulma Tarihi : </b>@UIToolHelper.RenderDateTime(Model.CreatedDate)</p>
+                        <p><b>Son Güncellenme Tarihi : </b>@UIToolHelper.RenderDateTime(Model.UpdatedDate)</p>
+                        <p><b>Altındaki Birim Sayısı : </b>@Model.CurrencyCount</p>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" asp-for="IsActive" />
+                        <label class="form-check-label" asp-for="IsActive">Aktif</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                    <button type="submit" class="btn btn-warning">Güncelle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

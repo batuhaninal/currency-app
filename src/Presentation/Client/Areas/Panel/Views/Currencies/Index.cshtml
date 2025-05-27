@@ -1,0 +1,87 @@
+@model PaginationResult<CurrencyItemResponse>
+@{
+    Layout = "_Layout";
+}
+
+<div class="row">
+  <div class="card mb-4">
+    <div class="card-header">
+      <div class="d-flex justify-content-between">
+        <h3 class="card-title">Birimler Tablosu</h3>
+        @await Html.PartialAsync("_SearchTool", new SearchModel())
+      </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>
+              #
+              @await Html.PartialAsync("_OrderTool", new SortModel("id"))
+            </th>
+            <th>
+              Kategorisi
+              @await Html.PartialAsync("_OrderTool", new SortModel("categoryTitle"))
+            </th>
+            <th>
+              Birim Kisaltmasi
+              @await Html.PartialAsync("_OrderTool", new SortModel("title"))
+            </th>
+            <th>
+              Birim Ismi
+              @await Html.PartialAsync("_OrderTool", new SortModel("subTitle"))
+            </th>
+            <th>
+              Satin Alinma Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("purchasePrice"))
+            </th>
+            <th>
+              Satis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("salePrice"))
+            </th>
+            <th>
+              Durum
+              @await Html.PartialAsync("_OrderTool", new SortModel("isActive"))
+            </th>
+            <th style="width: 40px">Islemler</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var item in Model.Items)
+          {
+            <tr class="align-middle">
+              <td>
+                @item.CurrencyId
+              </td>
+              <td>
+                @(item.Category != null ? item.Category.Title : "")
+              </td>
+              <td>
+                @item.Title
+              </td>
+              <td>
+                @item.SubTitle
+              </td>
+              <td>
+                @UIToolHelper.RenderTL(item.PurchasePrice)
+              </td>
+              <td>
+                @UIToolHelper.RenderTL(item.SalePrice)
+              </td>
+              <td>
+                <span class='badge @(item.IsActive ? "bg-primary" : "bg-info")'>
+                  @(item.IsActive ? "Aktif" : "Pasif")
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <!-- /.card-body -->
+    <div class="card-footer clearfix">
+      @await Html.PartialAsync("_PaginationTool", Model)
+    </div>
+  </div>
+</div>

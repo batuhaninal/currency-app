@@ -1,0 +1,11 @@
+@model SearchModel
+@{
+    var query = Context.Request.Query.ToDictionary(k => k.Key, v => v.Value.ToString());
+    string condition = query.TryGetValue("condition", out var value) ? value : string.Empty;
+}
+
+
+<form method="get" class="d-inline">
+    <label class="me-2">Arama:</label>
+    <input type="text" name="condition" value="@condition" class="form-control d-inline w-auto" />
+</form>

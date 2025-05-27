@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Domain\Domain.csproj"></ProjectReference>
+    <ProjectReference Include="..\..\Core\Application\Application.csproj"></ProjectReference>
+    <ProjectReference Include="..\..\Infrastructure\Persistence\Persistence.csproj"></ProjectReference>
+    <ProjectReference Include="..\..\Infrastructure\Adapter\Adapter.csproj"></ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0-preview.3.25172.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="8.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="8.1.1" />
+  </ItemGroup>
+
+</Project>

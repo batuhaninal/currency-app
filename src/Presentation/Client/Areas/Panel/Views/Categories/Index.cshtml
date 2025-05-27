@@ -1,0 +1,113 @@
+@model PaginationResult<CategoryItemResponse>
+@{
+  Layout = "_Layout";
+}
+
+<div class="row">
+  <div class="card mb-4">
+    <div class="card-header">
+      <div class="d-flex justify-content-between">
+        <div class="btn-group mb-2" role="group" aria-label="Basic mixed styles example">
+          <span class="badge rounded-pill bg-success p-2" role="button" data-bs-toggle="modal"
+            data-bs-target="#add-category-popup" title="Kategori ekle">
+            <i class="fa-solid fa-plus"></i>
+          </span>
+        </div>
+        <h3 class="card-title">Kategoriler Tablosu</h3>
+        @await Html.PartialAsync("_SearchTool", new SearchModel())
+      </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>
+              #
+              @await Html.PartialAsync("_OrderTool", new SortModel("id"))
+            </th>
+            <th>
+              Isim
+              @await Html.PartialAsync("_OrderTool", new SortModel("title"))
+            </th>
+            <th>
+              Durum
+              @await Html.PartialAsync("_OrderTool", new SortModel("isActive"))
+            </th>
+            <th style="width: 40px">Islemler</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var item in Model.Items)
+          {
+            <tr class="align-middle">
+              <td>
+                @item.CategoryId
+              </td>
+              <td>
+                @item.Title
+              </td>
+              <td>
+                <span class='badge @(item.IsActive ? "bg-primary" : "bg-info")'>
+                  @(item.IsActive ? "Aktif" : "Pasif")
+                </span>
+              </td>
+              <td>
+                <div class="d-inline-flex gap-1">
+                  <span class="badge rounded-pill bg-warning p-2 update-category" role="button"
+                    data-category-id="@item.CategoryId" title="@item.Title adli kategoriyi guncelle">
+                    <i class="fa-solid fa-pencil"></i>
+                  </span>
+                  <span class='badge rounded-pill @(item.IsActive ? "bg-info" : "bg-primary") p-2 change-category-status'
+                    role="button" data-category-id="@item.CategoryId"
+                    title='@item.Title adli kategorinin durumunu @(item.IsActive ? "pasife" : "aktife") degistir'>
+                    <i class='fa-solid @(item.IsActive ? "fa-lock" : "fa-lock-open")'></i>
+                  </span>
+                  <span class="badge rounded-pill bg-danger p-2 delete-category" role="button"
+                    data-category-id="@item.CategoryId" title="@item.Title adli kategoriyi sil">
+                    <i class="fa-solid fa-trash"></i>
+                  </span>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <!-- /.card-body -->
+    <div class="card-footer clearfix">
+      @await Html.PartialAsync("_PaginationTool", Model)
+    </div>
+  </div>
+</div>
+
+<div id="empty-container"></div>
+
+@await Html.PartialAsync("_CategoryAddPopup.cshtml", new CategoryInput())
+
+@section Scripts {
+  <script>
+    $(document).ready(function () {
+      const d = $("#empty-container");
+
+      $(".update-category").off("click").on("click", function () {
+        const id = $(this).data("category-id");
+        const fetchUrl = '@Url.Action("UpdateOperation", "Categories", new { Area = "panel" })';
+        openPopup(d, '#update-category-popup', fetchUrl + "?categoryId=" + id)
+      });
+
+      $(".change-category-status").off("click").on("click", function () {
+        const id = $(this).data("category-id");
+        const fetchUrl = '@Url.Action("ChangeStatusOperation", "Categories", new { Area = "panel" })';
+        statusPopup(fetchUrl + "?categoryId=" + id)
+      });
+
+      $(".delete-category").off("click").on("click", function () {
+        const id = $(this).data("category-id");
+        const fetchUrl = '@Url.Action("DeleteOperation", "Categories", new { Area = "panel" })';
+        deletePopup(fetchUrl + "?categoryId=" + id)
+      });
+
+    });
+  </script>
+}

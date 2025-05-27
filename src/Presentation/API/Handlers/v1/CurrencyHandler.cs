@@ -1,0 +1,44 @@
+using Application.Abstractions.Commons.Results;
+using Application.Abstractions.Handlers;
+using Application.CQRS.Commands.Currencies.Add;
+using Application.CQRS.Commands.Currencies.ChangeStatus;
+using Application.CQRS.Commands.Currencies.Update;
+using Application.CQRS.Commands.Currencies.UpdateValue;
+using Application.CQRS.Commons.Services;
+using Application.CQRS.Queries.Currencies.List;
+
+namespace API.Handlers.v1
+{
+    public sealed class CurrencyHandler : ICurrencyHandler
+    {
+        public async Task<IResult> Add(AddCurrencyCommand command, Dispatcher dispatcher, CancellationToken cancellationToken)
+        {
+            IBaseResult result = await dispatcher.SendCommandAsync<AddCurrencyCommand, IBaseResult>(command, cancellationToken);
+            return Results.Json(result, statusCode: result.StatusCode);
+        }
+
+        public async Task<IResult> ChangeStatus(ChangeCurrencyStatusCommand command, Dispatcher dispatcher, CancellationToken cancellationToken)
+        {
+            IBaseResult result = await dispatcher.SendCommandAsync<ChangeCurrencyStatusCommand, IBaseResult>(command, cancellationToken);
+            return Results.Json(result, statusCode: result.StatusCode);
+        }
+
+        public async Task<IResult> List(CurrencyListQuery query, Dispatcher dispatcher, CancellationToken cancellationToken)
+        {
+            IBaseResult result = await dispatcher.SendQueryAsync<CurrencyListQuery, IBaseResult>(query, cancellationToken);
+            return Results.Json(result, statusCode: result.StatusCode);
+        }
+
+        public async Task<IResult> Update(UpdateCurrencyCommand command, Dispatcher dispatcher, CancellationToken cancellationToken)
+        {
+            IBaseResult result = await dispatcher.SendCommandAsync<UpdateCurrencyCommand, IBaseResult>(command, cancellationToken);
+            return Results.Json(result, statusCode: result.StatusCode);
+        }
+
+        public async Task<IResult> UpdateValue(UpdateCurrencyValueCommand command, Dispatcher dispatcher, CancellationToken cancellationToken)
+        {
+            IBaseResult result = await dispatcher.SendCommandAsync<UpdateCurrencyValueCommand, IBaseResult>(command, cancellationToken);
+            return Results.Json(result, statusCode: result.StatusCode);
+        }
+    }
+}

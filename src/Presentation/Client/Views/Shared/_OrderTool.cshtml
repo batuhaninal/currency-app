@@ -1,0 +1,22 @@
+@model SortModel
+@using Microsoft.AspNetCore.WebUtilities
+
+@{
+    var query = Context.Request.Query.ToDictionary(k => k.Key, v => v.Value.ToString());
+
+    var currentOrder = query.ContainsKey("orderBy") ? query["orderBy"] : "";
+    var isCurrent = currentOrder.StartsWith(Model.Field + "_");
+
+    var currentDirection = isCurrent ? currentOrder.Split('_')[1] : "";
+    var newDirection = isCurrent && currentDirection == "asc" ? "desc" : "asc";
+
+    query["orderBy"] = $"{Model.Field}_{newDirection}";
+    var newUrl = QueryHelpers.AddQueryString(Context.Request.Path, query);
+}
+
+<span class="sort-icons ms-1">
+    <a href="@newUrl" class="text-decoration-none">
+        <i class="bi bi-caret-up-fill @(isCurrent && currentDirection == "asc" ? "text-primary" : "text-muted")"></i>
+        <i class="bi bi-caret-down-fill @(isCurrent && currentDirection == "desc" ? "text-primary" : "text-muted")"></i>
+    </a>
+</span>

@@ -1,4 +1,3 @@
-using System.Text.Json.Serialization;
 using Application.Models.RequestParameters.Commons;
 
 namespace Application.Models.RequestParameters.Categories

@@ -13,7 +13,6 @@ namespace Application.Models.RequestParameters.Commons
             set => _condition = value?.TrimStart().TrimEnd().ToLower();
         }
         public virtual string? OrderBy { get; set; }
-        public virtual string? SortDirection { get; set; }
         public virtual bool? IsActive { get; set; }
 
         [JsonIgnore]

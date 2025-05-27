@@ -5,7 +5,9 @@ using Application.CQRS.Queries.Assets.GetUserAssetInfo;
 using Application.CQRS.Queries.Assets.GetUsersAssets;
 using Application.CQRS.Queries.Categories.Info;
 using Application.CQRS.Queries.Categories.List;
+using Application.CQRS.Queries.Currencies.Info;
 using Application.CQRS.Queries.Currencies.List;
+using Application.CQRS.Queries.PriceInfo;
 using Application.CQRS.Queries.Tools;
 using Application.CQRS.Queries.Tools.GetCurrencyToolList;
 using Application.CQRS.Queries.Users.GetProfile;
@@ -51,6 +53,11 @@ namespace Application.CQRS.Queries
             services.AddScoped<CurrencyListQuery>();
             services.AddScoped<IQueryHandler<CurrencyListQuery, IBaseResult>, CurrencyListQueryHandler>();
 
+            services.AddScoped<CurrencyInfoQuery>();
+            services.AddScoped<IQueryHandler<CurrencyInfoQuery, IBaseResult>, CurrencyInfoQueryHandler>();
+
+            services.AddScoped<CurrencyPriceInfoQuery>();
+            services.AddScoped<IQueryHandler<CurrencyPriceInfoQuery, IBaseResult>, CurrencyPriceInfoQueryHandler>();
             #endregion
         }
     }

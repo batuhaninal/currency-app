@@ -6,6 +6,7 @@ using Application.CQRS.Commands.Categories.Delete;
 using Application.CQRS.Commands.Categories.Update;
 using Application.CQRS.Commands.Currencies.Add;
 using Application.CQRS.Commands.Currencies.ChangeStatus;
+using Application.CQRS.Commands.Currencies.Delete;
 using Application.CQRS.Commands.Currencies.Update;
 using Application.CQRS.Commands.Currencies.UpdateValue;
 using Application.CQRS.Commands.Users.Login;
@@ -34,6 +35,9 @@ namespace Application.CQRS.Commands
 
             services.AddScoped<UpdateCurrencyCommand>();
             services.AddScoped<ICommandHandler<UpdateCurrencyCommand, IBaseResult>, UpdateCurrencyCommandHandler>();
+
+            services.AddScoped<DeleteCurrencyCommand>();
+            services.AddScoped<ICommandHandler<DeleteCurrencyCommand, IBaseResult>, DeleteCurrencyCommandHandler>();
 
             services.AddScoped<ChangeCurrencyStatusCommand>();
             services.AddScoped<ICommandHandler<ChangeCurrencyStatusCommand, IBaseResult>, ChangeCurrencyStatusCommandHandler>();

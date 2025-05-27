@@ -14,7 +14,7 @@ namespace Application.CQRS.Commands.Currencies.Add
         {
             Title = title.TrimStart().TrimEnd();
             SubTitle = subTitle != null ? subTitle.TrimStart().TrimEnd() : null;
-            TVCode = tvCode != null ? tvCode.TrimStart().TrimEnd() : null;
+            TvCode = tvCode != null ? tvCode.TrimStart().TrimEnd() : null;
             PurchasePrice = purchasePrice;
             SalePrice = salePrice;
             CategoryId = categoryId;
@@ -23,7 +23,7 @@ namespace Application.CQRS.Commands.Currencies.Add
 
         public string Title { get; init; } = null!;
         public string? SubTitle { get; init; }
-        public string? TVCode { get; init; }
+        public string? TvCode { get; init; }
         public decimal PurchasePrice { get; init; }
         public decimal SalePrice { get; init; }
         public int CategoryId { get; init; }
@@ -37,7 +37,7 @@ namespace Application.CQRS.Commands.Currencies.Add
             {
                 Title = this.Title,
                 SubTitle = this.SubTitle,
-                TVCode = this.TVCode,
+                TVCode = this.TvCode,
                 PurchasePrice = this.PurchasePrice,
                 SalePrice = this.SalePrice,
                 CategoryId = this.CategoryId,

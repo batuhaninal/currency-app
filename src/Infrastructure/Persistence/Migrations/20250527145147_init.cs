@@ -73,6 +73,8 @@ namespace Persistence.Migrations
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     title = table.Column<string>(type: "character varying(75)", maxLength: 75, nullable: false),
+                    sub_title = table.Column<string>(type: "character varying(75)", maxLength: 75, nullable: true),
+                    tv_code = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
                     purchase_price = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     sale_price = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     category_id = table.Column<int>(type: "integer", nullable: false),

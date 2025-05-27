@@ -7,6 +7,11 @@
   <div class="card mb-4">
     <div class="card-header">
       <div class="d-flex justify-content-between">
+        <div class="btn-group mb-2" role="group" aria-label="Basic mixed styles example">
+          <span class="badge rounded-pill bg-success p-2" role="button" id="add-currency-btn" title="Birim ekle">
+            <i class="fa-solid fa-plus"></i>
+          </span>
+        </div>
         <h3 class="card-title">Birimler Tablosu</h3>
         @await Html.PartialAsync("_SearchTool", new SearchModel())
       </div>
@@ -74,6 +79,27 @@
                   @(item.IsActive ? "Aktif" : "Pasif")
                 </span>
               </td>
+              <td>
+                <div class="d-inline-flex gap-1">
+                  <span class="badge rounded-pill bg-dark p-2 update-currencyPrice-btn" role="button"
+                    data-currency-id="@item.CurrencyId" title="@item.Title adli birim fiyatini guncelle">
+                    <i class="fa-solid fa-tag"></i>
+                  </span>
+                  <span class="badge rounded-pill bg-warning p-2 update-currency-btn" role="button"
+                    data-currency-id="@item.CurrencyId" title="@item.Title adli birimi guncelle">
+                    <i class="fa-solid fa-pencil"></i>
+                  </span>
+                  <span class='badge rounded-pill @(item.IsActive ? "bg-info" : "bg-primary") p-2 change-currency-status-btn'
+                    role="button" data-currency-id="@item.CurrencyId"
+                    title='@item.Title adli kategorinin durumunu @(item.IsActive ? "pasife" : "aktife") degistir'>
+                    <i class='fa-solid @(item.IsActive ? "fa-lock" : "fa-lock-open")'></i>
+                  </span>
+                  <span class="badge rounded-pill bg-danger p-2 delete-currency-btn" role="button"
+                    data-currency-id="@item.CurrencyId" title="@item.Title adli birimi sil">
+                    <i class="fa-solid fa-trash"></i>
+                  </span>
+                </div>
+              </td>
             </tr>
           }
         </tbody>
@@ -85,3 +111,43 @@
     </div>
   </div>
 </div>
+
+<div id="empty-container"></div>
+
+@section Scripts {
+  <script>
+    $(document).ready(function () {
+      const d = $("#empty-container");
+
+      $("#add-currency-btn").off("click").on("click", function () {
+        const fetchUrl = '@Url.Action("AddOperation", "Currencies", new { Area = "panel" })';
+        openPopup(d, '#add-currency-popup', fetchUrl)
+      });
+
+      $(".update-currency-btn").off("click").on("click", function () {
+        const id = $(this).data("currency-id");
+        const fetchUrl = '@Url.Action("UpdateOperation", "Currencies", new { Area = "panel" })';
+        openPopup(d, '#update-currency-popup', fetchUrl + "?currencyId=" + id)
+      });
+
+      $(".update-currencyPrice-btn").off("click").on("click", function () {
+        const id = $(this).data("currency-id");
+        const fetchUrl = '@Url.Action("UpdatePriceOperation", "Currencies", new { Area = "panel" })';
+        openPopup(d, '#update-currencyPrice-popup', fetchUrl + "?currencyId=" + id)
+      });
+
+      $(".change-currency-status-btn").off("click").on("click", function () {
+        const id = $(this).data("currency-id");
+        const fetchUrl = '@Url.Action("ChangeStatusOperation", "Currencies", new { Area = "panel" })';
+        statusPopup(fetchUrl + "?currencyId=" + id)
+      });
+
+      $(".delete-currency-btn").off("click").on("click", function () {
+        const id = $(this).data("currency-id");
+        const fetchUrl = '@Url.Action("DeleteOperation", "Currencies", new { Area = "panel" })';
+        deletePopup(fetchUrl + "?currencyId=" + id)
+      });
+
+    });
+  </script>
+}

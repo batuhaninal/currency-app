@@ -6,6 +6,7 @@ using Application.CQRS.Commands.Categories.Delete;
 using Application.CQRS.Commands.Categories.Update;
 using Application.CQRS.Commands.Currencies.Add;
 using Application.CQRS.Commands.Currencies.ChangeStatus;
+using Application.CQRS.Commands.Currencies.Delete;
 using Application.CQRS.Commands.Currencies.Update;
 using Application.CQRS.Commands.Currencies.UpdateValue;
 using Application.CQRS.Commands.Users.Login;
@@ -16,7 +17,9 @@ using Application.CQRS.Queries.Assets.GetUserAssetInfo;
 using Application.CQRS.Queries.Assets.GetUsersAssets;
 using Application.CQRS.Queries.Categories.Info;
 using Application.CQRS.Queries.Categories.List;
+using Application.CQRS.Queries.Currencies.Info;
 using Application.CQRS.Queries.Currencies.List;
+using Application.CQRS.Queries.PriceInfo;
 using Application.CQRS.Queries.Tools;
 using Application.CQRS.Queries.Tools.GetCurrencyToolList;
 using Microsoft.AspNetCore.Mvc;
@@ -80,13 +83,13 @@ namespace API.Handlers
 
             var currency = api.MapGroup("currencies");
 
-            currency.MapGet("",
+            var currencyPanel = panel.MapGroup("currencies");
+
+            currencyPanel.MapGet("",
                 async ([FromServices] ICurrencyHandler handler, [AsParameters] CurrencyListQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.List(query, dispatcher, cancellationToken))
                 .WithName("Currency List")
                 .WithTags("Currencies")
                 .RequireAuthorization();
-
-            var currencyPanel = panel.MapGroup("currencies");
 
             currencyPanel.MapPost("",
                 async ([FromServices] ICurrencyHandler handler, [FromBody] AddCurrencyCommand command, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.Add(command, dispatcher, cancellationToken))
@@ -113,7 +116,34 @@ namespace API.Handlers
                 .WithTags("Currencies")
                 .RequireAuthorization();
 
-            currencyPanel.MapPut("change-value/{currencyId}",
+            currencyPanel.MapDelete("{currencyId}",
+                async ([FromServices] ICurrencyHandler handler, [FromRoute(Name = "currencyId")] int currencyId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
+                {
+                    return await handler.Delete(new DeleteCurrencyCommand(currencyId), dispatcher, cancellationToken);
+                })
+                .WithName("Delete Currency")
+                .WithTags("Currencies")
+                .RequireAuthorization();
+
+            currencyPanel.MapGet("{currencyId}",
+                async ([FromServices] ICurrencyHandler handler, [FromRoute(Name = "currencyId")] int currencyId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
+                {
+                    return await handler.Info(new CurrencyInfoQuery(currencyId), dispatcher, cancellationToken);
+                })
+                .WithName("Currency info")
+                .WithTags("Currencies")
+                .RequireAuthorization();
+
+            currencyPanel.MapGet("price-info/{currencyId}",
+                async ([FromServices] ICurrencyHandler handler, [FromRoute(Name = "currencyId")] int currencyId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
+                {
+                    return await handler.PriceInfo(new CurrencyPriceInfoQuery(currencyId), dispatcher, cancellationToken);
+                })
+                .WithName("Currency Price Info")
+                .WithTags("Currencies")
+                .RequireAuthorization();
+
+            currencyPanel.MapPatch("change-price/{currencyId}",
                 async ([FromServices] ICurrencyHandler handler, [FromRoute(Name = "currencyId")] int currencyId, [FromBody] UpdateCurrencyValueCommand command, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
                 {
                     command.CurrencyId = currencyId;

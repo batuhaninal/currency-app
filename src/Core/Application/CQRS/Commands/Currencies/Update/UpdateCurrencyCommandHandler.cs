@@ -32,14 +32,14 @@ namespace Application.CQRS.Commands.Currencies.Update
 
             result = await _unitOfWork.CurrencyRule.CheckTitleValidAsync(command.CurrencyId, command.Title, cancellationToken);
 
-            if (!result.Success)
+            if (result.Success)
             {
                 Currency currency = (await _unitOfWork.CurrencyReadRepository.GetByIdAsync(command.CurrencyId, true, cancellationToken))!;
 
                 currency.CategoryId = command.CategoryId;
                 currency.Title = command.Title;
                 currency.SubTitle = command.SubTitle;
-                currency.TVCode = command.TVCode;
+                currency.TVCode = command.TvCode;
                 currency.IsActive = command.IsActive;
 
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -56,6 +56,7 @@ namespace Application.CQRS.Commands.Currencies.Update
                     currency.Id,
                     currency.Title,
                     currency.SubTitle,
+                    currency.TVCode,
                     currency.PurchasePrice,
                     currency.SalePrice,
                     currency.CreatedDate,

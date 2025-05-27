@@ -3,6 +3,7 @@ using Client.Models.Constants;
 using Client.Services.Auth;
 using Client.Services.Categories;
 using Client.Services.Currencies;
+using Client.Services.Tools;
 
 namespace Client.Services
 {
@@ -25,8 +26,13 @@ namespace Client.Services
 
             services.AddHttpClient<ICurrencyService, CurrencyService>(opt =>
             {
-                opt.BaseAddress = new Uri($"{AppConstants.APIURL}/currencies/");
+                opt.BaseAddress = new Uri($"{AppConstants.APIURL}/panel/currencies/");
             }).AddHttpMessageHandler<TokenMiddleware>();
+
+            services.AddHttpClient<IToolService, ToolService>(opt =>
+            {
+                opt.BaseAddress = new Uri($"{AppConstants.APIURL}/tools/");
+            });
         }
     }
 }

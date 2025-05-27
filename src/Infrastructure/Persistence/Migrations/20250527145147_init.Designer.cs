@@ -12,8 +12,8 @@ using Persistence.Contexts;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(CurrencyContext))]
-    [Migration("20250518195251_subtitle_currency_mig")]
-    partial class subtitle_currency_mig
+    [Migration("20250527145147_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -158,6 +158,11 @@ namespace Persistence.Migrations
                         .HasMaxLength(75)
                         .HasColumnType("character varying(75)")
                         .HasColumnName("sub_title");
+
+                    b.Property<string>("TVCode")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("tv_code");
 
                     b.Property<string>("Title")
                         .IsRequired()

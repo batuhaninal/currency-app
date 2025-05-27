@@ -20,7 +20,7 @@ namespace Application.Abstractions.Repositories.Currencies.Extensions
         {
             var predicate = PredicateBuilderHelper.True<Currency>();
 
-            if (parameter.CategoryId is not null)
+            if (parameter.CategoryId is not null && parameter.CategoryId.Length > 0)
                 predicate = predicate.And(x => parameter.CategoryId.Contains(x.CategoryId));
 
             if (parameter.IsActive is not null)

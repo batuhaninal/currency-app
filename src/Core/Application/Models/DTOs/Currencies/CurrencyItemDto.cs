@@ -10,11 +10,12 @@ namespace Application.Models.DTOs.Currencies
             
         }
 
-        public CurrencyItemDto(int currencyId, string title, string? subTitle, decimal purchasePrice, decimal salePrice, bool isActive, CategoryRelationDto? category = null)
+        public CurrencyItemDto(int currencyId, string title, string? subTitle, string? tvCode, decimal purchasePrice, decimal salePrice, bool isActive, CategoryRelationDto? category = null)
         {
             CurrencyId = currencyId;
             Title = title;
             SubTitle = subTitle;
+            TvCode = tvCode;
             PurchasePrice = purchasePrice;
             SalePrice = salePrice;
             IsActive = isActive;
@@ -24,6 +25,7 @@ namespace Application.Models.DTOs.Currencies
         public int CurrencyId { get; init; }
         public string Title { get; init; } = null!;
         public string? SubTitle { get; init; }
+        public string? TvCode { get; init; }
         public decimal PurchasePrice { get; init; }
         public decimal SalePrice { get; init; }
         public bool IsActive { get; init; }

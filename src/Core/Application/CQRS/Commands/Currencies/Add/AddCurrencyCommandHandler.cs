@@ -31,7 +31,7 @@ namespace Application.CQRS.Commands.Currencies.Add
                 {
                     IBaseResult result = await _unitOfWork.CurrencyRule.CheckTitleValidAsync(command.Title, cancellationToken);
 
-                    if (!result.Success)
+                    if (result.Success)
                     {
                         Currency currency = await _unitOfWork.CurrencyWriteRepository.CreateAsync(command.ToDomain(), cancellationToken);
 
@@ -80,7 +80,7 @@ namespace Application.CQRS.Commands.Currencies.Add
                             }
                         }
                         CategoryRelationDto? category = await _unitOfWork.CategoryReadRepository.Table.AsNoTracking().Where(x => x.Id == currency.CategoryId).Select(x => new CategoryRelationDto(x.Id, x.Title)).FirstOrDefaultAsync();
-                        result = new ResultDto(201, true, new CurrencyItemDto(currency.Id, currency.Title, currency.SubTitle, currency.PurchasePrice, currency.SalePrice, currency.IsActive, category));
+                        result = new ResultDto(201, true, new CurrencyItemDto(currency.Id, currency.Title, currency.SubTitle, currency.TVCode, currency.PurchasePrice, currency.SalePrice, currency.IsActive, category));
                     }
 
                     await tx.CommitAsync(cancellationToken);

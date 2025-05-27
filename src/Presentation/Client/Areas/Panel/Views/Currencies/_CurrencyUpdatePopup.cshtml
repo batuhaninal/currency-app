@@ -1,0 +1,55 @@
+@using System.Text.Json
+@model CurrencyInfoResponse
+@{
+    var data = ViewBag.CategoryTool as List<CategoryToolResponse>;
+    SelectList categoryTool = new SelectList(data, "CategoryId", "Title");
+}
+
+<div class="modal fade" id="update-currency-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class='modal-header bg-warning'>
+                <h5 class="modal-title">Birim Guncelle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-area="Panel" asp-controller="Currencies" asp-action="UpdateOperation" asp-route-currencyId="@Model.CurrencyId" method="post">
+                <div class="modal-body" id="modal-body">
+                    @await Html.PartialAsync("_DropdownTool", new DropdownModel("Kategori Seciniz", "category-dropdown",
+                    "CategoryId", "category-tool", categoryTool, Model.Category.CategoryId.ToString()))
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label">Birim Adı</label>
+                        <input type="text" class="form-control" id="currency-title-add" asp-for="Title" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="SubTitle" class="form-label">Tam Adı</label>
+                        <input type="text" class="form-control" id="currency-subTitle-add" asp-for="SubTitle" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="TvCode" class="form-label">TV CODE</label>
+                        <input type="text" class="form-control" id="currency-tvCode-add" asp-for="TvCode" />
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" asp-for="IsActive" />
+                        <label class="form-check-label" id="currency-isActive-add" asp-for="IsActive">Aktif</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                    <button type="submit" class="btn btn-warning">Guncelle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.category-tool').select2({
+            dropdownParent: $('#update-currency-popup'),
+            width: '100%',
+            placeholder: "Kategori seçiniz",
+            allowClear: true
+        });
+    });
+</script>

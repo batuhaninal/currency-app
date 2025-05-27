@@ -32,7 +32,7 @@ namespace Application.CQRS.Commands.Users.Register
         {
             IBaseResult result = await _unitOfWork.UserRule.CheckEmailValidAsync(command.Username, cancellationToken);
 
-            if (!result.Success)
+            if (result.Success)
             {
                 byte[] pswHash, pswSalt;
                 _hashingService.CreatePasswordHash(command.Password, out pswHash, out pswSalt);

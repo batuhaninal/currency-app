@@ -23,7 +23,8 @@ namespace Application.CQRS.Queries.Tools
                 .CategoryReadRepository
                 .Table
                 .AsNoTracking()
-                .FilterAllConditions(query)
+                .Search(query.Condition)
+                .OrderQuery(query.OrderBy)
                 .Select(x=> new CategoryToolDto(x.Id, x.Title, x.IsActive))
                 .ToListAsync(cancellationToken);
 

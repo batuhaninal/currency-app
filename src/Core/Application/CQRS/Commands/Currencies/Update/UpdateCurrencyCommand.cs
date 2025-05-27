@@ -16,7 +16,7 @@ namespace Application.CQRS.Commands.Currencies.Update
             CategoryId = categoryId;
             Title = title;
             SubTitle = subTitle != null ? subTitle.TrimStart().TrimEnd() : null;
-            TVCode = tvCode != null ? tvCode.TrimStart().TrimEnd() : null;
+            TvCode = tvCode != null ? tvCode.TrimStart().TrimEnd() : null;
             IsActive = isActive;
         }
 
@@ -25,7 +25,7 @@ namespace Application.CQRS.Commands.Currencies.Update
         public int CategoryId { get; init; }
         public string Title { get; init; } = null!;
         public string? SubTitle { get; init; }
-        public string? TVCode { get; init; }
+        public string? TvCode { get; init; }
         public bool IsActive { get; init; }
     }
 }

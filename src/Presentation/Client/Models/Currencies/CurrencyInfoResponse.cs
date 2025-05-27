@@ -1,16 +1,15 @@
-using Application.Models.Constants.Messages;
-using Application.Models.DTOs.Categories;
+using Client.Models.Categories;
 
-namespace Application.Models.DTOs.Currencies
+namespace Client.Models.Currencies
 {
-    public sealed record CurrencyInfoDto
+    public sealed record CurrencyInfoResponse
     {
-        public CurrencyInfoDto()
+        public CurrencyInfoResponse()
         {
             
         }
 
-        public CurrencyInfoDto(int currencyId, string title, string? subTitle, string? tvCode, decimal purchasePrice, decimal salePrice, DateTime createdDate, DateTime updatedDate, bool isActive, CategoryRelationDto? category = null)
+        public CurrencyInfoResponse(int currencyId, string title, string? subTitle, string? tvCode, decimal purchasePrice, decimal salePrice, DateTime createdDate, DateTime updatedDate, bool isActive, CategoryRelationResponse category)
         {
             CurrencyId = currencyId;
             Title = title;
@@ -21,7 +20,7 @@ namespace Application.Models.DTOs.Currencies
             CreatedDate = createdDate;
             UpdatedDate = updatedDate;
             IsActive = isActive;
-            Category = category ?? new CategoryRelationDto(0, ErrorMessage.PASSIVEorDELETED); 
+            Category = category;
         }
 
         public int CurrencyId { get; init; }
@@ -33,6 +32,6 @@ namespace Application.Models.DTOs.Currencies
         public DateTime CreatedDate { get; init; }
         public DateTime UpdatedDate { get; init; }
         public bool IsActive { get; init; }
-        public CategoryRelationDto Category { get; init; } = null!;
+        public CategoryRelationResponse Category { get; init; } = null!;
     }
 }

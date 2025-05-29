@@ -26,8 +26,23 @@ namespace Client.Areas.Panel.Controllers
         [HttpGet]
         public async Task<IActionResult> Index([FromQuery] CurrencyRequestParameter parameter)
         {
+            var result = await _toolService.CategoryTools(new ToolRequestParameter());
+            if (!result.Success)
+                TempData["ErrorMessage"] = result.Message ?? "Beklenmeyen hata!";
+
+            ViewBag.CategoryTool = result.Data ?? new();
+
             var data = await _currencyService.ListAsync(parameter);
             return View(data.Data ?? new());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Info([FromQuery] int currencyId, [FromQuery] CurrencyHistoryRequestParameter parameter)
+        {
+            var result = await _currencyService.HistoryInfoAsync(currencyId, parameter);
+            _ = this.ShowResultMessage(result);
+
+            return View(result.Data ?? new());
         }
 
         [HttpGet]

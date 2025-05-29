@@ -19,9 +19,11 @@ using Application.CQRS.Queries.Categories.Info;
 using Application.CQRS.Queries.Categories.List;
 using Application.CQRS.Queries.Currencies.Info;
 using Application.CQRS.Queries.Currencies.List;
+using Application.CQRS.Queries.Currencies.WithHistoryInfo;
 using Application.CQRS.Queries.PriceInfo;
 using Application.CQRS.Queries.Tools;
 using Application.CQRS.Queries.Tools.GetCurrencyToolList;
+using Application.Models.Constants.Roles;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Handlers
@@ -89,13 +91,13 @@ namespace API.Handlers
                 async ([FromServices] ICurrencyHandler handler, [AsParameters] CurrencyListQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.List(query, dispatcher, cancellationToken))
                 .WithName("Currency List")
                 .WithTags("Currencies")
-                .RequireAuthorization();
+                .RequireAuthorization(AppRoles.Admin);
 
             currencyPanel.MapPost("",
                 async ([FromServices] ICurrencyHandler handler, [FromBody] AddCurrencyCommand command, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.Add(command, dispatcher, cancellationToken))
                 .WithName("Add Currency")
                 .WithTags("Currencies")
-                .RequireAuthorization();
+                .RequireAuthorization(AppRoles.Admin);
 
             currencyPanel.MapPatch("status/{currencyId}",
                 async ([FromServices] ICurrencyHandler handler, [FromRoute(Name = "currencyId")] int currencyId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
@@ -104,7 +106,7 @@ namespace API.Handlers
                 })
                 .WithName("Change Currency Status")
                 .WithTags("Currencies")
-                .RequireAuthorization();
+                .RequireAuthorization(AppRoles.Admin);
 
             currencyPanel.MapPut("{currencyId}",
                 async ([FromServices] ICurrencyHandler handler, [FromRoute(Name = "currencyId")] int currencyId, [FromBody] UpdateCurrencyCommand command, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
@@ -114,7 +116,7 @@ namespace API.Handlers
                 })
                 .WithName("Update Currency")
                 .WithTags("Currencies")
-                .RequireAuthorization();
+                .RequireAuthorization(AppRoles.Admin);
 
             currencyPanel.MapDelete("{currencyId}",
                 async ([FromServices] ICurrencyHandler handler, [FromRoute(Name = "currencyId")] int currencyId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
@@ -123,7 +125,7 @@ namespace API.Handlers
                 })
                 .WithName("Delete Currency")
                 .WithTags("Currencies")
-                .RequireAuthorization();
+                .RequireAuthorization(AppRoles.Admin);
 
             currencyPanel.MapGet("{currencyId}",
                 async ([FromServices] ICurrencyHandler handler, [FromRoute(Name = "currencyId")] int currencyId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
@@ -132,7 +134,17 @@ namespace API.Handlers
                 })
                 .WithName("Currency info")
                 .WithTags("Currencies")
-                .RequireAuthorization();
+                .RequireAuthorization(AppRoles.Admin);
+
+            currencyPanel.MapGet("history-info/{currencyId}",
+                async ([FromServices] ICurrencyHandler handler, [FromRoute(Name = "currencyId")] int currencyId, [AsParameters] CurrencyWithHistoryInfoQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
+                {
+                    query.CurrencyId = currencyId;
+                    return await handler.HistoryInfo(query, dispatcher, cancellationToken);
+                })
+                .WithName("Currency History Info")
+                .WithTags("Currencies")
+                .RequireAuthorization(AppRoles.Admin);
 
             currencyPanel.MapGet("price-info/{currencyId}",
                 async ([FromServices] ICurrencyHandler handler, [FromRoute(Name = "currencyId")] int currencyId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
@@ -141,7 +153,7 @@ namespace API.Handlers
                 })
                 .WithName("Currency Price Info")
                 .WithTags("Currencies")
-                .RequireAuthorization();
+                .RequireAuthorization(AppRoles.Admin);
 
             currencyPanel.MapPatch("change-price/{currencyId}",
                 async ([FromServices] ICurrencyHandler handler, [FromRoute(Name = "currencyId")] int currencyId, [FromBody] UpdateCurrencyValueCommand command, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
@@ -151,7 +163,7 @@ namespace API.Handlers
                 })
                 .WithName("Change Currency Value")
                 .WithTags("Currencies")
-                .RequireAuthorization();
+                .RequireAuthorization(AppRoles.Admin);
 
             var category = api.MapGroup("categories");
 
@@ -161,7 +173,7 @@ namespace API.Handlers
                 async ([FromServices] ICategoryHandler handler, [FromBody] AddCategoryCommand command, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.AddAsync(command, dispatcher, cancellationToken))
                 .WithName("Add Category")
                 .WithTags("Categories")
-                .RequireAuthorization();
+                .RequireAuthorization(AppRoles.Admin);
 
             categoryPanel.MapPut("{categoryId}",
                 async ([FromServices] ICategoryHandler handler, [FromRoute(Name = "categoryId")] int categoryId, [FromBody] UpdateCategoryCommand command, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
@@ -171,7 +183,7 @@ namespace API.Handlers
                 }) 
                 .WithName("Update Category")
                 .WithTags("Categories")
-                .RequireAuthorization();
+                .RequireAuthorization(AppRoles.Admin);
 
             categoryPanel.MapPatch("status/{categoryId}",
                 async ([FromServices] ICategoryHandler handler, [FromRoute(Name = "categoryId")] int categoryId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
@@ -180,7 +192,7 @@ namespace API.Handlers
                 }) 
                 .WithName("Change Category Status")
                 .WithTags("Categories")
-                .RequireAuthorization();
+                .RequireAuthorization(AppRoles.Admin);
 
             categoryPanel.MapDelete("{categoryId}",
                 async ([FromServices] ICategoryHandler handler, [FromRoute(Name = "categoryId")] int categoryId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
@@ -189,13 +201,13 @@ namespace API.Handlers
                 }) 
                 .WithName("Delete Category")
                 .WithTags("Categories")
-                .RequireAuthorization();
+                .RequireAuthorization(AppRoles.Admin);
 
             categoryPanel.MapGet("",
                 async ([FromServices] ICategoryHandler handler, [AsParameters] CategoryListQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.ListAsync(query, dispatcher, cancellationToken))
                 .WithName("List Category")
                 .WithTags("Categories")
-                .RequireAuthorization();
+                .RequireAuthorization(AppRoles.Admin);
 
             categoryPanel.MapGet("{categoryId}",
                 async ([FromServices] ICategoryHandler handler, [FromRoute(Name = "categoryId")] int categoryId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
@@ -204,7 +216,7 @@ namespace API.Handlers
                 })
                 .WithName("Get Category")
                 .WithTags("Categories")
-                .RequireAuthorization();
+                .RequireAuthorization(AppRoles.Admin);
 
         var tool = api.MapGroup("tools");
 

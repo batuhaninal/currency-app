@@ -9,14 +9,15 @@ namespace Client.Models.Commons
 
         }
 
-        public DropdownModel(string title, string id, string name, string className, SelectList data, string selected = "0")
+        public DropdownModel(string title, string id, string name, string className, SelectList data, bool isMultiple = false, string[]? selected = null)
         {
             Title = title;
             Id = id;
             Name = name;
             Class = className;
             Data = data;
-            SelectedData = selected;
+            SelectedDatas = selected;
+            IsMultiple = isMultiple;
         }
 
         public string Title { get; init; } = null!;
@@ -24,6 +25,7 @@ namespace Client.Models.Commons
         public string Name { get; init; } = null!;
         public string Class { get; init; } = null!;
         public SelectList Data { get; init; } = null!;
-        public string SelectedData { get; init; }
+        public string[]? SelectedDatas { get; init; }
+        public bool IsMultiple { get; init; }
     }
 }

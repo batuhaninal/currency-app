@@ -1,0 +1,419 @@
+@model CurrencyWithHistoryResponse
+@{
+    Layout = "_Layout";
+    @* List<CurrencyHistoryItemResponse>? dailyHistory = null;
+    List<CurrencyHistoryItemResponse>? weeklyHistory = null;
+    List<CurrencyHistoryItemResponse>? monthlyHistory = null;
+
+    @if(Model.CurrencyHistories is not null && Model.CurrencyHistories.Any())
+    {
+        dailyHistory = Model.CurrencyHistories
+            .OrderBy(x=> x.CurrencyHistoryId)
+            .GroupBy(key=> key.Date)
+            .Select(x=> new CurrencyHistoryItemResponse(
+                x.First().CurrencyHistoryId,
+                x.First().CurrencyId,
+                x.Average(y=> y.OldPurchasePrice),
+                x.Average(y=> y.NewPurchasePrice),
+                x.Average(y=> y.OldSalePrice),
+                x.Average(y=> y.NewSalePrice),
+                x.Key,
+                x.First().UpdatedDate
+            ))
+            .ToList();
+
+        weeklyHistory = Model.CurrencyHistories
+            .OrderBy(x=> x.CurrencyHistoryId)
+            .GroupBy(key=> key.Date.AddDays(-(int)key.Date.DayOfWeek))
+            .Select(x=> new CurrencyHistoryItemResponse(
+                x.First().CurrencyHistoryId,
+                x.First().CurrencyId,
+                x.Average(y=> y.OldPurchasePrice),
+                x.Average(y=> y.NewPurchasePrice),
+                x.Average(y=> y.OldSalePrice),
+                x.Average(y=> y.NewSalePrice),
+                x.Key,
+                x.First().UpdatedDate
+            ))
+            .ToList();
+
+        monthlyHistory = Model.CurrencyHistories
+            .OrderBy(x=> x.CurrencyHistoryId)
+            .GroupBy(key=> new DateOnly(key.Date.Year, key.Date.Month, 1))
+            .Select(x=> new CurrencyHistoryItemResponse(
+                x.First().CurrencyHistoryId,
+                x.First().CurrencyId,
+                x.Average(y=> y.OldPurchasePrice),
+                x.Average(y=> y.NewPurchasePrice),
+                x.Average(y=> y.OldSalePrice),
+                x.Average(y=> y.NewSalePrice),
+                x.Key,
+                x.First().UpdatedDate
+            ))
+            .ToList();
+    }  *@
+}
+
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="card-title mb-0">
+            @Model.Title 
+        @if (!string.IsNullOrEmpty(Model.SubTitle)) 
+        {
+            <small class="text-muted">(@Model.SubTitle)</small>
+        }
+        </h3>
+        <span class='badge @(Model.IsActive ? "bg-primary" : "bg-info")'>
+            @(Model.IsActive ? "Aktif" : "Pasif")
+        </span>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Satın Alış Fiyatı</dt>
+            <dd class="col-sm-9">@UIToolHelper.RenderTL(Model.PurchasePrice)</dd>
+
+            <dt class="col-sm-3">Satış Fiyatı</dt>
+            <dd class="col-sm-9">@UIToolHelper.RenderTL(Model.SalePrice)</dd>
+
+            <dt class="col-sm-3">Kategori</dt>
+            <dd class="col-sm-9">@Model.Category?.Title</dd>
+
+            <dt class="col-sm-3">Kod</dt>
+            <dd class="col-sm-9">@Model.TvCode</dd>
+
+            <dt class="col-sm-3">Oluşturulma</dt>
+            <dd class="col-sm-9">@Model.CreatedDate.ToString("dd.MM.yyyy HH:mm")</dd>
+
+            <dt class="col-sm-3">Güncellenme</dt>
+            <dd class="col-sm-9">@Model.UpdatedDate.ToString("dd.MM.yyyy HH:mm")</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="row">
+        <div class="col-12 col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Fiyat Geçmişi (Saatlik)</h3>
+                </div>
+                <div class="card-body">
+                    <canvas id="price-history-hourly"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Fiyat Geçmişi (Gunluk)</h3>
+                </div>
+                <div class="card-body">
+                    <canvas id="price-history-daily"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Fiyat Geçmişi (Haftalik)</h3>
+                </div>
+                <div class="card-body">
+                    <canvas id="price-history-weekly"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Fiyat Geçmişi (Aylik)</h3>
+                </div>
+                <div class="card-body">
+                    <canvas id="price-history-monthly"></canvas>
+                </div>
+            </div>
+        </div>   
+        <div class="col-12 col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Fiyat Geçmişi (Yillik)</h3>
+                </div>
+                <div class="card-body">
+                    <canvas id="price-history-yearly"></canvas>
+                </div>
+            </div>
+        </div>   
+</div>
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        $(document).ready(function () {
+            const hourlyPriceCtx = document.getElementById('price-history-hourly').getContext('2d')
+
+            const hourlyPriceChart = new Chart(hourlyPriceCtx, {
+                type: 'line',
+                data: {
+                    labels: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesHourly?.Select(x => x.UpdatedDate.ToString("yyyy-MM-dd HH:mm")))),
+                    datasets: [
+                        {
+                            label: 'Alış Fiyatı',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesHourly?.Select(x => x.NewPurchasePrice))),
+                            fill: false
+                        },
+                        {
+                            label: 'Satış Fiyatı',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesHourly?.Select(x => x.NewSalePrice))),
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            })
+
+            const dailyPriceCtx = document.getElementById('price-history-daily').getContext('2d')
+
+            const dailyPriceChart = new Chart(dailyPriceCtx, {
+                type: 'line',
+                data: {
+                    labels: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesDaily?.Select(x => x.Date.ToString("yyyy-MM-dd")))),
+                    datasets: [
+                        {
+                            label: 'Alış Fiyatı',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesDaily?.Select(x => x.NewPurchasePrice))),
+                            fill: false
+                        },
+                        {
+                            label: 'Satış Fiyatı',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesDaily?.Select(x => x.NewSalePrice))),
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            })
+
+            const weeklyPriceCtx = document.getElementById('price-history-weekly').getContext('2d')
+
+            const weeklyPriceChart = new Chart(weeklyPriceCtx, {
+                type: 'line',
+                data: {
+                    labels: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesWeekly?.Select(x => x.Date.ToString("yyyy-MM-dd")))),
+                    datasets: [
+                        {
+                            label: 'Alış Fiyatı',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesWeekly?.Select(x => x.NewPurchasePrice))),
+                            fill: false
+                        },
+                        {
+                            label: 'Satış Fiyatı',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesWeekly?.Select(x => x.NewSalePrice))),
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            })
+
+            const monthlyPriceCtx = document.getElementById('price-history-monthly').getContext('2d')
+
+            const monthlyPriceChart = new Chart(monthlyPriceCtx, {
+                type: 'line',
+                data: {
+                    labels: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesMonthly?.Select(x => x.Date.ToString("yyyy-MM")))),
+                    datasets: [
+                        {
+                            label: 'Alış Fiyatı',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesMonthly?.Select(x => x.NewPurchasePrice))),
+                            fill: false
+                        },
+                        {
+                            label: 'Satış Fiyatı',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesMonthly?.Select(x => x.NewSalePrice))),
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            })
+
+            const yearlyPriceCtx = document.getElementById('price-history-yearly').getContext('2d')
+
+            const yearlyPriceChart = new Chart(yearlyPriceCtx, {
+                type: 'line',
+                data: {
+                    labels: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesYearly?.Select(x => x.Date.ToString("yyyy")))),
+                    datasets: [
+                        {
+                            label: 'Alış Fiyatı',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesYearly?.Select(x => x.NewPurchasePrice))),
+                            fill: false
+                        },
+                        {
+                            label: 'Satış Fiyatı',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesYearly?.Select(x => x.NewSalePrice))),
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            })
+        });
+    </script>
+}
+
+@* @if (Model.CurrencyHistories is not null && Model.CurrencyHistories.Any())
+{
+    <div class="row">
+        @foreach (var group in new[] { "hourly", "daily", "weekly", "monthly" })
+        {
+            <div class="col-12 col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            @{
+                                var title = group switch
+                                {
+                                    "hourly" => "Saatlik",
+                                    "daily" => "Günlük",
+                                    "weekly" => "Haftalık",
+                                    "monthly" => "Aylık",
+                                    _ => ""
+                                };
+                            }
+                            Fiyat Geçmişi (@title)
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chart-@group"></canvas>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const groupData = {
+            hourly: {},
+            daily: {},
+            weekly: {},
+            monthly: {}
+        };
+
+        const histories = @Html.Raw(Json.Serialize(Model.CurrencyHistories));
+
+        function groupBy(histories, keyFn) {
+            const map = {};
+            for (const item of histories) {
+                const key = keyFn(new Date(item.updatedDate));
+                if (!map[key]) map[key] = [];
+                map[key].push(item);
+            }
+            return map;
+        }
+
+        function average(items, field) {
+            const total = items.reduce((sum, i) => sum + i[field], 0);
+            return (total / items.length).toFixed(2);
+        }
+
+        const groups = {
+            hourly: date => date.toLocaleString("tr-TR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }),
+            daily: date => date.toLocaleDateString("tr-TR"),
+            weekly: date => {
+                const first = new Date(date.getFullYear(), 0, 1);
+                const week = Math.ceil((((date - first) / 86400000) + first.getDay() + 1) / 7);
+                return `${date.getFullYear()} - ${week}.Hafta`;
+            },
+            monthly: date => `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`
+        };
+
+        for (const [key, grouper] of Object.entries(groups)) {
+            const map = groupBy(histories, grouper);
+            groupData[key] = {
+                labels: Object.keys(map),
+                purchasePrices: Object.values(map).map(g => average(g, 'newPurchasePrice')),
+                salePrices: Object.values(map).map(g => average(g, 'newSalePrice'))
+            };
+        }
+
+        for (const key of Object.keys(groupData)) {
+            const ctx = document.getElementById(`chart-${key}`).getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: groupData[key].labels,
+                    datasets: [
+                        {
+                            label: 'Alış Fiyatı',
+                            data: groupData[key].purchasePrices,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            fill: false
+                        },
+                        {
+                            label: 'Satış Fiyatı',
+                            data: groupData[key].salePrices,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            ticks: {
+                                autoSkip: true,
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        },
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+} *@

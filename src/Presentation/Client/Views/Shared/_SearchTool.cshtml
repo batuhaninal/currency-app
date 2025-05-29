@@ -8,4 +8,11 @@
 <form method="get" class="d-inline">
     <label class="me-2">Arama:</label>
     <input type="text" name="condition" value="@condition" class="form-control d-inline w-auto" />
+    @foreach (var param in Context.Request.Query)
+    {
+        if (param.Key != "condition" && param.Key != "pageIndex")
+        {
+            <input type="hidden" name="@param.Key" value="@param.Value" />
+        }
+    }
 </form>

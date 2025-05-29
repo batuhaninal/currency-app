@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
 using API.Handlers;
+using Application.Models.Constants.Roles;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -41,7 +42,10 @@ builder.Services.AddAuthentication(opt =>
     };
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy(AppRoles.Admin, policy => 
+        policy
+            .RequireRole(AppRoles.Admin));
 
 var app = builder.Build();
 

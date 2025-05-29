@@ -1,6 +1,8 @@
 @model PaginationResult<CurrencyItemResponse>
 @{
     Layout = "_Layout";
+    var data = ViewBag.CategoryTool as List<CategoryToolResponse>;
+    SelectList categoryTool = new SelectList(data, "CategoryId", "Title");
 }
 
 <div class="row">
@@ -11,6 +13,12 @@
           <span class="badge rounded-pill bg-success p-2" role="button" id="add-currency-btn" title="Birim ekle">
             <i class="fa-solid fa-plus"></i>
           </span>
+          <button type="button" class="badge rounded-pill bg-info p-2 border-0" id="filter-currency-btn" title="Birim Filtrele" data-bs-toggle="modal" data-bs-target="#filter-currency-popup">
+            <i class="fa-solid fa-filter"></i>
+          </button>
+          <a asp-area="panel" asp-controller="Currencies" asp-action="Index"  class="badge rounded-pill bg-danger p-2 border-0" id="filter-currency-btn" title="Filtreleri temizle">
+            <i class="fa-solid fa-filter"></i>
+          </a>
         </div>
         <h3 class="card-title">Birimler Tablosu</h3>
         @await Html.PartialAsync("_SearchTool", new SearchModel())
@@ -20,14 +28,14 @@
     <div class="card-body">
       <table class="table table-bordered">
         <thead>
-          <tr>
+          <tr class="text-center align-middle">
             <th>
               #
               @await Html.PartialAsync("_OrderTool", new SortModel("id"))
             </th>
             <th>
               Kategorisi
-              @await Html.PartialAsync("_OrderTool", new SortModel("categoryTitle"))
+              @await Html.PartialAsync("_OrderTool", new SortModel("categoryTitle", true))
             </th>
             <th>
               Birim Kisaltmasi
@@ -38,12 +46,16 @@
               @await Html.PartialAsync("_OrderTool", new SortModel("subTitle"))
             </th>
             <th>
-              Satin Alinma Fiyati
+              Alis Fiyati
               @await Html.PartialAsync("_OrderTool", new SortModel("purchasePrice"))
             </th>
             <th>
               Satis Fiyati
               @await Html.PartialAsync("_OrderTool", new SortModel("salePrice"))
+            </th>
+            <th>
+              Trading View Kodu
+              @await Html.PartialAsync("_OrderTool", new SortModel("tvCode"))
             </th>
             <th>
               Durum
@@ -55,7 +67,7 @@
         <tbody>
           @foreach (var item in Model.Items)
           {
-            <tr class="align-middle">
+            <tr class="text-center align-middle">
               <td>
                 @item.CurrencyId
               </td>
@@ -75,12 +87,18 @@
                 @UIToolHelper.RenderTL(item.SalePrice)
               </td>
               <td>
+                @item.TvCode
+              </td>
+              <td>
                 <span class='badge @(item.IsActive ? "bg-primary" : "bg-info")'>
                   @(item.IsActive ? "Aktif" : "Pasif")
                 </span>
               </td>
               <td>
                 <div class="d-inline-flex gap-1">
+                  <a class="badge rounded-pill bg-info p-2" asp-area="panel" asp-controller="Currencies" asp-action="Info" asp-route-currencyId="@item.CurrencyId" title="@item.Title adli birim fiyat gecmisi">
+                    <i class="fa-solid fa-landmark"></i>
+                  </a>
                   <span class="badge rounded-pill bg-dark p-2 update-currencyPrice-btn" role="button"
                     data-currency-id="@item.CurrencyId" title="@item.Title adli birim fiyatini guncelle">
                     <i class="fa-solid fa-tag"></i>
@@ -114,6 +132,8 @@
 
 <div id="empty-container"></div>
 
+@await Html.PartialAsync("_CurrencyFilterPopup", new CurrencyFilterViewModel(categoryTool))
+
 @section Scripts {
   <script>
     $(document).ready(function () {
@@ -146,6 +166,15 @@
         const id = $(this).data("currency-id");
         const fetchUrl = '@Url.Action("DeleteOperation", "Currencies", new { Area = "panel" })';
         deletePopup(fetchUrl + "?currencyId=" + id)
+      });
+
+      $('#filter-currency-popup').on('shown.bs.modal', function () {
+        $('.js-category-tool-multiple').select2({
+            dropdownParent: $('#filter-currency-popup'),
+            width: '100%',
+            placeholder: "Kategori seçiniz",
+            allowClear: true
+        });
       });
 
     });

@@ -7,6 +7,7 @@ using Application.CQRS.Queries.Categories.Info;
 using Application.CQRS.Queries.Categories.List;
 using Application.CQRS.Queries.Currencies.Info;
 using Application.CQRS.Queries.Currencies.List;
+using Application.CQRS.Queries.Currencies.WithHistoryInfo;
 using Application.CQRS.Queries.PriceInfo;
 using Application.CQRS.Queries.Tools;
 using Application.CQRS.Queries.Tools.GetCurrencyToolList;
@@ -55,6 +56,9 @@ namespace Application.CQRS.Queries
 
             services.AddScoped<CurrencyInfoQuery>();
             services.AddScoped<IQueryHandler<CurrencyInfoQuery, IBaseResult>, CurrencyInfoQueryHandler>();
+
+            services.AddScoped<CurrencyWithHistoryInfoQuery>();
+            services.AddScoped<IQueryHandler<CurrencyWithHistoryInfoQuery, IBaseResult>, CurrencyWithHistoryInfoQueryHandler>();
 
             services.AddScoped<CurrencyPriceInfoQuery>();
             services.AddScoped<IQueryHandler<CurrencyPriceInfoQuery, IBaseResult>, CurrencyPriceInfoQueryHandler>();

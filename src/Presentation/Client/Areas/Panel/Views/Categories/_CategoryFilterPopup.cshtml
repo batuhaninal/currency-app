@@ -1,0 +1,42 @@
+@model CategoryFilterViewModel
+@{
+    var query = Context.Request.Query.ToDictionary(k => k.Key.ToLower(), v => v.Value);
+    Model.IsActive = query.ContainsKey("isactive");
+}
+
+<div class="modal fade" id="filter-category-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class='modal-header bg-info'>
+                <h5 class="modal-title">Birim Guncelle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="get" class="d-inline">
+                <div class="modal-body" id="modal-body">
+                    <div class="mb-3">
+                        <label for="isActiveFilter" class="form-label">Durum</label>
+                        <select id="isActiveFilter" asp-for="IsActive" class="form-select">
+                            <option value="">
+                                Seçiniz
+                            </option>
+                            <option value="true">
+                                Aktif
+                            </option>
+                            <option value="false">
+                                Pasif
+                            </option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                    <a asp-area="panel" asp-controller="Currencies" asp-action="Index"
+                        class="btn btn-danger">Temizle</a>
+                    <button type="submit" class="btn btn-info">Filtreleri Uygula</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

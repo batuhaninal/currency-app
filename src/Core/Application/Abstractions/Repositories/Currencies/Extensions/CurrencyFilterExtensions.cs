@@ -44,7 +44,7 @@ namespace Application.Abstractions.Repositories.Currencies.Extensions
         public static IQueryable<Currency> OrderQuery(this IQueryable<Currency> source, string? orderBy)
         {
             if (string.IsNullOrWhiteSpace(orderBy))
-                return source;
+                return source.OrderBy(x=> x.Id);
 
             string normalizedConditiom = orderBy.TrimStart().TrimEnd().ToLower();
             
@@ -52,7 +52,11 @@ namespace Application.Abstractions.Repositories.Currencies.Extensions
 
             Expression<Func<Currency, object>> keySelector = orderByQuery[0] switch
             {
-                "title" => currency => currency.Title,
+                "title" => currency => currency.Title.ToLower(),
+                "subTitle" => currency => currency.SubTitle.ToLower(),
+                "tvCode" => currency => currency.TVCode.ToLower(),
+                "purchasePrice" => currency => currency.PurchasePrice,
+                "salePrice" => currency => currency.SalePrice,
                 "created" => currency => currency.CreatedDate,
                 "isActive" => currency => currency.IsActive,
                 _ => currency => currency.Id
@@ -77,7 +81,11 @@ namespace Application.Abstractions.Repositories.Currencies.Extensions
 
             Expression<Func<Currency, object>> keySelector = orderByQuery[0] switch
             {
-                "title" => currency => currency.Title,
+                "title" => currency => currency.Title.ToLower(),
+                "subTitle" => currency => currency.SubTitle.ToLower(),
+                "tvCode" => currency => currency.TVCode.ToLower(),
+                "purchasePrice" => currency => currency.PurchasePrice,
+                "salePrice" => currency => currency.SalePrice,
                 "created" => currency => currency.CreatedDate,
                 "isActive" => currency => currency.IsActive,
                 _ => currency => currency.Id

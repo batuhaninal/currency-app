@@ -6,6 +6,7 @@ using Application.CQRS.Commands.Currencies.UpdateValue;
 using Application.CQRS.Commons.Services;
 using Application.CQRS.Queries.Currencies.Info;
 using Application.CQRS.Queries.Currencies.List;
+using Application.CQRS.Queries.Currencies.WithHistoryInfo;
 using Application.CQRS.Queries.PriceInfo;
 using Microsoft.AspNetCore.Http;
 
@@ -20,6 +21,7 @@ namespace Application.Abstractions.Handlers
         Task<IResult> UpdateValue(UpdateCurrencyValueCommand command, Dispatcher dispatcher, CancellationToken cancellationToken);
         Task<IResult> List(CurrencyListQuery query, Dispatcher dispatcher, CancellationToken cancellationToken); 
         Task<IResult> Info(CurrencyInfoQuery query, Dispatcher dispatcher, CancellationToken cancellationToken);  
+        Task<IResult> HistoryInfo(CurrencyWithHistoryInfoQuery query, Dispatcher dispatcher, CancellationToken cancellationToken);  
         Task<IResult> PriceInfo(CurrencyPriceInfoQuery query, Dispatcher dispatcher, CancellationToken cancellationToken);  
     }
 }

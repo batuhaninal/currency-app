@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Client.Controllers
 {
-    public class AuthController : Controller
+    public class AuthController : BaseController
     {
         private readonly IAuthService _authService;
 
@@ -51,7 +51,7 @@ namespace Client.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _authService.RegisterAsync(HttpContext, input);
-                if (result.Success)
+                if (!result.Success)
                 {
                     ModelState.AddModelError("", result.Message ?? "Beklenmeyen Hata!");
                     return View();
@@ -61,6 +61,16 @@ namespace Client.Controllers
 
             }
             return View(input);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            var result = await _authService.LogoutAsync(HttpContext);
+            if (!this.ShowResultMessage(result))
+                return Redirect(HttpContext.Request.Path);
+
+            return RedirectToAction(nameof(AuthController.Login), "Auth");
         }
     }    
 }

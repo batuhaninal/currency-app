@@ -16,7 +16,7 @@
             <form asp-area="Panel" asp-controller="Currencies" asp-action="UpdateOperation" asp-route-currencyId="@Model.CurrencyId" method="post">
                 <div class="modal-body" id="modal-body">
                     @await Html.PartialAsync("_DropdownTool", new DropdownModel("Kategori Seciniz", "category-dropdown",
-                    "CategoryId", "category-tool", categoryTool, Model.Category.CategoryId.ToString()))
+                    "CategoryId[]", "js-category-tool", categoryTool, false, new [] {Model.Category.CategoryId.ToString()}))
                     <div class="mb-3">
                         <label asp-for="Title" class="form-label">Birim Adı</label>
                         <input type="text" class="form-control" id="currency-title-add" asp-for="Title" />
@@ -45,7 +45,7 @@
 
 <script>
     $(document).ready(function () {
-        $('.category-tool').select2({
+        $('.js-category-tool').select2({
             dropdownParent: $('#update-currency-popup'),
             width: '100%',
             placeholder: "Kategori seçiniz",

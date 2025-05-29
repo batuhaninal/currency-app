@@ -32,6 +32,12 @@ namespace Client.Services.Currencies
             return result;
         }
 
+        public async Task<BaseResult<CurrencyWithHistoryResponse>> HistoryInfoAsync(int currencyId, CurrencyHistoryRequestParameter parameter, CancellationToken cancellationToken = default)
+        {
+            BaseResult<CurrencyWithHistoryResponse> result = await this.GetAsync<CurrencyWithHistoryResponse>(_httpClient, $"history-info/{currencyId}", parameter.ToQueryString(), cancellationToken);
+            return result;
+        }
+
         public async Task<BaseResult<CurrencyInfoResponse>> InfoAsync(int currencyId, CancellationToken cancellationToken = default)
         {
             BaseResult<CurrencyInfoResponse> result = await this.GetAsync<CurrencyInfoResponse>(_httpClient, $"{currencyId}", null, cancellationToken);

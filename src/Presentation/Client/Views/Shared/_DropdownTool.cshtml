@@ -5,18 +5,52 @@
 
 <div class="mb-3">
     <label for="@Model.Id" class="form-label">@Model.Title</label>
-    <select class="form-select @Model.Class" id="@Model.Id" name="@Model.Name">
+    @if(Model.IsMultiple)
+    {
+        <select class="form-select @Model.Class" id="@Model.Id" name="@Model.Name" multiple="multiple">
         <option value="0">Seçiniz</option>
         @foreach (var item in Model.Data)
         {
-            if(item.Value == Model.SelectedData)
+            if (Model.SelectedDatas != null && Model.SelectedDatas.Any())
             {
-                <option value="@item.Value" selected>@item.Text</option>
+                if (Model.SelectedDatas.Contains(item.Value))
+                {
+                    <option value="@item.Value" selected>@item.Text</option>
+                }
+                else
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
             }
             else
             {
                 <option value="@item.Value">@item.Text</option>
-            }          
+            }
         }
     </select>
+    }
+    else
+    {
+        <select class="form-select @Model.Class" id="@Model.Id" name="@Model.Name">
+        <option value="0">Seçiniz</option>
+        @foreach (var item in Model.Data)
+        {
+            if (Model.SelectedDatas != null && Model.SelectedDatas.Any())
+            {
+                if (Model.SelectedDatas.Contains(item.Value))
+                {
+                    <option value="@item.Value" selected>@item.Text</option>
+                }
+                else
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            }
+            else
+            {
+                <option value="@item.Value">@item.Text</option>
+            }
+        }
+    </select>
+    }
 </div>

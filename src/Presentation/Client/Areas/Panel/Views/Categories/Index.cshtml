@@ -12,6 +12,12 @@
             data-bs-target="#add-category-popup" title="Kategori ekle">
             <i class="fa-solid fa-plus"></i>
           </span>
+          <button type="button" class="badge rounded-pill bg-info p-2 border-0" id="filter-currency-btn" title="Birim Filtrele" data-bs-toggle="modal" data-bs-target="#filter-category-popup">
+            <i class="fa-solid fa-filter"></i>
+          </button>
+          <a asp-area="panel" asp-controller="Categories" asp-action="Index"  class="badge rounded-pill bg-danger p-2 border-0" id="filter-currency-btn" title="Filtreleri temizle">
+            <i class="fa-solid fa-filter"></i>
+          </a>
         </div>
         <h3 class="card-title">Kategoriler Tablosu</h3>
         @await Html.PartialAsync("_SearchTool", new SearchModel())
@@ -21,7 +27,7 @@
     <div class="card-body">
       <table class="table table-bordered">
         <thead>
-          <tr>
+          <tr class="text-center align-middle">
             <th>
               #
               @await Html.PartialAsync("_OrderTool", new SortModel("id"))
@@ -40,7 +46,7 @@
         <tbody>
           @foreach (var item in Model.Items)
           {
-            <tr class="align-middle">
+            <tr class="text-center align-middle">
               <td>
                 @item.CategoryId
               </td>
@@ -84,6 +90,7 @@
 <div id="empty-container"></div>
 
 @await Html.PartialAsync("_CategoryAddPopup.cshtml", new CategoryInput())
+@await Html.PartialAsync("_CategoryFilterPopup.cshtml", new CategoryFilterViewModel())
 
 @section Scripts {
   <script>

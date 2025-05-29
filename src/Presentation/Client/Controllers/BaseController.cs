@@ -22,5 +22,16 @@ namespace Client.Controllers
 
             return state;
         }
+
+        public virtual bool ShowResultMessage<T>(BaseResult<T> result)
+        {
+            bool valid = result.Success;
+            if (valid)
+                TempData["Success"] = result.Message ?? "Basarili";
+            else
+                TempData["Error"] = result.Message ?? "Beklenmeyen Hata!";
+
+            return valid;
+        }
     }
 }

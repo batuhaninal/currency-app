@@ -2,21 +2,55 @@
 @using Microsoft.AspNetCore.WebUtilities
 
 @{
-    var query = Context.Request.Query.ToDictionary(k => k.Key, v => v.Value.ToString());
+    bool isCurrent = false;
+    bool isAsc = false;
+    bool isDesc = false;
+    string ascUrl = "";
+    string descUrl = "";
+    
+    if (Model.Disable)
+    {
 
-    var currentOrder = query.ContainsKey("orderBy") ? query["orderBy"] : "";
-    var isCurrent = currentOrder.StartsWith(Model.Field + "_");
+    }
+    else
+    {
+        var query = Context.Request.Query.ToDictionary(k => k.Key, v => v.Value.ToString());
 
-    var currentDirection = isCurrent ? currentOrder.Split('_')[1] : "";
-    var newDirection = isCurrent && currentDirection == "asc" ? "desc" : "asc";
+        string? currentOrder = query.ContainsKey("orderBy") ? query["orderBy"] : "";
+        isCurrent = currentOrder.StartsWith(Model.Field);
 
-    query["orderBy"] = $"{Model.Field}_{newDirection}";
-    var newUrl = QueryHelpers.AddQueryString(Context.Request.Path, query);
+        string? currentDirection = isCurrent
+        ? currentOrder.Split('_')[1].ToLower()
+        : "";
+
+        isAsc = isCurrent && currentDirection == "asc";
+        isDesc = isCurrent && currentDirection == "desc";
+
+        Dictionary<string, string>? ascQuery = new Dictionary<string, string>(query);
+        ascQuery["orderBy"] = $"{Model.Field}_asc";
+        ascUrl = QueryHelpers.AddQueryString(Context.Request.Path, ascQuery);
+
+        Dictionary<string, string>? descQuery = new Dictionary<string, string>(query);
+        descQuery["orderBy"] = $"{Model.Field}_desc";
+        descUrl = QueryHelpers.AddQueryString(Context.Request.Path, descQuery);
+    }
 }
 
 <span class="sort-icons ms-1">
-    <a href="@newUrl" class="text-decoration-none">
-        <i class="bi bi-caret-up-fill @(isCurrent && currentDirection == "asc" ? "text-primary" : "text-muted")"></i>
-        <i class="bi bi-caret-down-fill @(isCurrent && currentDirection == "desc" ? "text-primary" : "text-muted")"></i>
-    </a>
+    @if (Model.Disable)
+    {
+        <span class="text-muted">
+            <i class="bi bi-caret-up-fill me-1"></i>
+            <i class="bi bi-caret-down-fill"></i>
+        </span>
+    }
+    else
+    {
+        <a href="@ascUrl" class="text-decoration-none me-1">
+            <i class="bi bi-caret-up-fill @(isCurrent && isAsc ? "text-primary" : "text-muted")"></i>
+        </a>
+        <a href="@descUrl" class="text-decoration-none">
+            <i class="bi bi-caret-down-fill @(isCurrent && isDesc ? "text-primary" : "text-muted")"></i>
+        </a>
+    }
 </span>

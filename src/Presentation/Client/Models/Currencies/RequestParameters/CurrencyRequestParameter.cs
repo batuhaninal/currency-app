@@ -8,7 +8,9 @@ namespace Client.Models.Currencies.RequestParameters
         {
 
         }
-        
+
+        public int[]? CategoryId { get; set; }
+
         internal KeyValuePair<string, object>[] ToQueryString()
         {
             List<KeyValuePair<string, object>> result = new();
@@ -27,6 +29,14 @@ namespace Client.Models.Currencies.RequestParameters
 
             if (this.IsActive != null)
                 result.Add(new KeyValuePair<string, object>("isActive", this.IsActive.Value));
+
+            if (this.CategoryId != null && this.CategoryId.Any())
+            {
+                foreach (var categoryId in this.CategoryId)
+                {
+                    result.Add(new KeyValuePair<string, object>("categoryId", categoryId));
+                }
+            }
 
             return result.ToArray();
         }

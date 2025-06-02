@@ -1,0 +1,77 @@
+@model List<UserAssetSummaryResponse>
+@{
+    Layout = null;
+    decimal currencyPTotal = Model.Sum(x=> x.CurrentPurchasePriceTotal);
+    decimal currencySTotal = Model.Sum(x=> x.CurrentSalePriceTotal);
+    decimal pTotal = Model.Sum(x=> x.TotalPurchasePrice);
+    decimal sTotal = Model.Sum(x=> x.TotalSalePrice);
+    decimal cpTotal = Model.Sum(x=> x.PurchasedPurchasePriceTotal);
+    decimal csTotal = Model.Sum(x=> x.PurchasedSalePriceTotal);
+}
+
+<div class="modal fade" id="user-summary-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class='modal-header bg-primary'>
+                <h5 class="modal-title text-white">Kullanici Varlik Ozeti</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+                <div class="modal-body" id="modal-body">
+                    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive mb-3">
+            <table class="table table-sm table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Birim</th>
+                        <th>Miktar</th>
+                        <th>Guncel Piyasa Alış</th>
+                        <th>Guncel Piyasa Satış</th>
+                        <th>Eklendigi Tarih Piyasa Alış</th>
+                        <th>Eklendigi Tarih Piyasa Satış</th>
+                        <th>Satin Alindigi Toplam Alış</th>
+                        <th>Satin Alindigi Toplam Satış</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.CurrencyTitle</td>
+                            <td>@item.TotalCount</td>
+                            <td>@item.CurrentPurchasePriceTotal.ToString("N2")</td>
+                            <td>@item.CurrentSalePriceTotal.ToString("N2")</td>
+                            <td>@item.PurchasedPurchasePriceTotal.ToString("N2")</td>
+                            <td>@item.PurchasedSalePriceTotal.ToString("N2")</td>
+                            <td>@item.TotalPurchasePrice.ToString("N2")</td>
+                            <td>@item.TotalSalePrice.ToString("N2")</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot class="table-primary">
+                    <tr>
+                        <th>#</th>
+                        <th>Miktar</th>
+                        <th>@currencyPTotal.ToString("N2")</th>
+                        <th>@currencySTotal.ToString("N2")</th>
+                        <th>@cpTotal.ToString("N2")</th>
+                        <th>@csTotal.ToString("N2")</th>
+                        <th>@pTotal.ToString("N2")</th>
+                        <th>@sTotal.ToString("N2")</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">Varlık özeti bulunamadı.</p>
+    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                </div>
+        </div>
+    </div>
+</div>

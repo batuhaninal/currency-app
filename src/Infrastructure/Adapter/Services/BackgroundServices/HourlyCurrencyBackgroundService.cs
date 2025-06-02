@@ -88,11 +88,11 @@ namespace Adapter.Services.BackgroundServices
                     currency.PurchasePrice = tradingViewResponse.D[0];
                     currency.SalePrice = tradingViewResponse.D[0];
 
-                    unitOfWork.CurrencyWriteRepository.Update(currency);
+                    currency = unitOfWork.CurrencyWriteRepository.Update(currency);
 
                     await unitOfWork.SaveChangesAsync(cancellationToken);
 
-                    IBaseResult historyResult = await unitOfWork.CurrencyHistoryRule.CheckCurrencyCountAsync(currency.Id, DateOnly.FromDateTime(currency.UpdatedDate), cancellationToken: cancellationToken);
+                    IBaseResult historyResult = await unitOfWork.CurrencyHistoryRule.CheckCurrencyCountValidAsync(currency.Id, DateOnly.FromDateTime(currency.UpdatedDate), cancellationToken: cancellationToken);
                     if (historyResult.Success)
                     {
                         CurrencyHistoryPriceDto? currencyHistoryPriceDto = await unitOfWork.CurrencyHistoryReadRepository
@@ -118,7 +118,7 @@ namespace Adapter.Services.BackgroundServices
                         }
                         else
                         {
-                            await unitOfWork.CurrencyHistoryWriteRepository.CreateAsync(new CurrencyHistory
+                            _ = await unitOfWork.CurrencyHistoryWriteRepository.CreateAsync(new CurrencyHistory
                             {
                                 CurrencyId = currency.Id,
                                 Date = DateOnly.FromDateTime(currency.UpdatedDate),

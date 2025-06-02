@@ -1,0 +1,292 @@
+@using Helpers
+@model PaginationResult<UserAssetItemResponse>
+@{
+    Layout = "_Layout";
+
+    var data = ViewBag.CurrencyTool as List<CurrencyToolResponse>;
+    SelectList currencyTool = new SelectList(data, "CurrencyId", "Title");
+
+    decimal currencyPTotal = Model.Items.Sum(x=> x.Count * x.Currency.PurchasePrice);
+    decimal currencySTotal = Model.Items.Sum(x=> x.Count * x.Currency.SalePrice);
+    decimal pTotal = Model.Items.Sum(x=> x.Count * x.PurchasePrice);
+    decimal sTotal = Model.Items.Sum(x=> x.Count * x.SalePrice);
+    decimal cpTotal = Model.Items.Sum(x=> x.Count * x.CurrentPurchasePrice);
+    decimal csTotal = Model.Items.Sum(x=> x.Count * x.CurrentSalePrice);
+}
+
+<div class="row">
+  <div class="card mb-4">
+    <div class="card-header">
+      <div class="d-flex justify-content-between">
+        <div class="btn-group mb-2" role="group" aria-label="Basic mixed styles example">
+          <span class="badge rounded-pill bg-success p-2" role="button" id="add-asset-btn" title="Birim ekle">
+            <i class="fa-solid fa-plus"></i>
+          </span>
+          <span class="badge rounded-pill bg-primary p-2" role="button" id="user-summary-btn">
+            <i class="fa-solid fa-calculator"></i>
+          </span>
+          <button type="button" class="badge rounded-pill bg-info p-2 border-0" id="filter-asset-btn" title="Birim Filtrele" data-bs-toggle="modal" data-bs-target="#filter-asset-popup">
+            <i class="fa-solid fa-filter"></i>
+          </button>
+          <a asp-area="" asp-controller="Assets" asp-action="Index"  class="badge rounded-pill bg-danger p-2 border-0" id="filter-asset-btn" title="Filtreleri temizle">
+            <i class="fa-solid fa-filter"></i>
+          </a>
+        </div>
+        <h3 class="card-title">Birimler Tablosu</h3>
+        @await Html.PartialAsync("_SearchTool", new SearchModel())
+      </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+      <table class="table table-bordered">
+        <thead>
+          <tr class="text-center align-middle">
+            <th>
+              #
+              @await Html.PartialAsync("_OrderTool", new SortModel("id"))
+            </th>
+            <th>
+              Birim Adi
+              @await Html.PartialAsync("_OrderTool", new SortModel("currencyTitle", true))
+            </th>
+            <th>
+              Miktari
+              @await Html.PartialAsync("_OrderTool", new SortModel("count"))
+            </th>
+            <th>
+              Guncel Piyasa Alis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("currencyPurchasePrice", true))
+            </th>
+            <th>
+              Guncel Piyasa Satis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("currencySalePrice", true))
+            </th>
+            <th>
+              Eklendigi Tarihteki Piyasa Alis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("currentPurchasePrice"))
+            </th>
+            <th>
+              Eklendigi Tarihteki Piyasa Satis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("currentSalePrice"))
+            </th>
+            <th>
+              Satin Alindigi Satis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("purchasePrice"))
+            </th>
+            <th>
+              Satin Alindigi Alis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("salePrice"))
+            </th>
+            <th>
+              Satin Alinma Tarihi
+              @await Html.PartialAsync("_OrderTool", new SortModel("purchaseDate"))
+            </th>
+            <th>
+              Eklenme Tarihi
+              @await Html.PartialAsync("_OrderTool", new SortModel("createdDate"))
+            </th>
+            <th style="width: 40px">Islemler</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var item in Model.Items)
+          {
+            <tr class="text-center align-middle">
+              <td>
+                @item.AssetId
+              </td>
+              <td>
+                @(item.Currency != null ? item.Currency.Title : "")
+              </td>
+              <td>
+                @item.Count
+              </td>
+              <td>
+                @if(item.Currency != null)
+                {
+                    <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.Currency.PurchasePrice)</b></p>
+                    <p>@string.Format("({0} x {1}) = ",item.Count, UIToolHelper.RenderTL(item.Currency.PurchasePrice))<b style="color:#228D57;">@UIToolHelper.RenderTL(item.Count * item.Currency.PurchasePrice)</b></p>
+                }
+                else
+                {
+                    <p>Veri Yok</p>
+                }
+              </td>
+              <td>
+                @if(item.Currency != null)
+                {
+                    <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.Currency.SalePrice)</b></p>
+                    <p>@string.Format("({0} x {1}) = ",item.Count, UIToolHelper.RenderTL(item.Currency.SalePrice))<b style="color:#228D57;">@UIToolHelper.RenderTL(item.Count * item.Currency.SalePrice)</b></p>
+                }
+                else
+                {
+                    <p>Veri Yok</p>
+                }
+              </td>
+              <td>
+                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.CurrentPurchasePrice)</b></p>
+                <p>@string.Format("({0} x {1}) = ",item.Count, UIToolHelper.RenderTL(item.CurrentPurchasePrice))<b style="color:#228D57;">@UIToolHelper.RenderTL(item.Count * item.CurrentPurchasePrice)</b></p>
+              </td>
+              <td>
+                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.CurrentSalePrice)</b></p>
+                <p>@string.Format("({0} x {1}) = ",item.Count, UIToolHelper.RenderTL(item.CurrentSalePrice))<b style="color:#228D57;">@UIToolHelper.RenderTL(item.Count * item.CurrentSalePrice)</b></p>
+              </td>
+              <td>
+                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.PurchasePrice)</b></p>
+                <p>@string.Format("({0} x {1}) = ",item.Count, UIToolHelper.RenderTL(item.PurchasePrice))<b style="color:#228D57;">@UIToolHelper.RenderTL(item.Count * item.PurchasePrice)</b></p>
+              </td>
+              <td>
+                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.SalePrice)</b></p>
+                <p>@string.Format("({0} x {1}) = ",item.Count, UIToolHelper.RenderTL(item.SalePrice))<b style="color:#228D57;">@UIToolHelper.RenderTL(item.Count * item.SalePrice)</b></p>
+              </td>
+              <td>
+                @UIToolHelper.RenderDate(item.PurchaseDate)
+              </td>
+              <td>
+                @UIToolHelper.RenderDateTime(item.CreatedDate)
+              </td>
+              <td>
+                 <div class="d-inline-flex gap-1">
+                  <a class="badge rounded-pill bg-info p-2" asp-area="" asp-controller="Assets" asp-action="Info" asp-route-assetId="@item.AssetId" title="@item.AssetId idli birim portfoyu">
+                    <i class="fa-solid fa-landmark"></i>
+                  </a>
+                  @* <span class="badge rounded-pill bg-dark p-2 update-currencyPrice-btn" role="button"
+                    data-currency-id="@item.CurrencyId" title="@item.Title adli birim fiyatini guncelle">
+                    <i class="fa-solid fa-tag"></i>
+                  </span> *@
+                  <span class="badge rounded-pill bg-warning p-2 update-asset-btn" role="button"
+                    data-asset-id="@item.AssetId" title="@item.AssetId idli varligi guncelle">
+                    <i class="fa-solid fa-pencil"></i>
+                  </span>
+                  @* <span class='badge rounded-pill @(item.IsActive ? "bg-info" : "bg-primary") p-2 change-currency-status-btn'
+                    role="button" data-currency-id="@item.CurrencyId"
+                    title='@item.Title adli kategorinin durumunu @(item.IsActive ? "pasife" : "aktife") degistir'>
+                    <i class='fa-solid @(item.IsActive ? "fa-lock" : "fa-lock-open")'></i>
+                  </span> *@
+                  <span class="badge rounded-pill bg-danger p-2 delete-asset-btn" role="button"
+                    data-asset-id="@item.AssetId" title="@item.AssetId idli varligi sil">
+                    <i class="fa-solid fa-trash"></i>
+                  </span>
+                </div> 
+              </td>
+            </tr>
+          }
+        </tbody>
+        <tfoot>
+            <tr class="text-center align-middle">
+            <th>
+              #
+              @await Html.PartialAsync("_OrderTool", new SortModel("id"))
+            </th>
+            <th>
+              Birim Adi
+              @await Html.PartialAsync("_OrderTool", new SortModel("currencyTitle", true))
+            </th>
+            <th>
+              Miktari
+              @await Html.PartialAsync("_OrderTool", new SortModel("count"))
+            </th>
+            <th>
+              <p>Guncel Piyasa Alis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("currencyPurchasePrice", true))
+              </p>
+              <p><b style="color:#228D57;">@UIToolHelper.RenderTL(currencyPTotal)</b></p>
+            </th>
+            <th>
+              <p>Guncel Piyasa Satis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("currencySalePrice", true))
+              </p>
+              <p><b style="color:#228D57;">@UIToolHelper.RenderTL(currencySTotal)</b></p>
+            </th>
+            <th>
+                <p>
+              Eklendigi Tarihteki Piyasa Alis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("currentPurchasePrice"))
+              </p>
+              <p><b style="color:#228D57;">@UIToolHelper.RenderTL(cpTotal)</b></p>
+            </th>
+            <th>
+                <p>
+              Eklendigi Tarihteki Piyasa Satis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("currentSalePrice"))
+              </p>
+              <p><b style="color:#228D57;">@UIToolHelper.RenderTL(csTotal)</b></p>
+            </th>
+            <th>
+              <p>
+                Satin Alindigi Satis Fiyati
+                @await Html.PartialAsync("_OrderTool", new SortModel("purchasePrice"))
+              </p>
+              <p><b style="color:#228D57;">@UIToolHelper.RenderTL(pTotal)</b></p>
+            </th>
+            <th>
+                <p>
+              Satin Alindigi Alis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("salePrice"))
+              </p>
+              <p><b style="color:#228D57;">@UIToolHelper.RenderTL(sTotal)</b></p>
+            </th>
+            <th>
+              Satin Alinma Tarihi
+              @await Html.PartialAsync("_OrderTool", new SortModel("purchaseDate"))
+            </th>
+            <th>
+              Eklenme Tarihi
+              @await Html.PartialAsync("_OrderTool", new SortModel("createdDate"))
+            </th>
+            <th style="width: 40px">Islemler</th>
+            </tr>
+        </tfoot>
+      </table>
+    </div>
+    <!-- /.card-body -->
+    <div class="card-footer clearfix">
+      @await Html.PartialAsync("_PaginationTool", Model)
+    </div>
+  </div>
+</div>
+
+<div id="empty-container"></div>
+
+@await Html.PartialAsync("_AssetFilterPopup", new AssetFilterViewModel(currencyTool))
+
+@section Scripts {
+  <script>
+    $(document).ready(function () {
+      const d = $("#empty-container");
+
+      $("#add-asset-btn").off("click").on("click", function () {
+        const fetchUrl = '@Url.Action("AddOperation", "Assets")';
+        openPopup(d, '#add-asset-popup', fetchUrl)
+      });
+
+      $("#user-summary-btn").off("click").on("click", function () {
+        const fetchUrl = '@Url.Action("UserSummary", "Assets")';
+        openPopup(d, '#user-summary-popup', fetchUrl)
+      });
+
+      $(".update-asset-btn").off("click").on("click", function () {
+        const id = $(this).data("asset-id");
+        const fetchUrl = '@Url.Action("UpdateOperation", "Assets")';
+        openPopup(d, '#update-asset-popup', fetchUrl + "?assetId=" + id)
+      });
+
+      $(".delete-asset-btn").off("click").on("click", function () {
+        const id = $(this).data("asset-id");
+        const fetchUrl = '@Url.Action("DeleteOperation", "Assets")';
+        deletePopup(fetchUrl + "?assetId=" + id)
+      });
+
+      $('#filter-asset-popup').on('shown.bs.modal', function () {
+        $('.js-currency-tool-multiple').select2({
+            dropdownParent: $('#filter-asset-popup'),
+            width: '100%',
+            placeholder: "Birim seçiniz",
+            allowClear: true
+        });
+      });
+
+    });
+  </script>
+}
+

@@ -1,0 +1,36 @@
+@using Microsoft.Extensions.Primitives
+@model AssetFilterViewModel
+@{
+    Layout = null;
+
+    var query = Context.Request.Query.ToDictionary(k => k.Key.ToLower(), v => v.Value);
+
+    StringValues currencyIds;
+    string[]? selectedCurrencies = query.TryGetValue("currencyid", out currencyIds)
+    ? currencyIds.ToArray()
+    : null;
+}
+
+<div class="modal fade" id="filter-asset-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class='modal-header bg-info'>
+                <h5 class="modal-title">Varlik Filtrele</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="get" class="d-inline">
+                <div class="modal-body" id="modal-body">
+                    @await Html.PartialAsync("_DropdownTool", new DropdownModel("Birim Seciniz",
+                    "filter-asset-dropdown", "CurrencyId", "js-currency-tool-multiple", Model.Currencies, true, selectedCurrencies))
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                    <a asp-area="" asp-controller="Assets" asp-action="Index"
+                        class="btn btn-danger">Temizle</a>
+                    <button type="submit" class="btn btn-info">Filtreleri Uygula</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

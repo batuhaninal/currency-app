@@ -80,7 +80,7 @@ namespace Application.CQRS.Queries.Currencies.WithHistoryInfo
                 .Table
                 .AsNoTracking()
                 .Where(predicate)
-                .OrderBy(x=> x.Id)
+                .OrderBy(x=> x.UpdatedDate)
                 .Select(x => new CurrencyHistoryItemDto(
                     x.Id,
                     x.CurrencyId,
@@ -96,7 +96,7 @@ namespace Application.CQRS.Queries.Currencies.WithHistoryInfo
             if (data.CurrencyHistoriesHourly is not null && data.CurrencyHistoriesHourly.Any())
             {
                 data.CurrencyHistoriesDaily = data.CurrencyHistoriesHourly
-                    .OrderBy(x=> x.CurrencyHistoryId)
+                    .OrderBy(x=> x.Date)
                     .GroupBy(key => key.Date)
                     .Select(x => new CurrencyHistoryItemDto(
                         x.First().CurrencyHistoryId,
@@ -111,7 +111,7 @@ namespace Application.CQRS.Queries.Currencies.WithHistoryInfo
                     .ToList();
 
                 data.CurrencyHistoriesWeekly = data.CurrencyHistoriesHourly
-                    .OrderBy(x=> x.CurrencyHistoryId)
+                    .OrderBy(x=> x.Date)
                     .GroupBy(key => key.Date.AddDays(-(int)key.Date.DayOfWeek))
                     .Select(x => new CurrencyHistoryItemDto(
                         x.First().CurrencyHistoryId,
@@ -126,7 +126,7 @@ namespace Application.CQRS.Queries.Currencies.WithHistoryInfo
                     .ToList();
 
                 data.CurrencyHistoriesMonthly = data.CurrencyHistoriesHourly
-                    .OrderBy(x=> x.CurrencyHistoryId)
+                    .OrderBy(x=> x.Date)
                     .GroupBy(key => new DateOnly(key.Date.Year, key.Date.Month, 1))
                     .Select(x => new CurrencyHistoryItemDto(
                         x.First().CurrencyHistoryId,
@@ -141,7 +141,7 @@ namespace Application.CQRS.Queries.Currencies.WithHistoryInfo
                     .ToList();
 
                 data.CurrencyHistoriesYearly = data.CurrencyHistoriesHourly
-                    .OrderBy(x=> x.CurrencyHistoryId)
+                    .OrderBy(x=> x.Date)
                     .GroupBy(key => new DateOnly(key.Date.Year, 1, 1))
                     .Select(x => new CurrencyHistoryItemDto(
                         x.First().CurrencyHistoryId,

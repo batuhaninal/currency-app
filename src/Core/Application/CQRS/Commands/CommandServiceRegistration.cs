@@ -1,5 +1,7 @@
 using Application.Abstractions.Commons.Results;
 using Application.CQRS.Commands.Assets.AddAsset;
+using Application.CQRS.Commands.Assets.Delete;
+using Application.CQRS.Commands.Assets.Update;
 using Application.CQRS.Commands.Categories.Add;
 using Application.CQRS.Commands.Categories.ChangeStatus;
 using Application.CQRS.Commands.Categories.Delete;
@@ -26,9 +28,17 @@ namespace Application.CQRS.Commands
             services.AddScoped<LoginCommandHandler>();
             services.AddScoped<ICommandHandler<LoginCommand, IBaseResult>, LoginCommandHandler>();
 
+            #region Asset
             services.AddScoped<AddAssetCommandHandler>();
             services.AddScoped<ICommandHandler<AddAssetCommand, IBaseResult>, AddAssetCommandHandler>();
 
+            services.AddScoped<UpdateAssetCommand>();
+            services.AddScoped<ICommandHandler<UpdateAssetCommand, IBaseResult>, UpdateAssetCommandHandler>();
+
+            services.AddScoped<DeleteAssetCommand>();
+            services.AddScoped<ICommandHandler<DeleteAssetCommand, IBaseResult>, DeleteAssetCommandHandler>();
+            #endregion
+            
             #region Currency
             services.AddScoped<AddCurrencyCommand>();
             services.AddScoped<ICommandHandler<AddCurrencyCommand, IBaseResult>, AddCurrencyCommandHandler>();

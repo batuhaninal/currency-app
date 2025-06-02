@@ -37,6 +37,7 @@
 }
 
 <span class="sort-icons ms-1">
+    <p>
     @if (Model.Disable)
     {
         <span class="text-muted">
@@ -53,4 +54,5 @@
             <i class="bi bi-caret-down-fill @(isCurrent && isDesc ? "text-primary" : "text-muted")"></i>
         </a>
     }
+    </p>
 </span>

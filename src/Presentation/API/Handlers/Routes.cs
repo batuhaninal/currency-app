@@ -1,5 +1,7 @@
 using Application.Abstractions.Handlers;
 using Application.CQRS.Commands.Assets.AddAsset;
+using Application.CQRS.Commands.Assets.Delete;
+using Application.CQRS.Commands.Assets.Update;
 using Application.CQRS.Commands.Categories.Add;
 using Application.CQRS.Commands.Categories.ChangeStatus;
 using Application.CQRS.Commands.Categories.Delete;
@@ -12,9 +14,12 @@ using Application.CQRS.Commands.Currencies.UpdateValue;
 using Application.CQRS.Commands.Users.Login;
 using Application.CQRS.Commands.Users.Register;
 using Application.CQRS.Commons.Services;
+using Application.CQRS.Queries.Assets.GetForUpdate;
 using Application.CQRS.Queries.Assets.GetUserAssetHistory;
 using Application.CQRS.Queries.Assets.GetUserAssetInfo;
 using Application.CQRS.Queries.Assets.GetUsersAssets;
+using Application.CQRS.Queries.Assets.UserAssetItems;
+using Application.CQRS.Queries.Assets.UserSummary;
 using Application.CQRS.Queries.Categories.Info;
 using Application.CQRS.Queries.Categories.List;
 using Application.CQRS.Queries.Currencies.Info;
@@ -64,24 +69,68 @@ namespace API.Handlers
                 .WithTags("Assets")
                 .RequireAuthorization();
 
+            asset.MapPut("{assetId}",
+                async ([FromServices] IAssetHandler handler, [FromRoute(Name = "assetId")] int assetId, [FromBody] UpdateAssetCommand command, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
+                {
+                    command.AssetId = assetId;
+                    return await handler.Update(command, dispatcher, cancellationToken);
+                })
+                .WithName("Update Asset")
+                .WithTags("Assets")
+                .RequireAuthorization();
+
+            asset.MapDelete("{assetId}",
+                async ([FromServices] IAssetHandler handler, [FromRoute(Name = "assetId")] int assetId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
+                {
+                    return await handler.Delete(new DeleteAssetCommand(assetId), dispatcher, cancellationToken);
+                })
+                .WithName("Delete Asset")
+                .WithTags("Assets")
+                .RequireAuthorization();
+
             asset.MapGet("",
+                async ([FromServices] IAssetHandler handler, [AsParameters] UserAssetItemsQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.UserAssetItems(query, dispatcher, cancellationToken))
+                .WithName("User's Assets")
+                .WithTags("Assets")
+                .RequireAuthorization();
+
+            asset.MapGet("summary",
+                async ([FromServices] IAssetHandler handler, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.UserSummary(new UserSummaryAssetQuery(), dispatcher, cancellationToken))
+                .WithName("User's Asset Summary")
+                .WithTags("Assets")
+                .RequireAuthorization();
+
+            asset.MapGet("user-asset-history",
                 async ([FromServices] IAssetHandler handler, [AsParameters] GetUserAssetHistoryQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.GetUsersAssetHistory(query, dispatcher, cancellationToken))
                 .WithName("User's Asset History")
-                .WithTags("Assets");
+                .WithTags("Assets")
+                .RequireAuthorization();
 
-            asset.MapGet("users-assets",
-                async ([FromServices] IAssetHandler handler, [AsParameters] GetUsersAssetsQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.GetUsersAssets(query, dispatcher, cancellationToken))
-                .WithName("User's Asset List")
-                .WithTags("Assets");
+            asset.MapGet("user-asset-group",
+                async ([FromServices] IAssetHandler handler, [AsParameters] GetUsersAssetWithGroupQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.GetUserAssetWithGroup(query, dispatcher, cancellationToken))
+                .WithName("User's Asset List With Group")
+                .WithTags("Assets")
+                .RequireAuthorization();
 
-            asset.MapGet("users-asset-info/{currencyId}",
-                async ([FromServices] IAssetHandler handler, [FromRoute(Name = "currencyId")] int currencyId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
+            asset.MapGet("for-update/{assetId}",
+                async ([FromServices] IAssetHandler handler, [FromRoute(Name = "assetId")] int assetId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
                 {
-                    GetUsersAssetInfoQuery query = new GetUsersAssetInfoQuery(currencyId);
+                    GetForUpdateAssetQuery query = new GetForUpdateAssetQuery(assetId);
+                    return await handler.GetForUpdate(query, dispatcher, cancellationToken);
+                })
+                .WithName("For Update Asset")
+                .WithTags("Assets")
+                .RequireAuthorization();
+
+            asset.MapGet("users-asset-info/{assetId}",
+                async ([FromServices] IAssetHandler handler, [FromRoute(Name = "assetId")] int assetId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
+                {
+                    GetUsersAssetInfoQuery query = new GetUsersAssetInfoQuery(assetId);
                     return await handler.GetUsersAssetInfo(query, dispatcher, cancellationToken);
                 })
                 .WithName("User's Asset Info")
-                .WithTags("Assets");
+                .WithTags("Assets")
+                .RequireAuthorization();
 
             var currency = api.MapGroup("currencies");
 

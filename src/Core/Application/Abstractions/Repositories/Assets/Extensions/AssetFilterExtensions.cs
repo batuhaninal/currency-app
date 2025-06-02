@@ -20,7 +20,7 @@ namespace Application.Abstractions.Repositories.Assets.Extensions
         {
             var predicate = PredicateBuilderHelper.True<Asset>();
 
-            if (parameter.CurrencyId is not null)
+            if (parameter.CurrencyId is not null && parameter.CurrencyId.Any())
                 predicate = predicate.And(x => parameter.CurrencyId.Contains(x.CurrencyId));
 
             if (parameter.IsActive is not null)
@@ -44,7 +44,7 @@ namespace Application.Abstractions.Repositories.Assets.Extensions
         public static IQueryable<Asset> OrderQuery(this IQueryable<Asset> source, string? orderBy)
         {
             if (string.IsNullOrWhiteSpace(orderBy))
-                return source;
+                return source.OrderBy(x=> x.Id);
 
             string normalizedConditiom = orderBy.TrimStart().TrimEnd().ToLower();
             

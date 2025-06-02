@@ -1,5 +1,6 @@
 using Client.Middlewares;
 using Client.Models.Constants;
+using Client.Services.Assets;
 using Client.Services.Auth;
 using Client.Services.Categories;
 using Client.Services.Currencies;
@@ -33,6 +34,11 @@ namespace Client.Services
             {
                 opt.BaseAddress = new Uri($"{AppConstants.APIURL}/tools/");
             });
+
+            services.AddHttpClient<IAssetService, AssetService>(opt =>
+            {
+                opt.BaseAddress = new Uri($"{AppConstants.APIURL}/assets/");
+            }).AddHttpMessageHandler<TokenMiddleware>();
         }
     }
 }

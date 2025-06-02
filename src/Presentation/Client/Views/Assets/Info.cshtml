@@ -1,0 +1,338 @@
+@using Helpers
+@model UserAssetInfoResponse
+@{
+    Layout = "_Layout";
+    decimal purchaseP = Model.SelectedAsset.Count * Model.SelectedAsset.PurchasePrice;
+    decimal saleP = Model.SelectedAsset.Count * Model.SelectedAsset.SalePrice;
+    decimal pPurchaseP = Model.SelectedAsset.Count * Model.SelectedAsset.CurrentPurchasePrice;
+    decimal pSaleP = Model.SelectedAsset.Count * Model.SelectedAsset.CurrentSalePrice;
+    decimal cPurchaseP = Model.SelectedAsset.Count * Model.Currency!.PurchasePrice;
+    decimal cSaleP = Model.SelectedAsset.Count * Model.Currency.SalePrice;
+    decimal cPurchaseP2 = Model.Count * Model.Currency!.PurchasePrice;
+    decimal cSaleP2 = Model.Count * Model.Currency.SalePrice;
+}
+
+<div class="card mb-3 shadow-sm border-0">
+    <div class="card mb-4 shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+    <h5 class="mb-0">Seçilen Varlık</h5>
+</div>
+<div class="card-body bg-light">
+    <div class="row g-3">
+        <div class="col-md-6"><strong>Adet:</strong> @Model.SelectedAsset.Count</div>
+        <div class="col-md-6"><strong>Para Birimi:</strong> @Model.SelectedAsset.Currency?.Title</div>
+
+        <hr class="my-2" />
+
+        <div class="col-md-6"><strong>Alış Fiyatı:</strong>
+            <span style="color:#228D57">@UIToolHelper.RenderTL(Model.SelectedAsset.PurchasePrice)</span>
+        </div>
+        <div class="col-md-6"><strong>Toplam Alış Fiyatı:</strong>
+            <span style="color:#228D57">@UIToolHelper.RenderTL(purchaseP)</span>
+        </div>
+
+        <div class="col-md-6"><strong>Satış Fiyatı:</strong>
+            <span style="color:#228D57">@UIToolHelper.RenderTL(Model.SelectedAsset.SalePrice)</span>
+        </div>
+        <div class="col-md-6"><strong>Toplam Satış Fiyatı:</strong>
+            <span style="color:#228D57">@UIToolHelper.RenderTL(saleP)</span>
+        </div>
+
+        <hr class="my-2" />
+
+        <div class="col-md-6"><strong>Satin Alındığında Piyasa Alış Fiyatı:</strong>
+            <span style="color:#228D57">@UIToolHelper.RenderTL(Model.SelectedAsset.CurrentPurchasePrice)</span>
+        </div>
+        <div class="col-md-6"><strong>Toplam Satin Alındığında Piyasa Alış Fiyatı:</strong>
+            <span style="color:#228D57">@UIToolHelper.RenderTL(pPurchaseP)</span>
+        </div>
+
+        <div class="col-md-6"><strong>Satin Alındığında Piyasa Satış Fiyatı:</strong>
+            <span style="color:#228D57">@UIToolHelper.RenderTL(Model.SelectedAsset.CurrentSalePrice)</span>
+        </div>
+        <div class="col-md-6"><strong>Toplam Satin Alındığında Piyasa Satış Fiyatı:</strong>
+            <span style="color:#228D57">@UIToolHelper.RenderTL(pSaleP)</span>
+        </div>
+
+        <hr class="my-2" />
+
+        <div class="col-md-6"><strong>Güncel Piyasa Alış Fiyatı:</strong>
+            <span style="color:#228D57">@UIToolHelper.RenderTL(Model.Currency.PurchasePrice)</span>
+        </div>
+        <div class="col-md-6"><strong>Toplam Güncel Piyasa Alış Fiyatı:</strong>
+            <span style="color:#228D57">@UIToolHelper.RenderTL(cPurchaseP)</span>
+        </div>
+
+        <div class="col-md-6"><strong>Güncel Piyasa Satış Fiyatı:</strong>
+            <span style="color:#228D57">@UIToolHelper.RenderTL(Model.Currency.SalePrice)</span>
+        </div>
+        <div class="col-md-6"><strong>Toplam Güncel Piyasa Satış Fiyatı:</strong>
+            <span style="color:#228D57">@UIToolHelper.RenderTL(cSaleP)</span>
+        </div>
+
+        <hr class="my-2" />
+
+        <div class="col-md-6"><strong>Alım Tarihi:</strong> @UIToolHelper.RenderDate(Model.SelectedAsset.PurchaseDate)</div>
+        <div class="col-md-6"><strong>Oluşturulma:</strong> @UIToolHelper.RenderDateTime(Model.SelectedAsset.CreatedDate)</div>
+        <div class="col-md-6"><strong>Güncellenme:</strong> @UIToolHelper.RenderDateTime(Model.SelectedAsset.UpdatedDate)</div>
+    </div>
+</div>
+
+<div class="card mb-4 shadow-sm border-0">
+    <div class="card-header bg-secondary text-white">
+        <h5 class="mb-0">Genel Varlık Bilgileri</h5>
+    </div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-6"><strong>Toplam Adet:</strong> @Model.Count</div>
+            <div class="col-md-6"><strong>Para Birimi:</strong> @Model.Currency?.Title</div>
+
+            <hr class="my-2" />
+
+            <div class="col-md-6"><strong>Toplam Alış Değeri:</strong>
+                <span style="color:#228D57">@UIToolHelper.RenderTL(Model.TotalPurchaseValue)</span>
+            </div>
+            <div class="col-md-6"><strong>Toplam Satış Değeri:</strong>
+                <span style="color:#228D57">@UIToolHelper.RenderTL(Model.TotalSaleValue)</span>
+            </div>
+
+            <hr class="my-2" />
+
+            <div class="col-md-6"><strong>Satin Alındığındaki Toplam Piyasa Alış Değeri:</strong>
+                <span style="color:#228D57">@UIToolHelper.RenderTL(Model.TotalCurrentPurchaseValue)</span>
+            </div>
+            <div class="col-md-6"><strong>Satin Alındığındaki Toplam Piyasa Satış Değeri:</strong>
+                <span style="color:#228D57">@UIToolHelper.RenderTL(Model.TotalCurrentSaleValue)</span>
+            </div>
+
+            <hr class="my-2" />
+
+            <div class="col-md-6"><strong>Güncel Piyasa Alış Fiyatı:</strong>
+                <span style="color:#228D57">@UIToolHelper.RenderTL(Model.Currency!.PurchasePrice)</span>
+            </div>
+            <div class="col-md-6"><strong>Toplam Güncel Piyasa Alış Fiyatı:</strong>
+                <span style="color:#228D57">@UIToolHelper.RenderTL(cPurchaseP2)</span>
+            </div>
+
+            <div class="col-md-6"><strong>Güncel Piyasa Satış Fiyatı:</strong>
+                <span style="color:#228D57">@UIToolHelper.RenderTL(Model.Currency.SalePrice)</span>
+            </div>
+            <div class="col-md-6"><strong>Toplam Güncel Piyasa Satış Fiyatı:</strong>
+                <span style="color:#228D57">@UIToolHelper.RenderTL(cSaleP2)</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="card-footer bg-white">
+        <div class="row">
+            <div class="col-12 col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Fiyat Geçmişi (Saatlik)</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="price-history-hourly"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Fiyat Geçmişi (Gunluk)</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="price-history-daily"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Fiyat Geçmişi (Haftalik)</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="price-history-weekly"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Fiyat Geçmişi (Aylik)</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="price-history-monthly"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Fiyat Geçmişi (Yillik)</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="price-history-yearly"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        $(document).ready(function () {
+            const hourlyPriceCtx = document.getElementById('price-history-hourly').getContext('2d')
+
+            const hourlyPriceChart = new Chart(hourlyPriceCtx, {
+                type: 'line',
+                data: {
+                    labels: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesHourly?.Select(x => x.UpdatedDate.ToString("yyyy-MM-dd HH:mm")))),
+                    datasets: [
+                        {
+                            label: 'Alış Fiyatı',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesHourly?.Select(x => x.NewPurchasePrice))),
+                            fill: false
+                        },
+                        {
+                            label: 'Satış Fiyatı',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesHourly?.Select(x => x.NewSalePrice))),
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            })
+
+            const dailyPriceCtx = document.getElementById('price-history-daily').getContext('2d')
+
+            const dailyPriceChart = new Chart(dailyPriceCtx, {
+                type: 'line',
+                data: {
+                    labels: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesDaily?.Select(x => x.Date.ToString("yyyy-MM-dd")))),
+                    datasets: [
+                        {
+                            label: 'Alış Fiyatı',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesDaily?.Select(x => x.NewPurchasePrice))),
+                            fill: false
+                        },
+                        {
+                            label: 'Satış Fiyatı',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesDaily?.Select(x => x.NewSalePrice))),
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            })
+
+            const weeklyPriceCtx = document.getElementById('price-history-weekly').getContext('2d')
+
+            const weeklyPriceChart = new Chart(weeklyPriceCtx, {
+                type: 'line',
+                data: {
+                    labels: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesWeekly?.Select(x => x.Date.ToString("yyyy-MM-dd")))),
+                    datasets: [
+                        {
+                            label: 'Alış Fiyatı',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesWeekly?.Select(x => x.NewPurchasePrice))),
+                            fill: false
+                        },
+                        {
+                            label: 'Satış Fiyatı',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesWeekly?.Select(x => x.NewSalePrice))),
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            })
+
+            const monthlyPriceCtx = document.getElementById('price-history-monthly').getContext('2d')
+
+            const monthlyPriceChart = new Chart(monthlyPriceCtx, {
+                type: 'line',
+                data: {
+                    labels: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesMonthly?.Select(x => x.Date.ToString("yyyy-MM")))),
+                    datasets: [
+                        {
+                            label: 'Alış Fiyatı',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesMonthly?.Select(x => x.NewPurchasePrice))),
+                            fill: false
+                        },
+                        {
+                            label: 'Satış Fiyatı',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesMonthly?.Select(x => x.NewSalePrice))),
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            })
+
+            const yearlyPriceCtx = document.getElementById('price-history-yearly').getContext('2d')
+
+            const yearlyPriceChart = new Chart(yearlyPriceCtx, {
+                type: 'line',
+                data: {
+                    labels: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesYearly?.Select(x => x.Date.ToString("yyyy")))),
+                    datasets: [
+                        {
+                            label: 'Alış Fiyatı',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesYearly?.Select(x => x.NewPurchasePrice))),
+                            fill: false
+                        },
+                        {
+                            label: 'Satış Fiyatı',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            data: @Html.Raw(Json.Serialize(Model.CurrencyHistoriesYearly?.Select(x => x.NewSalePrice))),
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            })
+        });
+    </script>
+}

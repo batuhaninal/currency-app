@@ -7,7 +7,7 @@ namespace Application.Models.DTOs.Assets
     {
         public AssetItemDto()
         {
-            
+
         }
 
         public AssetItemDto(int assetId, int count, decimal purchaseValue, decimal currentValue, DateOnly purchaseDate, bool isActive, CurrencyRelationDto? currency = null)

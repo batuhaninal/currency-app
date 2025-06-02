@@ -1,8 +1,11 @@
 using Application.Abstractions.Commons.Results;
 using Application.CQRS.Commons.Interfaces;
+using Application.CQRS.Queries.Assets.GetForUpdate;
 using Application.CQRS.Queries.Assets.GetUserAssetHistory;
 using Application.CQRS.Queries.Assets.GetUserAssetInfo;
 using Application.CQRS.Queries.Assets.GetUsersAssets;
+using Application.CQRS.Queries.Assets.UserAssetItems;
+using Application.CQRS.Queries.Assets.UserSummary;
 using Application.CQRS.Queries.Categories.Info;
 using Application.CQRS.Queries.Categories.List;
 using Application.CQRS.Queries.Currencies.Info;
@@ -32,14 +35,23 @@ namespace Application.CQRS.Queries
             #endregion
 
             #region Asset
-            services.AddScoped<GetUsersAssetsQuery>();
-            services.AddScoped<IQueryHandler<GetUsersAssetsQuery, IBaseResult>, GetUsersAssetsQueryHandler>();
+            services.AddScoped<GetUsersAssetWithGroupQuery>();
+            services.AddScoped<IQueryHandler<GetUsersAssetWithGroupQuery, IBaseResult>, GetUsersAssetWithGroupQueryHandler>();
 
             services.AddScoped<GetUsersAssetInfoQuery>();
             services.AddScoped<IQueryHandler<GetUsersAssetInfoQuery, IBaseResult>, GetUsersAssetInfoQueryHandler>();
 
             services.AddScoped<GetUserAssetHistoryQuery>();
             services.AddScoped<IQueryHandler<GetUserAssetHistoryQuery, IBaseResult>, GetUserAssetHistoryQueryHandler>();
+
+            services.AddScoped<UserAssetItemsQuery>();
+            services.AddScoped<IQueryHandler<UserAssetItemsQuery, IBaseResult>, UserAssetItemsQueryHandler>();
+
+            services.AddScoped<GetForUpdateAssetQuery>();
+            services.AddScoped<IQueryHandler<GetForUpdateAssetQuery, IBaseResult>, GetForUpdateAssetQueryHandler>();
+
+            services.AddScoped<UserSummaryAssetQuery>();
+            services.AddScoped<IQueryHandler<UserSummaryAssetQuery, IBaseResult>, UserSummaryAssetQueryHandler>();
             #endregion
 
             #region Category

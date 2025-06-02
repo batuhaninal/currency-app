@@ -43,7 +43,7 @@ namespace Application.CQRS.Commands.Currencies.UpdateValue
 
                         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-                        IBaseResult historyResult = await _unitOfWork.CurrencyHistoryRule.CheckCurrencyCountAsync(currency.Id, DateOnly.FromDateTime(currency.UpdatedDate), cancellationToken: cancellationToken);
+                        IBaseResult historyResult = await _unitOfWork.CurrencyHistoryRule.CheckCurrencyCountValidAsync(currency.Id, DateOnly.FromDateTime(currency.UpdatedDate), cancellationToken: cancellationToken);
                         if (historyResult.Success)
                         {
                             CurrencyHistoryPriceDto? currencyHistoryPriceDto = await _unitOfWork.CurrencyHistoryReadRepository

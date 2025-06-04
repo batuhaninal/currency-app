@@ -19,22 +19,7 @@ namespace API.Middlewares
         {
             _logger.LogError("{ServiceName} service exception : {Error} at : {Now}", typeof(ExceptionMiddleware).Name, exception.Message, DateTime.UtcNow);
 
-            IBaseResult result;
-
-            switch (exception)
-            {
-                case BusinessException businessException:
-                    result = new ResultDto((int)HttpStatusCode.BadRequest, false, null, businessException.Message);
-                    break;
-
-                case UnauthorizedAccessException:
-                    result = new ResultDto((int)HttpStatusCode.Unauthorized, false, null, "Unauthorized access.");
-                    break;
-
-                default:
-                    result = new ResultDto((int)HttpStatusCode.InternalServerError, false, null, "An unexpected error occurred.");
-                    break;
-            }
+            IBaseResult result = new ResultDto((int)HttpStatusCode.InternalServerError, false, null, "An unexpected error occurred.");
 
             httpContext.Response.StatusCode = result.StatusCode;
             httpContext.Response.ContentType = "application/json";

@@ -1,14 +1,13 @@
+using Application.Abstractions.Commons.Logger;
 using Application.Abstractions.Commons.Results;
 using Application.Abstractions.Repositories.Commons;
 using Application.Abstractions.Services.Externals;
 using Application.Models.DTOs.CurrencyHistories;
 using Application.Models.DTOs.Externals;
 using Domain;
-using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Adapter.Services.BackgroundServices
 {
@@ -16,9 +15,10 @@ namespace Adapter.Services.BackgroundServices
     {
         private readonly IWebScrappingService _webScrappingService;
         private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger<HourlyScrapperBackgroundService> _logger;
+        // private readonly ILogger<HourlyScrapperBackgroundService> _logger;
+        private readonly ILoggerService<HourlyScrapperBackgroundService> _logger;
 
-        public HourlyScrapperBackgroundService(IWebScrappingService webScrappingService, IServiceProvider serviceProvider, ILogger<HourlyScrapperBackgroundService> logger)
+        public HourlyScrapperBackgroundService(IWebScrappingService webScrappingService, IServiceProvider serviceProvider, ILoggerService<HourlyScrapperBackgroundService> logger)
         {
             _webScrappingService = webScrappingService;
             _serviceProvider = serviceProvider;
@@ -27,6 +27,7 @@ namespace Adapter.Services.BackgroundServices
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
+            _logger.Info("background service started");
             return base.StartAsync(cancellationToken);
         }
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -38,7 +39,7 @@ namespace Adapter.Services.BackgroundServices
                     var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
                     DateTime now = DateTime.UtcNow;
 
-                    _logger.LogInformation("{Service} background service execute started at: {Now}", typeof(HourlyScrapperBackgroundService).Name, now);
+                    _logger.Info("background service execute started");
 
                     var keys = await unitOfWork
                         .CurrencyReadRepository
@@ -48,11 +49,11 @@ namespace Adapter.Services.BackgroundServices
                         .Select(x => x.XPath)
                         .ToArrayAsync(cancellationToken);
 
-                    _logger.LogInformation("{Service} background service external service request started at: {Now}", typeof(HourlyScrapperBackgroundService).Name, DateTime.UtcNow);
+                    _logger.Info("background service request started");
 
                     var fetchedData = await _webScrappingService.FetchDovizcomXAUDataAsync(keys, cancellationToken);
 
-                    _logger.LogInformation("{Service} background service external service request finished at: {Now}", typeof(HourlyScrapperBackgroundService).Name, DateTime.UtcNow);
+                    _logger.Info("background service request finished");
 
                     foreach (var data in fetchedData)
                     {
@@ -141,7 +142,7 @@ namespace Adapter.Services.BackgroundServices
                 }
                 catch (System.Exception ex)
                 {
-                    _logger.LogError("{Function} exception: {Exception}", typeof(HourlyScrapperBackgroundService).Name, ex);
+                    _logger.Error(ex.Message);
                     await tx.RollbackAsync(cancellationToken);
                 }
             }
@@ -149,19 +150,14 @@ namespace Adapter.Services.BackgroundServices
 
         public override Task StopAsync(CancellationToken cancellationToken)
         {
+            _logger.Info("background service stopped");
             return base.StopAsync(cancellationToken);
         }
 
         public override void Dispose()
         {
+            _logger.Info("background service disposed");
             base.Dispose();
         }
-    }
-
-    public class AltinVerisi
-    {
-        public string Key { get; set; }
-        public string Attr { get; set; }
-        public string Value { get; set; }
     }
 }

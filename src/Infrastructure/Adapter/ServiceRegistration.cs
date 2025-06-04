@@ -1,7 +1,9 @@
 ﻿using Adapter.Services.BackgroundServices;
 using Adapter.Services.Externals;
+using Adapter.Services.Logger;
 using Adapter.Services.Security;
 using Adapter.Services.Tokens;
+using Application.Abstractions.Commons.Logger;
 using Application.Abstractions.Commons.Security;
 using Application.Abstractions.Commons.Tokens;
 using Application.Abstractions.Services.Externals;
@@ -19,6 +21,7 @@ namespace Adapter
 
             services.AddSingleton<IHashingService, HashingService>();
             services.AddSingleton<ITokenService, TokenService>();
+            services.AddSingleton(typeof(ILoggerService<>), typeof(LoggerService<>));
 
             services.AddScoped<IUserTokenService, UserTokenService>();
 

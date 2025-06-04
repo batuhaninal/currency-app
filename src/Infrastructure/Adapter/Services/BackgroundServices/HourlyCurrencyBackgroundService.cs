@@ -1,3 +1,4 @@
+using Application.Abstractions.Commons.Logger;
 using Application.Abstractions.Commons.Results;
 using Application.Abstractions.Repositories.Commons;
 using Application.Abstractions.Services.Externals;
@@ -15,9 +16,10 @@ namespace Adapter.Services.BackgroundServices
     {
         private readonly ITradingViewService _tradingViewService;
         private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger<HourlyCurrencyBackgroundService> _logger;
+        // private readonly ILogger<HourlyCurrencyBackgroundService> _logger;
+        private readonly ILoggerService<HourlyCurrencyBackgroundService> _logger;
 
-        public HourlyCurrencyBackgroundService(ITradingViewService tradingViewService, IServiceProvider serviceProvider, ILogger<HourlyCurrencyBackgroundService> logger)
+        public HourlyCurrencyBackgroundService(ITradingViewService tradingViewService, IServiceProvider serviceProvider, ILoggerService<HourlyCurrencyBackgroundService> logger)
         {
             _tradingViewService = tradingViewService;
             _serviceProvider = serviceProvider;
@@ -26,7 +28,7 @@ namespace Adapter.Services.BackgroundServices
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("{Service} background service started at: {Now}", typeof(HourlyCurrencyBackgroundService).Name, DateTime.UtcNow);
+            _logger.Info("background service started");
             return base.StartAsync(cancellationToken);
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -38,7 +40,7 @@ namespace Adapter.Services.BackgroundServices
                     IUnitOfWork unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
                     DateTime now = DateTime.UtcNow;
 
-                    _logger.LogInformation("{Service} background service execute started at: {Now}", typeof(HourlyCurrencyBackgroundService).Name, now);
+                    _logger.Info("background service execute started");
 
                     List<Currency> currencies = await unitOfWork
                         .CurrencyReadRepository
@@ -48,11 +50,11 @@ namespace Adapter.Services.BackgroundServices
 
                     string[] currencyList = currencies.Select(x => x.TVCode ?? "RENALDOMESSI").ToArray();
 
-                    _logger.LogInformation("{Service} background service external service request started at: {Now}", typeof(HourlyCurrencyBackgroundService).Name, DateTime.UtcNow);
+                    _logger.Info("background service request started");
 
                     var tradingData = await _tradingViewService.FetchData(1_000, "TRY", cancellationToken: stoppingToken, currencyList);
 
-                    _logger.LogInformation("{Service} background service external service request finished at: {Now}", typeof(HourlyCurrencyBackgroundService).Name, DateTime.UtcNow);
+                    _logger.Info("background service request finished");
 
                     foreach (var item in tradingData)
                     {
@@ -139,7 +141,7 @@ namespace Adapter.Services.BackgroundServices
                 }
                 catch (System.Exception ex)
                 {
-                    _logger.LogError("{Function} exception: {Exception}", typeof(HourlyCurrencyBackgroundService).Name, ex);
+                    _logger.Error(ex.Message);
                     await tx.RollbackAsync(cancellationToken);
                 }
             }
@@ -147,13 +149,13 @@ namespace Adapter.Services.BackgroundServices
 
         public override Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("{Service} background service stopped at: {Now}", typeof(HourlyCurrencyBackgroundService).Name, DateTime.UtcNow);
+            _logger.Info("background service stopped");
             return base.StopAsync(cancellationToken);
         }
 
         public override void Dispose()
         {
-            _logger.LogInformation("{Service} background service disposed at: {Now}", typeof(HourlyCurrencyBackgroundService).Name, DateTime.UtcNow);
+            _logger.Info("background service disposed");
             base.Dispose();
         }
     }

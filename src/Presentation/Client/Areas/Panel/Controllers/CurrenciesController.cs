@@ -27,8 +27,7 @@ namespace Client.Areas.Panel.Controllers
         public async Task<IActionResult> Index([FromQuery] CurrencyRequestParameter parameter)
         {
             var result = await _toolService.CategoryTools(new ToolRequestParameter());
-            if (!result.Success)
-                TempData["ErrorMessage"] = result.Message ?? "Beklenmeyen hata!";
+            _ = this.ShowResultMessage(result);
 
             ViewBag.CategoryTool = result.Data ?? new();
 
@@ -51,8 +50,7 @@ namespace Client.Areas.Panel.Controllers
             var data = await _currencyService.InfoAsync(currencyId);
 
             var result = await _toolService.CategoryTools(new ToolRequestParameter());
-            if (!result.Success)
-                TempData["ErrorMessage"] = result.Message ?? "Beklenmeyen hata!";
+            _ = this.ShowResultMessage(result);
 
             ViewBag.CategoryTool = result.Data ?? new();
 
@@ -101,8 +99,7 @@ namespace Client.Areas.Panel.Controllers
         public async Task<IActionResult> AddOperation()
         {
             var result = await _toolService.CategoryTools(new ToolRequestParameter());
-            if (!result.Success)
-                TempData["ErrorMessage"] = result.Message ?? "Beklenmeyen hata!";
+            _ = this.ShowResultMessage(result);
 
             ViewBag.CategoryTool = result.Data ?? new();
 

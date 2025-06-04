@@ -246,6 +246,7 @@ namespace API.Handlers
             categoryPanel.MapDelete("{categoryId}",
                 async ([FromServices] ICategoryHandler handler, [FromRoute(Name = "categoryId")] int categoryId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
                 {
+                    throw new Exception("sex");
                     return await handler.DeleteAsync(new DeleteCategoryCommand(categoryId), dispatcher, cancellationToken);
                 }) 
                 .WithName("Delete Category")

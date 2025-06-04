@@ -81,8 +81,7 @@ namespace Client.Controllers
             {
                 var result = await _assetService.AddAsync(input);
 
-                if (!result.Success)
-                    TempData["ErrorMessage"] = result.Message ?? "Beklenmeyen hata!";
+                _ = this.ShowResultMessage(result);
             }
 
             return RedirectToAction(nameof(AssetsController.Index), "Assets");
@@ -104,8 +103,7 @@ namespace Client.Controllers
             {
                 var result = await _assetService.UpdateAsync(assetId, input);
 
-                if (!result.Success)
-                    TempData["ErrorMessage"] = result.Message ?? "Beklenmeyen hata!";
+                _ = this.ShowResultMessage(result);
             }
 
             return RedirectToAction(nameof(AssetsController.Index), "Assets");

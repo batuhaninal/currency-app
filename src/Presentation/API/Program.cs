@@ -10,6 +10,7 @@ using Application.Models.Constants.Roles;
 using System.Net;
 using Application.Models.DTOs.Commons.Results;
 using API.Middlewares;
+using API.Middlewares.ExceptionHandlers;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -45,7 +46,11 @@ builder.Services.AddAuthentication(opt =>
     };
 });
 
+builder.Services.AddExceptionHandler<NotFoundExceptionHandler>();
+builder.Services.AddExceptionHandler<BusinessExceptionHandler>();
+builder.Services.AddExceptionHandler<UnauthorizedExceptionHandler>();
 builder.Services.AddExceptionHandler<ExceptionMiddleware>();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy(AppRoles.Admin, policy => 
@@ -71,7 +76,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseExceptionHandler(opt => {});
+app.UseExceptionHandler();
 
 app.UseStatusCodePages(async context => // 401 / 403 gibi durum kodlarına özel yanıt
 {

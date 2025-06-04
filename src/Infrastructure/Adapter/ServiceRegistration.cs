@@ -27,7 +27,10 @@ namespace Adapter
                 cfg.BaseAddress = new Uri(ExternalApiUrls.TradingView);
             });
 
+            services.AddHttpClient<IWebScrappingService, WebScrappingService>();
+
             services.AddHostedService<HourlyCurrencyBackgroundService>();
+            services.AddHostedService<HourlyScrapperBackgroundService>();
         }
     }
 }

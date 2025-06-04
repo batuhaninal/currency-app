@@ -1,4 +1,4 @@
-using Application.Models.RequestParameters.Commons;
+using Client.Models.Commons;
 
 namespace Client.Models.Categories.RequestParameters
 {

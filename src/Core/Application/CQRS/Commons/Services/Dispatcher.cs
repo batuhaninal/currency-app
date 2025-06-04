@@ -1,3 +1,4 @@
+using Application.Abstractions.Commons.Results;
 using Application.CQRS.Commons.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -17,13 +18,24 @@ namespace Application.CQRS.Commons.Services
 
         public async Task<TResult> SendCommandAsync<TCommand, TResult>(TCommand command, CancellationToken cancellationToken = default)
             where TCommand : ICommand
+            where TResult : IBaseResult
         {
             _logger.LogInformation("Handling command {CommandType} at {Time}", typeof(TCommand).Name, DateTime.UtcNow);
 
             try
             {
                 var handler = _serviceProvider.GetRequiredService<ICommandHandler<TCommand, TResult>>();
-                var result = await handler.Handle(command, cancellationToken);
+                var pipelines = _serviceProvider.GetServices<IPipeline<TCommand, TResult>>().ToList();
+
+                // Pipeline zinciri oluşturuluyor
+                Func<Task<TResult>> pipelineChain = () => handler.Handle(command, cancellationToken);
+                foreach (var pipeline in pipelines.AsEnumerable().Reverse()) // ters sirayla calismali
+                {
+                    var next = pipelineChain;
+                    pipelineChain = () => pipeline.HandleAsync(command, cancellationToken, next);
+                }
+
+                var result = await pipelineChain();
                 _logger.LogInformation("Handled command {CommandType} successfully", typeof(TCommand).Name);
                 return result;
             }

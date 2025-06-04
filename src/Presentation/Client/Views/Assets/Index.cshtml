@@ -150,19 +150,10 @@
                   <a class="badge rounded-pill bg-info p-2" asp-area="" asp-controller="Assets" asp-action="Info" asp-route-assetId="@item.AssetId" title="@item.AssetId idli birim portfoyu">
                     <i class="fa-solid fa-landmark"></i>
                   </a>
-                  @* <span class="badge rounded-pill bg-dark p-2 update-currencyPrice-btn" role="button"
-                    data-currency-id="@item.CurrencyId" title="@item.Title adli birim fiyatini guncelle">
-                    <i class="fa-solid fa-tag"></i>
-                  </span> *@
                   <span class="badge rounded-pill bg-warning p-2 update-asset-btn" role="button"
                     data-asset-id="@item.AssetId" title="@item.AssetId idli varligi guncelle">
                     <i class="fa-solid fa-pencil"></i>
                   </span>
-                  @* <span class='badge rounded-pill @(item.IsActive ? "bg-info" : "bg-primary") p-2 change-currency-status-btn'
-                    role="button" data-currency-id="@item.CurrencyId"
-                    title='@item.Title adli kategorinin durumunu @(item.IsActive ? "pasife" : "aktife") degistir'>
-                    <i class='fa-solid @(item.IsActive ? "fa-lock" : "fa-lock-open")'></i>
-                  </span> *@
                   <span class="badge rounded-pill bg-danger p-2 delete-asset-btn" role="button"
                     data-asset-id="@item.AssetId" title="@item.AssetId idli varligi sil">
                     <i class="fa-solid fa-trash"></i>
@@ -187,43 +178,33 @@
               @await Html.PartialAsync("_OrderTool", new SortModel("count"))
             </th>
             <th>
-              <p>Guncel Piyasa Alis Fiyati
+              Guncel Piyasa Alis Fiyati
               @await Html.PartialAsync("_OrderTool", new SortModel("currencyPurchasePrice", true))
-              </p>
               <p><b style="color:#228D57;">@UIToolHelper.RenderTL(currencyPTotal)</b></p>
             </th>
             <th>
-              <p>Guncel Piyasa Satis Fiyati
+              Guncel Piyasa Satis Fiyati
               @await Html.PartialAsync("_OrderTool", new SortModel("currencySalePrice", true))
-              </p>
               <p><b style="color:#228D57;">@UIToolHelper.RenderTL(currencySTotal)</b></p>
             </th>
             <th>
-                <p>
               Eklendigi Tarihteki Piyasa Alis Fiyati
               @await Html.PartialAsync("_OrderTool", new SortModel("currentPurchasePrice"))
-              </p>
               <p><b style="color:#228D57;">@UIToolHelper.RenderTL(cpTotal)</b></p>
             </th>
             <th>
-                <p>
               Eklendigi Tarihteki Piyasa Satis Fiyati
               @await Html.PartialAsync("_OrderTool", new SortModel("currentSalePrice"))
-              </p>
               <p><b style="color:#228D57;">@UIToolHelper.RenderTL(csTotal)</b></p>
             </th>
             <th>
-              <p>
                 Satin Alindigi Satis Fiyati
                 @await Html.PartialAsync("_OrderTool", new SortModel("purchasePrice"))
-              </p>
               <p><b style="color:#228D57;">@UIToolHelper.RenderTL(pTotal)</b></p>
             </th>
             <th>
-                <p>
               Satin Alindigi Alis Fiyati
               @await Html.PartialAsync("_OrderTool", new SortModel("salePrice"))
-              </p>
               <p><b style="color:#228D57;">@UIToolHelper.RenderTL(sTotal)</b></p>
             </th>
             <th>

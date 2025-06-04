@@ -19,19 +19,23 @@
                     "CategoryId[]", "js-category-tool", categoryTool, false, new [] {Model.Category.CategoryId.ToString()}))
                     <div class="mb-3">
                         <label asp-for="Title" class="form-label">Birim Adı</label>
-                        <input type="text" class="form-control" id="currency-title-add" asp-for="Title" />
+                        <input type="text" class="form-control" id="currency-title-update" asp-for="Title" />
                     </div>
                     <div class="mb-3">
                         <label asp-for="SubTitle" class="form-label">Tam Adı</label>
-                        <input type="text" class="form-control" id="currency-subTitle-add" asp-for="SubTitle" />
+                        <input type="text" class="form-control" id="currency-subTitle-update" asp-for="SubTitle" />
                     </div>
                     <div class="mb-3">
                         <label asp-for="TvCode" class="form-label">TV CODE</label>
-                        <input type="text" class="form-control" id="currency-tvCode-add" asp-for="TvCode" />
+                        <input type="text" class="form-control" id="currency-tvCode-update" asp-for="TvCode" />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="XPath" class="form-label">XPath</label>
+                        <input type="text" class="form-control" id="currency-datasocketkey-update" asp-for="XPath" />
                     </div>
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" asp-for="IsActive" />
-                        <label class="form-check-label" id="currency-isActive-add" asp-for="IsActive">Aktif</label>
+                        <label class="form-check-label" id="currency-isActive-update" asp-for="IsActive">Aktif</label>
                     </div>
                 </div>
                 <div class="modal-footer">

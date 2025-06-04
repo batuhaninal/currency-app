@@ -7,6 +7,9 @@ using System.Text;
 using System.Security.Claims;
 using API.Handlers;
 using Application.Models.Constants.Roles;
+using System.Net;
+using Application.Models.DTOs.Commons.Results;
+using API.Middlewares;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -42,10 +45,13 @@ builder.Services.AddAuthentication(opt =>
     };
 });
 
+builder.Services.AddExceptionHandler<ExceptionMiddleware>();
+
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy(AppRoles.Admin, policy => 
         policy
             .RequireRole(AppRoles.Admin));
+
 
 var app = builder.Build();
 
@@ -65,13 +71,29 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseExceptionHandler(opt => {});
+
+app.UseStatusCodePages(async context => // 401 / 403 gibi durum kodlarına özel yanıt
+{
+    var response = context.HttpContext.Response;
+
+    if (response.StatusCode == (int)HttpStatusCode.Forbidden)
+    {
+        response.ContentType = "application/json";
+        await response.WriteAsJsonAsync(new ResultDto((int)HttpStatusCode.Forbidden, false, null, "Access is forbidden."));
+    }
+
+    if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+    {
+        response.ContentType = "application/json";
+        await response.WriteAsJsonAsync(new ResultDto((int)HttpStatusCode.Unauthorized, false, null, "Unauthorized access."));
+    }
+});
+
+app.UseHttpsRedirection();
 app.RouteMap();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseHttpsRedirection();
-
-
 
 app.Run();

@@ -9,12 +9,13 @@ namespace Client.Models.Currencies
 
         }
 
-        public CurrencyWithHistoryResponse(int currencyId, string title, string? subTitle, string? tvCode, decimal purchasePrice, decimal salePrice, DateTime createdDate, DateTime updatedDate, bool isActive, CategoryRelationResponse category, List<CurrencyHistoryItemResponse>? currencyHistoriesHourly, List<CurrencyHistoryItemResponse>? currencyHistoriesDaily, List<CurrencyHistoryItemResponse>? currencyHistoriesWeekly, List<CurrencyHistoryItemResponse>? currencyHistoriesMonthly, List<CurrencyHistoryItemResponse>? currencyHistoriesYearly)
+        public CurrencyWithHistoryResponse(int currencyId, string title, string? subTitle, string? tvCode, string? xPath, decimal purchasePrice, decimal salePrice, DateTime createdDate, DateTime updatedDate, bool isActive, CategoryRelationResponse category, List<CurrencyHistoryItemResponse>? currencyHistoriesHourly, List<CurrencyHistoryItemResponse>? currencyHistoriesDaily, List<CurrencyHistoryItemResponse>? currencyHistoriesWeekly, List<CurrencyHistoryItemResponse>? currencyHistoriesMonthly, List<CurrencyHistoryItemResponse>? currencyHistoriesYearly)
         {
             CurrencyId = currencyId;
             Title = title;
             SubTitle = subTitle;
             TvCode = tvCode;
+            XPath = xPath;
             PurchasePrice = purchasePrice;
             SalePrice = salePrice;
             CreatedDate = createdDate;
@@ -32,6 +33,7 @@ namespace Client.Models.Currencies
         public string Title { get; init; } = null!;
         public string? SubTitle { get; init; }
         public string? TvCode { get; init; }
+        public string? XPath { get; init; }
         public decimal PurchasePrice { get; init; }
         public decimal SalePrice { get; init; }
         public DateTime CreatedDate { get; init; }

@@ -11,12 +11,13 @@ namespace Application.Models.DTOs.Currencies
 
         }
 
-        public CurrencyInfoDto(int currencyId, string title, string? subTitle, string? tvCode, decimal purchasePrice, decimal salePrice, DateTime createdDate, DateTime updatedDate, bool isActive, CategoryRelationDto? category = null)
+        public CurrencyInfoDto(int currencyId, string title, string? subTitle, string? tvCode, string? xPath, decimal purchasePrice, decimal salePrice, DateTime createdDate, DateTime updatedDate, bool isActive, CategoryRelationDto? category = null)
         {
             CurrencyId = currencyId;
             Title = title;
             SubTitle = subTitle;
             TvCode = tvCode;
+            XPath = xPath;
             PurchasePrice = purchasePrice;
             SalePrice = salePrice;
             CreatedDate = createdDate;
@@ -29,6 +30,7 @@ namespace Application.Models.DTOs.Currencies
         public string Title { get; init; } = null!;
         public string? SubTitle { get; init; }
         public string? TvCode { get; init; }
+        public string? XPath { get; init; }
         public decimal PurchasePrice { get; init; }
         public decimal SalePrice { get; init; }
         public DateTime CreatedDate { get; init; }
@@ -44,12 +46,13 @@ namespace Application.Models.DTOs.Currencies
 
         }
 
-        public CurrencyWithHistoryDto(int currencyId, string title, string? subTitle, string? tvCode, decimal purchasePrice, decimal salePrice, DateTime createdDate, DateTime updatedDate, bool isActive, CategoryRelationDto? category = null)
+        public CurrencyWithHistoryDto(int currencyId, string title, string? subTitle, string? tvCode, string? xPath, decimal purchasePrice, decimal salePrice, DateTime createdDate, DateTime updatedDate, bool isActive, CategoryRelationDto? category = null)
         {
             CurrencyId = currencyId;
             Title = title;
             SubTitle = subTitle;
             TvCode = tvCode;
+            XPath = xPath;
             PurchasePrice = purchasePrice;
             SalePrice = salePrice;
             CreatedDate = createdDate;
@@ -62,6 +65,7 @@ namespace Application.Models.DTOs.Currencies
         public string Title { get; init; } = null!;
         public string? SubTitle { get; init; }
         public string? TvCode { get; init; }
+        public string? XPath { get; init; }
         public decimal PurchasePrice { get; init; }
         public decimal SalePrice { get; init; }
         public DateTime CreatedDate { get; init; }

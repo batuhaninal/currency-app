@@ -48,20 +48,47 @@
             </div>
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Sign in to start your session</p>
-                <form asp-area="" asp-controller="Auth" asp-action="Login" method="post">
+                <form asp-area="" asp-controller="Auth" asp-action="Register" method="post">
                     <div class="input-group mb-1">
                         <div class="form-floating">
-                            <input id="loginEmail" type="email" class="form-control" value="" placeholder="" />
-                            <label for="loginEmail">Email</label>
+                            <input type="text" class="form-control" asp-for="FirstName" placeholder="" />
+                            <label asp-for="FirstName">Isim</label>
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
                         </div>
-                        <div class="input-group-text"><span class="bi bi-envelope"></span></div>
+                        <div class="input-group-text"><span class="bi bi-card-text"></span></div>
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
                     </div>
                     <div class="input-group mb-1">
                         <div class="form-floating">
-                            <input id="loginPassword" type="password" class="form-control" placeholder="" />
-                            <label for="loginPassword">Password</label>
+                            <input type="text" class="form-control" asp-for="LastName" placeholder="" />
+                            <label asp-for="LastName">Soyisim</label>
+                        </div>
+                        <div class="input-group-text"><span class="bi bi-card-text"></span></div>
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                    <div class="input-group mb-1">
+                        <div class="form-floating">
+                            <input type="email" class="form-control" asp-for="Username" placeholder="" />
+                            <label asp-for="Username">E-Posta</label>
+                        </div>
+                        <div class="input-group-text"><span class="bi bi-envelope"></span></div>
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+                    <div class="input-group mb-1">
+                        <div class="form-floating">
+                            <input type="password" class="form-control" asp-for="Password" placeholder="" />
+                            <label asp-for="Password">Sifre</label>
                         </div>
                         <div class="input-group-text"><span class="bi bi-lock-fill"></span></div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                     <div class="input-group mb-1">
+                        <div class="form-floating">
+                            <input type="password" class="form-control" asp-for="RepeatPassword" placeholder="" />
+                            <label asp-for="RepeatPassword">Sifre Tekrari</label>
+                        </div>
+                        <div class="input-group-text"><span class="bi bi-lock-fill"></span></div>
+                        <span asp-validation-for="RepeatPassword" class="text-danger"></span>
                     </div>
                     <!--begin::Row-->
                     <div class="social-auth-links text-center mb-3 d-grid gap-2">
@@ -78,6 +105,7 @@
 
                 <!-- /.social-auth-links -->
                 <p class="mb-1"><a href="forgot-password.html">I forgot my password</a></p>
+                <div class="text-danger" asp-validation-summary="ModelOnly"></div>
             </div>
             <!-- /.login-card-body -->
         </div>

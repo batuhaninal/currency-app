@@ -35,6 +35,11 @@ namespace Persistence.Configurations.FluentMappings.PostgreSQL
                     .IsRequired(false)
                     .HasMaxLength(20);
 
+                 c.Property(x => x.XPath)
+                    .HasColumnName("x_path")
+                    .IsRequired(false)
+                    .HasMaxLength(50);
+
                 c.Property(x=> x.PurchasePrice).HasColumnName("purchase_price").IsRequired().HasPrecision(18,2);
                 c.Property(x=> x.SalePrice).HasColumnName("sale_price").IsRequired().HasPrecision(18,2);
 

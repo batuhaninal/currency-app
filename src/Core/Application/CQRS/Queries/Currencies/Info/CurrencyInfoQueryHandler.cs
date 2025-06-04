@@ -34,6 +34,7 @@ namespace Application.CQRS.Queries.Currencies.Info
                     x.Title,
                     x.SubTitle,
                     x.TVCode,
+                    x.XPath,
                     x.PurchasePrice,
                     x.SalePrice,
                     x.CreatedDate,

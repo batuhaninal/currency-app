@@ -7,11 +7,12 @@ namespace Client.Models.Currencies
 
         }
 
-        public CurrencyInput(string title, string? subTitle, string? tVCode, decimal purchasePrice, decimal salePrice, int categoryId, bool isActive)
+        public CurrencyInput(string title, string? subTitle, string? tVCode, string? xPath, decimal purchasePrice, decimal salePrice, int categoryId, bool isActive)
         {
             Title = title;
             SubTitle = subTitle;
             TvCode = tVCode;
+            XPath = xPath;
             PurchasePrice = purchasePrice;
             SalePrice = salePrice;
             CategoryId = categoryId;
@@ -21,6 +22,7 @@ namespace Client.Models.Currencies
         public string Title { get; init; } = null!;
         public string? SubTitle { get; init; }
         public string? TvCode { get; init; }
+        public string? XPath { get; init; }
         public decimal PurchasePrice { get; init; }
         public decimal SalePrice { get; init; }
         public int CategoryId { get; init; }

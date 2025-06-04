@@ -1,5 +1,7 @@
 using Application.CQRS.Commons.Interfaces;
+using Application.Models.Constants.Messages;
 using Domain;
+using FluentValidation;
 
 namespace Application.CQRS.Commands.Assets.AddAsset
 {
@@ -42,6 +44,36 @@ namespace Application.CQRS.Commands.Assets.AddAsset
                 CurrentPurchasePrice = currentPurchasePrice,
                 CurrentSalePrice = currentSalePrice
             };
+        }
+    }
+
+    public sealed class AddAssetCommandValidator : AbstractValidator<AddAssetCommand>
+    {
+        public AddAssetCommandValidator()
+        {
+            this.RuleFor(x => x.CurrencyId)
+                .NotNull()
+                    .WithMessage(ErrorMessage.Validation.NotNull())
+                .GreaterThan(0)
+                    .WithMessage(ErrorMessage.Validation.GreaterThan());
+
+            this.RuleFor(x => x.Count)
+                .NotNull()
+                    .WithMessage(ErrorMessage.Validation.NotNull())
+                .GreaterThan(0)
+                    .WithMessage(ErrorMessage.Validation.GreaterThan());
+
+            this.RuleFor(x => x.PurchasePrice)
+                .NotNull()
+                    .WithMessage(ErrorMessage.Validation.NotNull())
+                .GreaterThan(0)
+                    .WithMessage(ErrorMessage.Validation.GreaterThan());
+            
+            this.RuleFor(x => x.SalePrice)
+                .NotNull()
+                    .WithMessage(ErrorMessage.Validation.NotNull())
+                .GreaterThan(0)
+                    .WithMessage(ErrorMessage.Validation.GreaterThan());
         }
     }
 }

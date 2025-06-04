@@ -44,7 +44,7 @@ namespace Client.Areas.Panel.Controllers
                 var result = await _categoryService.UpdateAsync(categoryId, categoryInput);
 
                 if (!result.Success)
-                    TempData["ErrorMessage"] = result.Message ?? "Beklenmeyen hata!";
+                    this.ShowResultMessage(result);
             }
 
             return RedirectToAction(nameof(CategoriesController.Index), "Categories", new { Area = AppConstants.PANELAREA });
@@ -58,7 +58,7 @@ namespace Client.Areas.Panel.Controllers
             {
                 var result = await _categoryService.AddAsync(categoryInput);
                 if (!result.Success)
-                    TempData["ErrorMessage"] = result.Message ?? "Beklenmeyen hata!";
+                    this.ShowResultMessage(result);
             }
 
             return RedirectToAction(nameof(CategoriesController.Index), "Categories", new { Area = AppConstants.PANELAREA });

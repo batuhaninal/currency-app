@@ -41,6 +41,7 @@ namespace Application.CQRS.Commands.Currencies.Update
                 currency.SubTitle = command.SubTitle;
                 currency.TVCode = command.TvCode;
                 currency.IsActive = command.IsActive;
+                currency.XPath = command.XPath;
 
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -57,6 +58,7 @@ namespace Application.CQRS.Commands.Currencies.Update
                     currency.Title,
                     currency.SubTitle,
                     currency.TVCode,
+                    currency.XPath,
                     currency.PurchasePrice,
                     currency.SalePrice,
                     currency.CreatedDate,

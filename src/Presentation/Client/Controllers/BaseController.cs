@@ -27,9 +27,22 @@ namespace Client.Controllers
         {
             bool valid = result.Success;
             if (valid)
-                TempData["Success"] = result.Message ?? "Basarili";
+            {
+                TempData["Success"] = result.Message ?? "Başarılı";
+            }
             else
-                TempData["Error"] = result.Message ?? "Beklenmeyen Hata!";
+            {
+                string errorMessage = result.Message ?? "Beklenmeyen Hata!";
+                string validationMessage = "";
+
+                if (result.ValidationErrors != null && result.ValidationErrors.Any())
+                {
+                    validationMessage = JsonSerializer.Serialize(result.ValidationErrors);
+                }
+
+                TempData["Errors"] = errorMessage;
+                TempData["DbValidationErrors"] = validationMessage;
+            }
 
             return valid;
         }

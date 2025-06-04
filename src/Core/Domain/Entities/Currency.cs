@@ -7,6 +7,7 @@ namespace Domain
         public string Title { get; set; } = null!;
         public string? SubTitle { get; set; }
         public string? TVCode { get; set; }
+        public string? XPath { get; set; }
         public decimal PurchasePrice { get; set; }
         public decimal SalePrice { get; set; }
         public int CategoryId { get; set; }

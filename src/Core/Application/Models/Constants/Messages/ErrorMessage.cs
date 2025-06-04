@@ -122,5 +122,87 @@ namespace Application.Models.Constants.Messages
             _ => "Asset is not found!"
         };
         #endregion
+
+        #region Validation
+        public static class Validation
+        {
+            public static string NotNull() => CurrentLanguage switch
+            {
+                Language.TR => "{PropertyName} alanı boş olamaz!",
+                Language.EN => "{PropertyName} field cannot be empty!",
+                _ => "{PropertyName} field cannot be empty!"
+            };
+
+            public static string Length() => CurrentLanguage switch
+            {
+                Language.TR => "{PropertyName} alanı {TotalLength} karakter olmalı!",
+                Language.EN => "{PropertyName} field must be {TotalLength} characters long!",
+                _ => "{PropertyName} field must be {TotalLength} characters long!"
+            };
+
+            public static string MaxLength() => CurrentLanguage switch
+            {
+                Language.TR => "{PropertyName} alanı en fazla {MaxLength} karakter olabilir!",
+                Language.EN => "{PropertyName} field can be maximum {MaxLength} characters long!",
+                _ => "{PropertyName} field can be maximum {MaxLength} characters long!"
+            };
+
+            public static string MinLength() => CurrentLanguage switch
+            {
+                Language.TR => "{PropertyName} alanı en az {MinLength} karakter olmalı!",
+                Language.EN => "{PropertyName} field must be at least {MinLength} characters long!",
+                _ => "{PropertyName} field must be at least {MinLength} characters long!"
+            };
+
+            public static string BetweenLength() => CurrentLanguage switch
+            {
+                Language.TR => "{PropertyName} alanı {MinLength} ile {MaxLength} karakter arasında olmalı!",
+                Language.EN => "{PropertyName} field must be between {MinLength} and {MaxLength} characters long!",
+                _ => "{PropertyName} field must be between {MinLength} and {MaxLength} characters long!"
+            };
+
+            public static string GreaterThan() => CurrentLanguage switch
+            {
+                Language.TR => "{PropertyName} alanı {ComparisonValue}'den büyük olmalı!",
+                Language.EN => "{PropertyName} field must be greater than {ComparisonValue}!",
+                _ => "{PropertyName} field must be greater than {ComparisonValue}!"
+            };
+
+            public static string LessThan() => CurrentLanguage switch
+            {
+                Language.TR => "{PropertyName} alanı {ComparisonValue}'den küçük olmalı!",
+                Language.EN => "{PropertyName} field must be less than {ComparisonValue}!",
+                _ => "{PropertyName} field must be less than {ComparisonValue}!"
+            };
+
+            public static string GreaterThanOrEqual() => CurrentLanguage switch
+            {
+                Language.TR => "{PropertyName} alanı {ComparisonValue} veya daha büyük olmalı!",
+                Language.EN => "{PropertyName} field must be greater than or equal to {ComparisonValue}!",
+                _ => "{PropertyName} field must be greater than or equal to {ComparisonValue}!"
+            };
+
+            public static string LessThanOrEqual() => CurrentLanguage switch
+            {
+                Language.TR => "{PropertyName} alanı {ComparisonValue} veya daha küçük olmalı!",
+                Language.EN => "{PropertyName} field must be less than or equal to {ComparisonValue}!",
+                _ => "{PropertyName} field must be less than or equal to {ComparisonValue}!"
+            };
+
+            public static string Email => CurrentLanguage switch
+            {
+                Language.TR => "Geçerli bir e-posta giriniz!",
+                Language.EN => "Please enter a valid email!",
+                _ => "Please enter a valid email!"
+            };
+
+            public static string PasswordsNotMatches => CurrentLanguage switch
+            {
+                Language.TR => "Şifreler uyuşmuyor!",
+                Language.EN => "Passwords do not match!",
+                _ => "Passwords do not match!"
+            };
+        }
+        #endregion
     }
 }

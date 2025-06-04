@@ -58,6 +58,10 @@
               @await Html.PartialAsync("_OrderTool", new SortModel("tvCode"))
             </th>
             <th>
+              Web Scrapping Key
+              @await Html.PartialAsync("_OrderTool", new SortModel("xPath"))
+            </th>
+            <th>
               Durum
               @await Html.PartialAsync("_OrderTool", new SortModel("isActive"))
             </th>
@@ -88,6 +92,9 @@
               </td>
               <td>
                 @item.TvCode
+              </td>
+              <td>
+                @item.XPath
               </td>
               <td>
                 <span class='badge @(item.IsActive ? "bg-primary" : "bg-info")'>

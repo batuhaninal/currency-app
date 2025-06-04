@@ -1,10 +1,7 @@
 using System.Text.Json.Serialization;
-using Application.Abstractions.Commons.Results;
-using Application.Abstractions.Commons.Tokens;
-using Application.Abstractions.Repositories.Commons;
 using Application.CQRS.Commons.Interfaces;
-using Application.Models.DTOs.Assets;
-using Application.Models.DTOs.Commons.Results;
+using Application.Models.Constants.Messages;
+using FluentValidation;
 
 namespace Application.CQRS.Commands.Assets.Update
 {
@@ -31,36 +28,33 @@ namespace Application.CQRS.Commands.Assets.Update
         public DateOnly PurchaseDate { get; init; }
     }
 
-    public sealed class UpdateAssetCommandHandler : ICommandHandler<UpdateAssetCommand, IBaseResult>
+    public sealed class UpdateAssetCommandValidator : AbstractValidator<UpdateAssetCommand>
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IUserTokenService  _userTokenService;
-
-        public UpdateAssetCommandHandler(IUnitOfWork unitOfWork, IUserTokenService userTokenService)
+        public UpdateAssetCommandValidator()
         {
-            _unitOfWork = unitOfWork;
-            _userTokenService = userTokenService;
-        }
+            this.RuleFor(x => x.AssetId)
+                .NotNull()
+                    .WithMessage(ErrorMessage.Validation.NotNull())
+                .GreaterThan(0)
+                    .WithMessage(ErrorMessage.Validation.GreaterThan());
 
-        public async Task<IBaseResult> Handle(UpdateAssetCommand command, CancellationToken cancellationToken = default)
-        {
-            IBaseResult result = await _unitOfWork.AssetRule.CheckExistAsync(command.AssetId, _userTokenService.UserId, cancellationToken);
+            this.RuleFor(x => x.Count)
+                .NotNull()
+                    .WithMessage(ErrorMessage.Validation.NotNull())
+                .GreaterThan(0)
+                    .WithMessage(ErrorMessage.Validation.GreaterThan());
 
-            if (!result.Success)
-                return result;
-
-            var asset = await _unitOfWork
-                .AssetReadRepository
-                .GetByIdAsync(command.AssetId, true, cancellationToken);
-
-            asset!.PurchasePrice = command.PurchasePrice;
-            asset.SalePrice = command.SalePrice;
-            asset.Count = command.Count;
-            asset.PurchaseDate = command.PurchaseDate;
-
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return new ResultDto(203, true, new AssetForUpdateDto(asset.Id, asset.Count, asset.PurchasePrice, asset.SalePrice, asset.PurchaseDate)); 
+            this.RuleFor(x => x.PurchasePrice)
+                .NotNull()
+                    .WithMessage(ErrorMessage.Validation.NotNull())
+                .GreaterThan(0)
+                    .WithMessage(ErrorMessage.Validation.GreaterThan());
+            
+            this.RuleFor(x => x.SalePrice)
+                .NotNull()
+                    .WithMessage(ErrorMessage.Validation.NotNull())
+                .GreaterThan(0)
+                    .WithMessage(ErrorMessage.Validation.GreaterThan());
         }
     }
 }

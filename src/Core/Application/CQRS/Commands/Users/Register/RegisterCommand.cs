@@ -1,5 +1,7 @@
 using Application.CQRS.Commons.Interfaces;
+using Application.Models.Constants.Messages;
 using Domain.Entities;
+using FluentValidation;
 
 namespace Application.CQRS.Commands.Users.Register
 {
@@ -8,7 +10,7 @@ namespace Application.CQRS.Commands.Users.Register
         // public Guid Id => Guid.NewGuid();
         public RegisterCommand()
         {
-            
+
         }
 
         public RegisterCommand(string username, string password, string firstName, string lastName)
@@ -21,6 +23,7 @@ namespace Application.CQRS.Commands.Users.Register
 
         public string Username { get; init; } = null!;
         public string Password { get; init; } = null!;
+        public string RepeatPassword { get; init; } = null!;
         public string FirstName { get; init; } = null!;
         public string LastName { get; init; } = null!;
 
@@ -38,6 +41,40 @@ namespace Application.CQRS.Commands.Users.Register
                 UpdatedDate = now,
                 IsActive = true,
             };
+        }
+    }
+
+    public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand>
+    {
+        public RegisterCommandValidator()
+        {
+            this.RuleFor(x => x.Username)
+                .NotNull()
+                    .WithMessage(ErrorMessage.Validation.NotNull())
+                .MinimumLength(5)
+                    .WithMessage(ErrorMessage.Validation.MinLength())
+                .MaximumLength(100)
+                    .WithMessage(ErrorMessage.Validation.MaxLength())
+                .EmailAddress()
+                    .WithMessage(ErrorMessage.Validation.Email);
+
+            this.RuleFor(x => x.Password)
+                .NotNull()
+                    .WithMessage(ErrorMessage.Validation.NotNull())
+                .MinimumLength(5)
+                    .WithMessage(ErrorMessage.Validation.MinLength())
+                .MaximumLength(100)
+                    .WithMessage(ErrorMessage.Validation.MaxLength());
+
+            this.RuleFor(x => x.RepeatPassword)
+                .NotEmpty()
+                    .WithMessage(ErrorMessage.Validation.NotNull())
+                .NotNull()
+                    .WithMessage(ErrorMessage.Validation.NotNull())
+                .MaximumLength(100)
+                    .WithMessage(ErrorMessage.Validation.MaxLength())
+                .Equal(x => x.Password)
+                    .WithMessage(ErrorMessage.Validation.PasswordsNotMatches);
         }
     }
 }

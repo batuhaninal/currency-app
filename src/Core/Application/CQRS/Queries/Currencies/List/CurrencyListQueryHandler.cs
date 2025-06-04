@@ -32,6 +32,7 @@ namespace Application.CQRS.Queries.Currencies.List
                     x.Title,
                     x.SubTitle,
                     x.TVCode,
+                    x.XPath,
                     x.PurchasePrice,
                     x.SalePrice,
                     x.IsActive,

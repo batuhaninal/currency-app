@@ -6,5 +6,6 @@
         bool Success { get; }
         string? Message { get; }
         object? Data { get; }
+        IDictionary<string, string[]>? ValidationErrors { get; }
     }
 }

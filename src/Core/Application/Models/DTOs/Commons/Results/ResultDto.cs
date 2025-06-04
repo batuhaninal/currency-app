@@ -4,20 +4,26 @@ namespace Application.Models.DTOs.Commons.Results
 {
     public class ResultDto : IBaseResult
     {
-        public ResultDto(int statusCode, bool success, object? data, string? message)
+        public ResultDto(int statusCode, bool success, object? data, string? message, IDictionary<string, string[]>? validationErrors)
         {
             StatusCode = statusCode;
             Success = success;
             Message = message;
             Data = data;
+            ValidationErrors = validationErrors;
         }
-
-        public ResultDto(int statusCode, bool success, object? data) : this(statusCode, success, data, null)
+        
+        public ResultDto(int statusCode, bool success, object? data, string? message) : this(statusCode, success, data, message, null)
         {
-            
+
         }
 
-        public ResultDto(int statusCode, bool success) : this(statusCode, success, null, null)
+        public ResultDto(int statusCode, bool success, object? data) : this(statusCode, success, data, null, null)
+        {
+
+        }
+
+        public ResultDto(int statusCode, bool success) : this(statusCode, success, null, null, null)
         {
             
         }
@@ -29,5 +35,7 @@ namespace Application.Models.DTOs.Commons.Results
         public string? Message { get; }
 
         public object? Data { get; }
+
+        public IDictionary<string, string[]>? ValidationErrors { get; }
     }
 }

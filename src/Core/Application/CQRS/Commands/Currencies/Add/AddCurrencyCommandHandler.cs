@@ -80,7 +80,7 @@ namespace Application.CQRS.Commands.Currencies.Add
                             }
                         }
                         CategoryRelationDto? category = await _unitOfWork.CategoryReadRepository.Table.AsNoTracking().Where(x => x.Id == currency.CategoryId).Select(x => new CategoryRelationDto(x.Id, x.Title)).FirstOrDefaultAsync();
-                        result = new ResultDto(201, true, new CurrencyItemDto(currency.Id, currency.Title, currency.SubTitle, currency.TVCode, currency.PurchasePrice, currency.SalePrice, currency.IsActive, category));
+                        result = new ResultDto(201, true, new CurrencyItemDto(currency.Id, currency.Title, currency.SubTitle, currency.TVCode, currency.XPath, currency.PurchasePrice, currency.SalePrice, currency.IsActive, category));
                     }
 
                     await tx.CommitAsync(cancellationToken);

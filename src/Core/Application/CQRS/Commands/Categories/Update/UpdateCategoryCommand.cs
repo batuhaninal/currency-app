@@ -1,6 +1,8 @@
 using System.Text.Json.Serialization;
 using Application.CQRS.Commons.Interfaces;
+using Application.Models.Constants.Messages;
 using Domain;
+using FluentValidation;
 
 namespace Application.CQRS.Commands.Categories.Update
 {
@@ -28,6 +30,26 @@ namespace Application.CQRS.Commands.Categories.Update
             category.Title = Title;
             category.IsActive = IsActive;
             category.UpdatedDate = DateTime.UtcNow;
+        }
+    }
+
+    public sealed class UpdateCategoryCommandValidator : AbstractValidator<UpdateCategoryCommand>
+    {
+        public UpdateCategoryCommandValidator()
+        {
+            this.RuleFor(x => x.CategoryId)
+                .NotNull()
+                    .WithMessage(ErrorMessage.Validation.NotNull())
+                .GreaterThan(0)
+                    .WithMessage(ErrorMessage.Validation.GreaterThan());
+
+            this.RuleFor(x => x.Title)
+                .NotNull()
+                    .WithMessage(ErrorMessage.Validation.NotNull())
+                .MinimumLength(2)
+                    .WithMessage(ErrorMessage.Validation.MinLength())
+                .MaximumLength(50)
+                    .WithMessage(ErrorMessage.Validation.MaxLength());
         }
     }
 }

@@ -4,6 +4,7 @@ using Application.Abstractions.Services.Externals;
 using Application.Models.DTOs.CurrencyHistories;
 using Application.Models.DTOs.Externals;
 using Domain;
+using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,84 +12,85 @@ using Microsoft.Extensions.Logging;
 
 namespace Adapter.Services.BackgroundServices
 {
-    public sealed class HourlyCurrencyBackgroundService : BackgroundService
+    public sealed class HourlyScrapperBackgroundService : BackgroundService
     {
-        private readonly ITradingViewService _tradingViewService;
+        private readonly IWebScrappingService _webScrappingService;
         private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger<HourlyCurrencyBackgroundService> _logger;
+        private readonly ILogger<HourlyScrapperBackgroundService> _logger;
 
-        public HourlyCurrencyBackgroundService(ITradingViewService tradingViewService, IServiceProvider serviceProvider, ILogger<HourlyCurrencyBackgroundService> logger)
+        public HourlyScrapperBackgroundService(IWebScrappingService webScrappingService, IServiceProvider serviceProvider, ILogger<HourlyScrapperBackgroundService> logger)
         {
-            _tradingViewService = tradingViewService;
+            _webScrappingService = webScrappingService;
             _serviceProvider = serviceProvider;
             _logger = logger;
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("{Service} background service started at: {Now}", typeof(HourlyCurrencyBackgroundService).Name, DateTime.UtcNow);
             return base.StartAsync(cancellationToken);
         }
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            while (!stoppingToken.IsCancellationRequested)
+            while (!cancellationToken.IsCancellationRequested)
             {
                 using (var scope = _serviceProvider.CreateScope())
                 {
-                    IUnitOfWork unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+                    var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
                     DateTime now = DateTime.UtcNow;
 
-                    _logger.LogInformation("{Service} background service execute started at: {Now}", typeof(HourlyCurrencyBackgroundService).Name, now);
+                    _logger.LogInformation("{Service} background service execute started at: {Now}", typeof(HourlyScrapperBackgroundService).Name, now);
 
-                    List<Currency> currencies = await unitOfWork
+                    var keys = await unitOfWork
                         .CurrencyReadRepository
                         .Table
                         .AsNoTracking()
-                        .ToListAsync(stoppingToken);
+                        .Where(x => x.XPath != null && x.XPath != string.Empty)
+                        .Select(x => x.XPath)
+                        .ToArrayAsync(cancellationToken);
 
-                    string[] currencyList = currencies.Select(x => x.TVCode ?? "RENALDOMESSI").ToArray();
+                    _logger.LogInformation("{Service} background service external service request started at: {Now}", typeof(HourlyScrapperBackgroundService).Name, DateTime.UtcNow);
 
-                    _logger.LogInformation("{Service} background service external service request started at: {Now}", typeof(HourlyCurrencyBackgroundService).Name, DateTime.UtcNow);
+                    var fetchedData = await _webScrappingService.FetchDovizcomXAUDataAsync(keys, cancellationToken);
 
-                    var tradingData = await _tradingViewService.FetchData(1_000, "TRY", cancellationToken: stoppingToken, currencyList);
+                    _logger.LogInformation("{Service} background service external service request finished at: {Now}", typeof(HourlyScrapperBackgroundService).Name, DateTime.UtcNow);
 
-                    _logger.LogInformation("{Service} background service external service request finished at: {Now}", typeof(HourlyCurrencyBackgroundService).Name, DateTime.UtcNow);
-
-                    foreach (var item in tradingData)
+                    foreach (var data in fetchedData)
                     {
-                        Console.WriteLine(item.TotalCount);
-                        Console.WriteLine(item.Data);
-                    }
-
-                    foreach (var currency in currencies)
-                    {
-                        if (currency.TVCode != null)
+                        if (data != null && data.Value > 0)
                         {
-                            TradingViewResponseData? trading = tradingData.SelectMany(x => x.Data).FirstOrDefault(a => a.Currency == currency.TVCode);
-                            if (trading != null)
-                            {
-                                await UpdateValue(unitOfWork, currency, trading, stoppingToken);
-                                await Task.Delay(1_000, stoppingToken);
-                            }
+                            await UpdateValue(unitOfWork, data, now, cancellationToken);
+                            await Task.Delay(1_000, cancellationToken);
                         }
                     }
 
-                    await Task.Delay(1_000 * 60 * 60, stoppingToken);
+                    await Task.Delay(1_000 * 60 * 60, cancellationToken);
                 }
             }
         }
 
-        private async Task UpdateValue(IUnitOfWork unitOfWork, Currency currency, TradingViewResponseData tradingViewResponse, CancellationToken cancellationToken)
+        private async Task UpdateValue(IUnitOfWork unitOfWork, XAUData xauData, DateTime fetchDate, CancellationToken cancellationToken)
         {
             using (var tx = unitOfWork.BeginTransaction())
             {
                 try
                 {
-                    currency.UpdatedDate = tradingViewResponse.Date.Value;
-                    currency.PurchasePrice = tradingViewResponse.D[0];
-                    currency.SalePrice = tradingViewResponse.D[0];
+                    Currency? currency = await unitOfWork
+                                .CurrencyReadRepository
+                                .Table
+                                .FirstOrDefaultAsync(x => x.XPath == xauData.Key, cancellationToken);
 
-                    currency = unitOfWork.CurrencyWriteRepository.Update(currency);
+                    if (currency == null)
+                        return;
+
+                    currency.UpdatedDate = fetchDate;
+                    if (xauData.Attr == "bid")
+                    {
+                        currency.PurchasePrice = xauData.Value;
+                    }
+                    else if (xauData.Attr == "ask")
+                    {
+                        currency.SalePrice = xauData.Value;
+                    }
 
                     await unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -139,7 +141,7 @@ namespace Adapter.Services.BackgroundServices
                 }
                 catch (System.Exception ex)
                 {
-                    _logger.LogError("{Function} exception: {Exception}", typeof(HourlyCurrencyBackgroundService).Name, ex);
+                    _logger.LogError("{Function} exception: {Exception}", typeof(HourlyScrapperBackgroundService).Name, ex);
                     await tx.RollbackAsync(cancellationToken);
                 }
             }
@@ -147,14 +149,19 @@ namespace Adapter.Services.BackgroundServices
 
         public override Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("{Service} background service stopped at: {Now}", typeof(HourlyCurrencyBackgroundService).Name, DateTime.UtcNow);
             return base.StopAsync(cancellationToken);
         }
 
         public override void Dispose()
         {
-            _logger.LogInformation("{Service} background service disposed at: {Now}", typeof(HourlyCurrencyBackgroundService).Name, DateTime.UtcNow);
             base.Dispose();
         }
+    }
+
+    public class AltinVerisi
+    {
+        public string Key { get; set; }
+        public string Attr { get; set; }
+        public string Value { get; set; }
     }
 }

@@ -1,17 +1,17 @@
-using Domain;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Configurations.FluentMappings.PostgreSQL
 {
-    public static class AssetMap
+    public static class TempAssetItemMap
     {
         public static void ConfigureAssetMap(this ModelBuilder builder)
         {
-            builder.Entity<Asset>(c =>
+            builder.Entity<TempAssetItem>(c =>
             {
                 c.HasKey(x => x.Id);
 
-                c.ToTable("assets");
+                c.ToTable("temp_asset_items");
 
                 c.Property(x => x.Id).HasColumnName("id").ValueGeneratedOnAdd();
 
@@ -32,13 +32,7 @@ namespace Persistence.Configurations.FluentMappings.PostgreSQL
 
                 c.Property(x => x.CurrencyId).HasColumnName("currency_id").IsRequired();
 
-                c.Property(x => x.PurchaseDate).HasColumnName("purchase_date").IsRequired();
-
                 c.HasOne(x => x.Currency);
-
-                c.Property(x => x.UserId).HasColumnName("user_id").IsRequired();
-
-                c.HasOne(x => x.User);
             });
         }
     }

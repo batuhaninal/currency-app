@@ -1,0 +1,17 @@
+# Build output
+**/bin/
+**/obj/
+
+# Docker
+**/Dockerfile*
+**/.dockerignore*
+
+# Git
+**/.git
+
+# IDE files
+*.user
+*.suo
+
+# Node modules (varsa frontend projelerde)
+node_modules/

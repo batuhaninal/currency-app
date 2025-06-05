@@ -27,6 +27,23 @@
               role="menu"
               data-accordion="false"
             >
+            @if(User.IsInRole("admin"))
+            {
+              <li class="nav-header">Kategoriler</li>
+              <li class="nav-item">
+                <a asp-area="panel" asp-controller="Categories" asp-action="Index" class="nav-link">
+                  <i class="fa-solid fa-money-bill"></i>
+                  <p>Kategoriler Tablosu</p>
+                </a>
+              </li>
+              <li class="nav-header">Birimler</li>
+              <li class="nav-item">
+                <a asp-area="panel" asp-controller="Currencies" asp-action="Index" class="nav-link">
+                  <i class="fa-solid fa-money-bill"></i>
+                  <p>Birimler Tablosu</p>
+                </a>
+              </li>
+            }
               <li class="nav-header">Varliklar</li>
               <li class="nav-item">
                 <a asp-area="" asp-controller="Assets" asp-action="Index" class="nav-link">

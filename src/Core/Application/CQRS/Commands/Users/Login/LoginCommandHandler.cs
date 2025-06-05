@@ -3,6 +3,7 @@ using Application.Abstractions.Commons.Security;
 using Application.Abstractions.Commons.Tokens;
 using Application.Abstractions.Repositories.Commons;
 using Application.CQRS.Commons.Interfaces;
+using Application.Models.Constants.Messages;
 using Application.Models.DTOs.Commons.Results;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -26,18 +27,17 @@ namespace Application.CQRS.Commands.Users.Login
         {
             IBaseResult result = await _unitOfWork.UserRule.CheckExistAsync(command.Username);
 
-            if (result.Success)
-            {
-                User user = (await _unitOfWork.UserReadRepository.Table.AsNoTracking().Include(x=> x.UserRoles).ThenInclude(x=> x.Role).FirstOrDefaultAsync(x => x.Email == command.Username))!;
-                bool pswResult = _hashingService.VerifyPassword(command.Password, user.PasswordHash, user.PasswordSalt);
-                if (pswResult)
-                {
-                    var token = _tokenService.CreateAccessToken(user, 60 * 24 * 30);
-                    return new ResultDto(200, pswResult, token);
-                }
-            }
+            if (!result.Success)
+                return result;
 
-            return result;
+            User user = (await _unitOfWork.UserReadRepository.Table.AsNoTracking().Include(x => x.UserRoles).ThenInclude(x => x.Role).FirstOrDefaultAsync(x => x.Email == command.Username))!;
+            bool pswResult = _hashingService.VerifyPassword(command.Password, user.PasswordHash, user.PasswordSalt);
+
+            if (!pswResult)
+                return new ResultDto(400, false, null, ErrorMessage.USEREXIST);
+
+            var token = _tokenService.CreateAccessToken(user, 60 * 24 * 30);
+            return new ResultDto(200, pswResult, token);
         }
     }
 }

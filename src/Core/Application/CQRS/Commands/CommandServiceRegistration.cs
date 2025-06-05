@@ -11,6 +11,7 @@ using Application.CQRS.Commands.Currencies.ChangeStatus;
 using Application.CQRS.Commands.Currencies.Delete;
 using Application.CQRS.Commands.Currencies.Update;
 using Application.CQRS.Commands.Currencies.UpdateValue;
+using Application.CQRS.Commands.UpdateProfile;
 using Application.CQRS.Commands.Users.Login;
 using Application.CQRS.Commands.Users.Register;
 using Application.CQRS.Commons.Interfaces;
@@ -22,11 +23,16 @@ namespace Application.CQRS.Commands
     {
         public static void BindCommands(this IServiceCollection services)
         {
+            #region User
             services.AddScoped<RegisterCommandHandler>();
             services.AddScoped<ICommandHandler<RegisterCommand, IBaseResult>, RegisterCommandHandler>();
 
             services.AddScoped<LoginCommandHandler>();
             services.AddScoped<ICommandHandler<LoginCommand, IBaseResult>, LoginCommandHandler>();
+
+            services.AddScoped<UpdateProfileCommand>();
+            services.AddScoped<ICommandHandler<UpdateProfileCommand, IBaseResult>, UpdateProfileCommandHandler>();
+            #endregion
 
             #region Asset
             services.AddScoped<AddAssetCommandHandler>();
@@ -38,7 +44,7 @@ namespace Application.CQRS.Commands
             services.AddScoped<DeleteAssetCommand>();
             services.AddScoped<ICommandHandler<DeleteAssetCommand, IBaseResult>, DeleteAssetCommandHandler>();
             #endregion
-            
+
             #region Currency
             services.AddScoped<AddCurrencyCommand>();
             services.AddScoped<ICommandHandler<AddCurrencyCommand, IBaseResult>, AddCurrencyCommandHandler>();

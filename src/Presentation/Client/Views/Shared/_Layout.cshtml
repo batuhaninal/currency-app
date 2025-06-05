@@ -1,72 +1,136 @@
-﻿<!DOCTYPE html>
+﻿@using System.Text.Json
+@{
+  var validationErrorsJson = TempData["ValidationErrors"] as string;
+  List<string>? validationErrors = new();
+
+  if (!string.IsNullOrEmpty(validationErrorsJson))
+  {
+    validationErrors = System.Text.Json.JsonSerializer.Deserialize<List<string>>(validationErrorsJson);
+  }
+
+  var dbValidationErrorsJson = TempData["DbValidationErrors"] as string;
+  IDictionary<string, string[]>? dbValidationErrors = null;
+
+  if (!string.IsNullOrEmpty(dbValidationErrorsJson))
+  {
+    dbValidationErrors = JsonSerializer.Deserialize<Dictionary<string, string[]>>(dbValidationErrorsJson);
+  }
+}
+<!DOCTYPE html>
 <html lang="tr">
-  <!--begin::Head-->
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>AdminLTE | Dashboard v3</title>
-    <!--begin::Primary Meta Tags-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="title" content="AdminLTE | Dashboard v3" />
-    <meta name="author" content="ColorlibHQ" />
-    <meta
-      name="description"
-      content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS."
-    />
-    <meta
-      name="keywords"
-      content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard"
-    />
-    <!--end::Primary Meta Tags-->
-    @await Html.PartialAsync("_Styles.cshtml")
-    @await RenderSectionAsync("Styles", false)
-  </head>
-  <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-    <!--begin::App Wrapper-->
-    <div class="app-wrapper">
-      <!--begin::Header-->
-      @await Html.PartialAsync("_Navbar.cshtml")
-      <!--end::Header-->
-      <!--begin::Sidebar-->
-        @await Html.PartialAsync("_Sidebar.cshtml")
-      <!--end::Sidebar-->
-      <!--begin::App Main-->
-      <main class="app-main">
-        <!--begin::App Content Header-->
-        <div class="app-content-header">
-          <!--begin::Container-->
-          <div class="container-fluid">
-            <!--begin::Row-->
-            <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0">Dashboard v3</h3></div>
-              <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Dashboard v3</li>
-                </ol>
-              </div>
+<!--begin::Head-->
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>AdminLTE | Dashboard v3</title>
+  <!--begin::Primary Meta Tags-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="title" content="AdminLTE | Dashboard v3" />
+  <meta name="author" content="ColorlibHQ" />
+  <meta name="description"
+    content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS." />
+  <meta name="keywords"
+    content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard" />
+  <!--end::Primary Meta Tags-->
+  @await Html.PartialAsync("_Styles.cshtml")
+  @await RenderSectionAsync("Styles", false)
+</head>
+
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+  <!--begin::App Wrapper-->
+  <div class="app-wrapper">
+    <!--begin::Header-->
+    @await Html.PartialAsync("_Navbar.cshtml")
+    <!--end::Header-->
+    <!--begin::Sidebar-->
+    @await Html.PartialAsync("_Sidebar.cshtml")
+    <!--end::Sidebar-->
+    <!--begin::App Main-->
+    <main class="app-main">
+      <!--begin::App Content Header-->
+      <div class="app-content-header">
+        <!--begin::Container-->
+        <div class="container-fluid">
+          <!--begin::Row-->
+          <div class="row">
+            <div class="col-sm-6">
+              <h3 class="mb-0">Dashboard v3</h3>
             </div>
-            <!--end::Row-->
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-end">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Dashboard v3</li>
+              </ol>
+            </div>
           </div>
-          <!--end::Container-->
+          <!--end::Row-->
         </div>
-        <div class="app-content">
-          <!--begin::Container-->
-          <div class="container-fluid">
-            @RenderBody()
+        <!--end::Container-->
+      </div>
+      <div class="app-content">
+        <!--begin::Container-->
+        <div class="container-fluid">
+          <div id="alertBoxDiv">
+            @if (TempData["ErrorMessage"] != null)
+            {
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            }
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            }
+
+            @if (validationErrors != null)
+            {
+              @foreach (var err in validationErrors)
+              {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  @err
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              }
+            }
+
+            @if (dbValidationErrors != null)
+            {
+              foreach (var error in dbValidationErrors)
+              {
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  <strong>@error.Key:</strong>
+                  <ul class="mb-0">
+                    @foreach (var msg in error.Value)
+                    {
+                      <li>@msg</li>
+                    }
+                  </ul>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              }
+            }
           </div>
-          <!--end::Container-->
+          @RenderBody()
         </div>
-        <!--end::App Content-->
-      </main>
-      <!--end::App Main-->
-      <!--begin::Footer-->
-      @await Html.PartialAsync("_Footer.cshtml")
-      <!--end::Footer-->
-    </div>
-    <!--end::App Wrapper-->
-    <!--begin::Script-->
-    @await Html.PartialAsync("_Scripts.cshtml")
-    @await RenderSectionAsync("Scripts", false)
-    <!--end::Script-->
-  </body>
+        <!--end::Container-->
+      </div>
+      <!--end::App Content-->
+    </main>
+    <!--end::App Main-->
+    <!--begin::Footer-->
+    @await Html.PartialAsync("_Footer.cshtml")
+    <!--end::Footer-->
+  </div>
+  <!--end::App Wrapper-->
+  <!--begin::Script-->
+  @await Html.PartialAsync("_Scripts.cshtml")
+  @await RenderSectionAsync("Scripts", false)
+  <!--end::Script-->
+</body>
+
 </html>

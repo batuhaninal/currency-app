@@ -11,6 +11,7 @@ using Application.CQRS.Commands.Currencies.ChangeStatus;
 using Application.CQRS.Commands.Currencies.Delete;
 using Application.CQRS.Commands.Currencies.Update;
 using Application.CQRS.Commands.Currencies.UpdateValue;
+using Application.CQRS.Commands.UpdateProfile;
 using Application.CQRS.Commands.Users.Login;
 using Application.CQRS.Commands.Users.Register;
 using Application.CQRS.Commons.Services;
@@ -58,6 +59,12 @@ namespace API.Handlers
             users.MapGet("profile",
                 async ([FromServices] IUserHandler handler, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.GetProfile(dispatcher, cancellationToken))
                 .WithName("Profile")
+                .WithTags("Users")
+                .RequireAuthorization();
+
+            users.MapPut("update-profile",
+                async ([FromServices] IUserHandler handler, [FromBody] UpdateProfileCommand command, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.UpdateProfile(command, dispatcher, cancellationToken))
+                .WithName("Update Profile")
                 .WithTags("Users")
                 .RequireAuthorization();
 

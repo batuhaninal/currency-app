@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace Helpers
+namespace Client.Helpers
 {
     public static class UIToolHelper
     {

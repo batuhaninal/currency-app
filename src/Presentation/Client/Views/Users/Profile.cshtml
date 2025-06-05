@@ -1,0 +1,77 @@
+@model UserProfileResponse
+@{
+    Layout = "_Layout";
+}
+
+<form asp-area="" asp-controller="Users" asp-action="Profile" method="post" novalidate>
+    <div class="container mt-5" style="max-width: 600px;">
+        <!-- Profil Bilgileri -->
+        <div class="card shadow rounded">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Profil Bilgilerim</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label asp-for="FirstName" class="form-label">Isim</label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="LastName" class="form-label">Soyisim</label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label id="prof-email" class="form-label">E-Posta</label>
+                    <input id="prof-email" value="@Model.Email" class="form-control" readonly />
+                </div>
+
+                <div class="mb-3">
+                    <label id="prof-role" class="form-label">Rol</label>
+                    <input id="prof-role" value="@Model.Role" class="form-control" readonly />
+                </div>
+
+                <div class="text-end">
+                    <button type="submit" class="btn btn-success">Bilgileri Güncelle</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Şifre Güncelleme -->
+        <div class="card shadow rounded mt-4">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">Şifre Güncelle</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3 form-floating">
+                    <input type="password" class="form-control" id="old-psw-prof" name="OldPassword"
+                        placeholder="Mevcut Şifreniz" />
+                    <label for="old-psw-prof">Mevcut Şifreniz</label>
+                    <span class="text-danger" data-valmsg-for="OldPassword" data-valmsg-replace="true"></span>
+                </div>
+
+                <div class="mb-3 form-floating">
+                    <input type="password" class="form-control" id="new-psw-prof" name="NewPassword"
+                        placeholder="Yeni Şifre" />
+                    <label for="new-psw-prof">Yeni Şifre</label>
+                    <span class="text-danger" data-valmsg-for="NewPassword" data-valmsg-replace="true"></span>
+                </div>
+
+                <div class="mb-3 form-floating">
+                    <input type="password" class="form-control" id="repeat-psw-prof" name="RepeatPassword"
+                        placeholder="Yeni Şifre Tekrarı" />
+                    <label for="repeat-psw-prof">Yeni Şifre Tekrarı</label>
+                    <span class="text-danger" data-valmsg-for="RepeatPassword" data-valmsg-replace="true"></span>
+                </div>
+
+                <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+                <div class="text-end">
+                    <button type="submit" class="btn btn-warning">Şifreyi Güncelle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

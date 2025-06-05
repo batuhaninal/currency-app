@@ -1,0 +1,37 @@
+@model BaseResult<UserProfileResponse>
+@{
+    Layout = null;
+}
+
+<li class="nav-item dropdown user-menu">
+    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+        @* <img src="../../dist/assets/img/user2-160x160.jpg" class="user-image rounded-circle shadow" alt="User Image" /> *@
+        <span class="d-none d-md-inline">
+            @(Model.Success && Model.Data != null ? string.Format("{0} {1}", Model.Data.FirstName, Model.Data.LastName) : "")
+        </span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+        <!--begin::User Image-->
+        <li class="user-header text-bg-primary">
+            <img src="../../dist/assets/img/user2-160x160.jpg" class="rounded-circle shadow" alt="User Image" />
+            <p>
+                @(Model.Success && Model.Data != null ? string.Format("{0} {1} - {2}", Model.Data.FirstName, Model.Data.LastName, Model.Data.Role) : "")
+            </p>
+        </li>
+        <!--end::User Image-->
+        <!--begin::Menu Footer-->
+        <li class="user-footer">
+            <div class="d-flex justify-content-around">
+                <a asp-area="" asp-controller="Users" asp-action="Profile" class="btn btn-warning btn-round" title="Profil bilgileri">
+                    <i class="fa-solid fa-id-card"></i>
+                </a>
+                <form asp-area="" asp-controller="Auth" asp-action="Logout" method="post">
+                    <button type="submit" class="btn btn-danger btn-round float-end" title="Cikis yap">
+                        <i class="fa-solid fa-power-off"></i>
+                    </button>
+                </form>
+            </div>
+        </li>
+        <!--end::Menu Footer-->
+    </ul>
+</li>

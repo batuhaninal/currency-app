@@ -29,7 +29,7 @@ namespace Client.Controllers
                 if (!result.Success)
                 {
                     ModelState.AddModelError("", result.Message ?? "Beklenmeyen Hata!");
-                    return View();
+                    return View(input);
                 }
 
                 return RedirectToAction(nameof(HomeController.Index), "Home");
@@ -65,6 +65,16 @@ namespace Client.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Logout()
+        {
+            var result = await _authService.LogoutAsync(HttpContext);
+            if (!this.ShowResultMessage(result))
+                return Redirect(HttpContext.Request.Path);
+
+            return RedirectToAction(nameof(AuthController.Login), "Auth");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> LogoutUser()
         {
             var result = await _authService.LogoutAsync(HttpContext);
             if (!this.ShowResultMessage(result))

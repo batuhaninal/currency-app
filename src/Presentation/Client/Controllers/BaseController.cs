@@ -28,7 +28,8 @@ namespace Client.Controllers
             bool valid = result.Success;
             if (valid)
             {
-                TempData["Success"] = result.Message ?? "Başarılı";
+                if(!string.IsNullOrEmpty(result.Message))
+                    TempData["SuccessMessage"] = result.Message;
             }
             else
             {
@@ -40,7 +41,7 @@ namespace Client.Controllers
                     validationMessage = JsonSerializer.Serialize(result.ValidationErrors);
                 }
 
-                TempData["Errors"] = errorMessage;
+                TempData["ErrorMessage"] = errorMessage;
                 TempData["DbValidationErrors"] = validationMessage;
             }
 

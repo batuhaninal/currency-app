@@ -40,6 +40,12 @@ namespace Application.Models.Constants.Messages
             Language.EN => "User email already taken!",
             _ => "User email already taken!"
         };
+        public static string USERPASSWORDINVALID => CurrentLanguage switch
+        {
+            Language.TR => "Lutfen sifrenizi kontrol ediniz!",
+            Language.EN => "Please check your old password!",
+            _ => "Please check your old password!",
+        };
         #endregion
 
         #region Role
@@ -201,6 +207,13 @@ namespace Application.Models.Constants.Messages
                 Language.TR => "Şifreler uyuşmuyor!",
                 Language.EN => "Passwords do not match!",
                 _ => "Passwords do not match!"
+            };
+
+            public static string NewPasswordCannotBeSame => CurrentLanguage switch
+            {
+                Language.TR => "Yeni sifreniz eski sifreniz ile ayni olamaz!",
+                Language.EN => "New password cannot be same as old password!",
+                _ => "New password cannot be same as old password!"
             };
         }
         #endregion

@@ -24,8 +24,6 @@ namespace Client.Services.Auth
             if (!data.Success)
                 return data;
 
-            Console.WriteLine(data.Data.AccessToken);
-
             await LoginToAppAsync(httpContext, data.Data);
 
             return data;

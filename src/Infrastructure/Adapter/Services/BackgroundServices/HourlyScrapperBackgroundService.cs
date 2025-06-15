@@ -101,7 +101,7 @@ namespace Adapter.Services.BackgroundServices
                         historyResult = await unitOfWork.CurrencyHistoryRule.CheckCurrencyTimeAsync(currency.Id, currency.UpdatedDate, cancellationToken);
                         if (historyResult.Success)
                         {
-                            CurrencyHistory currencyHistory = (await unitOfWork.CurrencyHistoryReadRepository.FindByConditionAsync(x => x.CurrencyId == currency.Id && x.UpdatedDate.Hour == currency.UpdatedDate.Hour, true, cancellationToken))!;
+                            CurrencyHistory currencyHistory = (await unitOfWork.CurrencyHistoryReadRepository.FindByConditionAsync(x => x.CurrencyId == currency.Id && x.CreatedDate.Date == currency.UpdatedDate.Date && x.Date == DateOnly.FromDateTime(currency.UpdatedDate.Date) && x.UpdatedDate.Year == currency.UpdatedDate.Year && x.UpdatedDate.Month == currency.UpdatedDate.Month && x.UpdatedDate.Day == currency.UpdatedDate.Day && x.UpdatedDate.Hour == currency.UpdatedDate.Hour, true, cancellationToken))!;
 
                             currencyHistory.UpdatedDate = currency.UpdatedDate;
                             currencyHistory.OldPurchasePrice = currencyHistory.NewPurchasePrice;

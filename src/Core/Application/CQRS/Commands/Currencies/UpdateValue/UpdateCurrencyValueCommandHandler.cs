@@ -54,7 +54,7 @@ namespace Application.CQRS.Commands.Currencies.UpdateValue
                                 .Select(x => new CurrencyHistoryPriceDto(x.Id, x.CurrencyId, x.OldPurchasePrice, x.NewPurchasePrice, x.OldPurchasePrice, x.NewSalePrice))
                                 .FirstOrDefaultAsync(cancellationToken);
 
-                            historyResult = await _unitOfWork.CurrencyHistoryRule.CheckCurrencyTimeAsync(currency.Id, currency.UpdatedDate.Hour, cancellationToken);
+                            historyResult = await _unitOfWork.CurrencyHistoryRule.CheckCurrencyTimeAsync(currency.Id, currency.UpdatedDate, cancellationToken);
                             if (historyResult.Success)
                             {
                                 CurrencyHistory currencyHistory = (await _unitOfWork.CurrencyHistoryReadRepository.FindByConditionAsync(x => x.CurrencyId == currency.Id && x.UpdatedDate.Hour == currency.UpdatedDate.Hour, true, cancellationToken))!;

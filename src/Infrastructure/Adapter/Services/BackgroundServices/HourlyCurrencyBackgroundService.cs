@@ -8,7 +8,6 @@ using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Adapter.Services.BackgroundServices
 {
@@ -97,15 +96,7 @@ namespace Adapter.Services.BackgroundServices
                     IBaseResult historyResult = await unitOfWork.CurrencyHistoryRule.CheckCurrencyCountValidAsync(currency.Id, DateOnly.FromDateTime(currency.UpdatedDate), cancellationToken: cancellationToken);
                     if (historyResult.Success)
                     {
-                        CurrencyHistoryPriceDto? currencyHistoryPriceDto = await unitOfWork.CurrencyHistoryReadRepository
-                            .Table
-                            .AsNoTracking()
-                            .Where(x => x.CurrencyId == currency.Id)
-                            .OrderByDescending(x => x.UpdatedDate)
-                            .Select(x => new CurrencyHistoryPriceDto(x.Id, x.CurrencyId, x.OldPurchasePrice, x.NewPurchasePrice, x.OldPurchasePrice, x.NewSalePrice))
-                            .FirstOrDefaultAsync(cancellationToken);
-
-                        historyResult = await unitOfWork.CurrencyHistoryRule.CheckCurrencyTimeAsync(currency.Id, currency.UpdatedDate.Hour, cancellationToken);
+                        historyResult = await unitOfWork.CurrencyHistoryRule.CheckCurrencyTimeAsync(currency.Id, currency.UpdatedDate, cancellationToken);
                         if (historyResult.Success)
                         {
                             CurrencyHistory currencyHistory = (await unitOfWork.CurrencyHistoryReadRepository.FindByConditionAsync(x => x.CurrencyId == currency.Id && x.UpdatedDate.Hour == currency.UpdatedDate.Hour, true, cancellationToken))!;
@@ -120,6 +111,14 @@ namespace Adapter.Services.BackgroundServices
                         }
                         else
                         {
+                            CurrencyHistoryPriceDto? currencyHistoryPriceDto = await unitOfWork.CurrencyHistoryReadRepository
+                                .Table
+                                .AsNoTracking()
+                                .Where(x => x.CurrencyId == currency.Id)
+                                .OrderByDescending(x => x.UpdatedDate)
+                                .Select(x => new CurrencyHistoryPriceDto(x.Id, x.CurrencyId, x.OldPurchasePrice, x.NewPurchasePrice, x.OldPurchasePrice, x.NewSalePrice))
+                                .FirstOrDefaultAsync(cancellationToken);
+
                             _ = await unitOfWork.CurrencyHistoryWriteRepository.CreateAsync(new CurrencyHistory
                             {
                                 CurrencyId = currency.Id,

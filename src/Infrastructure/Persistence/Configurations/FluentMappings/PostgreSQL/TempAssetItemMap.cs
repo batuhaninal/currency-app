@@ -5,7 +5,7 @@ namespace Persistence.Configurations.FluentMappings.PostgreSQL
 {
     public static class TempAssetItemMap
     {
-        public static void ConfigureAssetMap(this ModelBuilder builder)
+        public static void ConfigureTempAssetItemMap(this ModelBuilder builder)
         {
             builder.Entity<TempAssetItem>(c =>
             {

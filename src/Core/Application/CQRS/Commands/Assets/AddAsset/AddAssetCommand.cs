@@ -1,6 +1,6 @@
 using Application.CQRS.Commons.Interfaces;
 using Application.Models.Constants.Messages;
-using Domain;
+using Domain.Entities;
 using FluentValidation;
 
 namespace Application.CQRS.Commands.Assets.AddAsset

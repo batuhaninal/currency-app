@@ -11,5 +11,6 @@ namespace Domain.Entities
         public string LastName { get; set; } = null!;
         public virtual ICollection<UserRole>? UserRoles { get; set; }
         public virtual ICollection<Asset>? Assets { get; set; }
+        public virtual ICollection<UserAssetHistory>? UserAssetHistories { get; set; }
     }
 }

@@ -7,7 +7,7 @@ using Application.Models.DTOs.Assets;
 using Application.Models.DTOs.Commons.Results;
 using Application.Models.DTOs.Currencies;
 using Application.Models.DTOs.Users;
-using Domain;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.CQRS.Commands.Assets.AddAsset

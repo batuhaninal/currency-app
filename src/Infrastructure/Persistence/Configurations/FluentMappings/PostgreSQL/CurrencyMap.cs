@@ -24,7 +24,7 @@ namespace Persistence.Configurations.FluentMappings.PostgreSQL
                     .HasColumnName("title")
                     .IsRequired()
                     .HasMaxLength(75);
-                    
+
                 c.Property(x => x.SubTitle)
                     .HasColumnName("sub_title")
                     .IsRequired(false)
@@ -35,25 +35,31 @@ namespace Persistence.Configurations.FluentMappings.PostgreSQL
                     .IsRequired(false)
                     .HasMaxLength(20);
 
-                 c.Property(x => x.XPath)
-                    .HasColumnName("x_path")
-                    .IsRequired(false)
-                    .HasMaxLength(50);
+                c.Property(x => x.XPath)
+                   .HasColumnName("x_path")
+                   .IsRequired(false)
+                   .HasMaxLength(50);
 
-                c.Property(x=> x.PurchasePrice).HasColumnName("purchase_price").IsRequired().HasPrecision(18,2);
-                c.Property(x=> x.SalePrice).HasColumnName("sale_price").IsRequired().HasPrecision(18,2);
+                c.Property(x => x.PurchasePrice).HasColumnName("purchase_price").IsRequired().HasPrecision(18, 2);
+                c.Property(x => x.SalePrice).HasColumnName("sale_price").IsRequired().HasPrecision(18, 2);
 
-                c.Property(x=> x.CategoryId).HasColumnName("category_id").IsRequired();
+                c.Property(x => x.CategoryId).HasColumnName("category_id").IsRequired();
 
-                c.HasOne(x=> x.Category);
+                c.HasOne(x => x.Category);
 
-                c.HasMany(x=> x.CurrencyHistories)
+                c.HasMany(x => x.CurrencyHistories)
                     .WithOne(ch => ch.Currency)
                     .HasForeignKey(ch => ch.CurrencyId)
                     .IsRequired()
                     .OnDelete(DeleteBehavior.Cascade);
 
-                c.HasMany(x=> x.Assets)
+                c.HasMany(x => x.Assets)
+                    .WithOne(ch => ch.Currency)
+                    .HasForeignKey(ch => ch.CurrencyId)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.Cascade);
+                    
+                c.HasMany(x=> x.UserAssetItemHistories)
                     .WithOne(ch => ch.Currency)
                     .HasForeignKey(ch => ch.CurrencyId)
                     .IsRequired()

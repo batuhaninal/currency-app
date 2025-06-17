@@ -3,6 +3,7 @@ using Application.Abstractions.Repositories.Categories;
 using Application.Abstractions.Repositories.Currencies;
 using Application.Abstractions.Repositories.CurrencyHistories;
 using Application.Abstractions.Repositories.Roles;
+using Application.Abstractions.Repositories.UserAssetHistories;
 using Application.Abstractions.Repositories.UserRoles;
 using Application.Abstractions.Repositories.Users;
 using Application.Abstractions.Rules;
@@ -26,6 +27,10 @@ namespace Application.Abstractions.Repositories.Commons
         ICurrencyHistoryWriteRepository CurrencyHistoryWriteRepository { get; }
         IAssetReadRepository AssetReadRepository { get; }
         IAssetWriteRepository AssetWriteRepository { get; }
+        IUserAssetHistoryReadRepository UserAssetHistoryReadRepository { get; }
+        IUserAssetHistoryWriteRepository UserAssetHistoryWriteRepository { get; }
+        IUserAssetItemHistoryReadRepository UserAssetItemHistoryReadRepository { get; }
+        IUserAssetItemHistoryWriteRepository UserAssetItemHistoryWriteRepository { get; }
 
         // Rules
         IAssetRule AssetRule { get; }

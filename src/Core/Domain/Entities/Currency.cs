@@ -1,3 +1,4 @@
+using Domain.Entities;
 using Domain.Entities.Commons;
 
 namespace Domain
@@ -14,5 +15,6 @@ namespace Domain
         public virtual Category Category { get; set; } = null!;
         public virtual ICollection<CurrencyHistory>? CurrencyHistories { get; set; }
         public virtual ICollection<Asset>? Assets { get; set; }
+        public virtual ICollection<UserAssetItemHistory>? UserAssetItemHistories { get; set; }
     }
 }

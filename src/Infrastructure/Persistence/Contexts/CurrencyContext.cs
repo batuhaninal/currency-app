@@ -19,6 +19,8 @@ namespace Persistence.Contexts
         public DbSet<Currency> Currencies { get; set; } = null!;
         public DbSet<CurrencyHistory> CurrencyHistories { get; set; } = null!;
         public DbSet<Asset> Assets { get; set; } = null!;
+        public DbSet<UserAssetHistory> UserAssetHistories { get; set; } = null!;
+        public DbSet<UserAssetItemHistory> UserAssetItemHistories { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,7 +31,9 @@ namespace Persistence.Contexts
             modelBuilder.ConfigureCurrencyMap();
             modelBuilder.ConfigureCurrencyHistoryMap();
             modelBuilder.ConfigureAssetMap();
-            
+            modelBuilder.ConfigureUserAssetHistoryMap();
+            modelBuilder.ConfigureUserAssetItemHistoryMap();
+
             base.OnModelCreating(modelBuilder);
         }
 

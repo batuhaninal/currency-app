@@ -44,9 +44,15 @@ namespace Persistence.Configurations.FluentMappings.PostgreSQL
                     .HasColumnName("password_salt")
                     .IsRequired();
 
-                c.HasMany(x=> x.UserRoles);
+                c.HasMany(x => x.UserRoles);
 
                 c.HasMany(x => x.Assets)
+                    .WithOne(uwf => uwf.User)
+                    .HasForeignKey(u => u.UserId)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.Cascade);
+                    
+                c.HasMany(x => x.UserAssetHistories)
                     .WithOne(uwf=> uwf.User)
                     .HasForeignKey(u=> u.UserId)
                     .IsRequired()

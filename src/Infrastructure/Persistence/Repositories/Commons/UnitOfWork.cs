@@ -4,12 +4,14 @@ using Application.Abstractions.Repositories.Commons;
 using Application.Abstractions.Repositories.Currencies;
 using Application.Abstractions.Repositories.CurrencyHistories;
 using Application.Abstractions.Repositories.Roles;
+using Application.Abstractions.Repositories.UserAssetHistories;
 using Application.Abstractions.Repositories.UserRoles;
 using Application.Abstractions.Repositories.Users;
 using Application.Abstractions.Rules;
 using Persistence.Contexts;
 using Persistence.Repositories.Categories;
 using Persistence.Repositories.Roles;
+using Persistence.Repositories.UserAssetHistories;
 using Persistence.Repositories.UserRoles;
 using Persistence.Repositories.Users;
 using Persistence.Services.Rules;
@@ -35,6 +37,10 @@ namespace Persistence.Repositories.Commons
         private readonly CurrencyHistoryWriteRepository _currencyHistoryWriteRepository;
         private readonly AssetReadRepository _assetReadRepository;
         private readonly AssetWriteRepository _assetWriteRepository;
+        private readonly UserAssetHistoryReadRepository _userAssetHistoryReadRepository;
+        private readonly UserAssetHistoryWriteRepository _userAssetHistoryWriteRepository;
+        private readonly UserAssetItemHistoryReadRepository _userAssetItemHistoryReadRepository;
+        private readonly UserAssetItemHistoryWriteRepository _userAssetItemHistoryWriteRepository;
         #endregion
 
         #region Rule Interfaces
@@ -82,6 +88,14 @@ namespace Persistence.Repositories.Commons
         public IAssetReadRepository AssetReadRepository => _assetReadRepository ?? new AssetReadRepository(_context);
 
         public IAssetWriteRepository AssetWriteRepository => _assetWriteRepository ?? new AssetWriteRepository(_context);
+
+        public IUserAssetHistoryReadRepository UserAssetHistoryReadRepository => _userAssetHistoryReadRepository ?? new UserAssetHistoryReadRepository(_context);
+
+        public IUserAssetHistoryWriteRepository UserAssetHistoryWriteRepository => _userAssetHistoryWriteRepository ?? new UserAssetHistoryWriteRepository(_context);
+
+        public IUserAssetItemHistoryReadRepository UserAssetItemHistoryReadRepository => _userAssetItemHistoryReadRepository ?? new UserAssetItemHistoryReadRepository(_context);
+
+        public IUserAssetItemHistoryWriteRepository UserAssetItemHistoryWriteRepository => _userAssetItemHistoryWriteRepository ?? new UserAssetItemHistoryWriteRepository(_context);
         #endregion
 
         #region Rule Instances

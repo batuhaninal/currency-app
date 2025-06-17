@@ -34,6 +34,7 @@ namespace Adapter
 
             services.AddHostedService<HourlyCurrencyBackgroundService>();
             services.AddHostedService<HourlyScrapperBackgroundService>();
+            services.AddHostedService<UserAssetHistoryBackgroundService>();
         }
     }
 }

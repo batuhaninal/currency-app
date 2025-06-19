@@ -50,6 +50,12 @@ namespace Client.Services.Assets
             return result;
         }
 
+        public async Task<BaseResult<List<UserAssetsForOperationResponse>>> UserAssetsForOperationAsync(CancellationToken cancellationToken = default)
+        {
+            BaseResult<List<UserAssetsForOperationResponse>> result = await this.GetAsync<List<UserAssetsForOperationResponse>>(_httpClient, "users-assets-for-operation", null, cancellationToken);
+            return result;
+        }
+
         public async Task<BaseResult<List<UserAssetSummaryResponse>>> UserAssetSummaryAsync(CancellationToken cancellationToken = default)
         {
             BaseResult<List<UserAssetSummaryResponse>> result = await this.GetAsync<List<UserAssetSummaryResponse>>(_httpClient, "summary", null, cancellationToken);

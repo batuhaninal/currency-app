@@ -23,12 +23,12 @@ namespace Client.Services
 
             services.AddHttpClient<ICategoryService, CategoryService>(opt =>
             {
-                opt.BaseAddress = new Uri($"{AppConstants.APIURL}/panel/categories/");
+                opt.BaseAddress = new Uri($"{AppConstants.APIURL}/categories/");
             }).AddHttpMessageHandler<TokenMiddleware>();
 
             services.AddHttpClient<ICurrencyService, CurrencyService>(opt =>
             {
-                opt.BaseAddress = new Uri($"{AppConstants.APIURL}/panel/currencies/");
+                opt.BaseAddress = new Uri($"{AppConstants.APIURL}/currencies/");
             }).AddHttpMessageHandler<TokenMiddleware>();
 
             services.AddHttpClient<IToolService, ToolService>(opt =>

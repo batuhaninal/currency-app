@@ -20,9 +20,11 @@ using Application.CQRS.Queries.Assets.GetUserAssetHistory;
 using Application.CQRS.Queries.Assets.GetUserAssetInfo;
 using Application.CQRS.Queries.Assets.GetUsersAssets;
 using Application.CQRS.Queries.Assets.UserAssetItems;
+using Application.CQRS.Queries.Assets.UserAssetsForOperationQuery;
 using Application.CQRS.Queries.Assets.UserSummary;
 using Application.CQRS.Queries.Categories.Info;
 using Application.CQRS.Queries.Categories.List;
+using Application.CQRS.Queries.Currencies.Calculator;
 using Application.CQRS.Queries.Currencies.Info;
 using Application.CQRS.Queries.Currencies.List;
 using Application.CQRS.Queries.Currencies.WithHistoryInfo;
@@ -39,8 +41,6 @@ namespace API.Handlers
         public static void RouteMap(this IEndpointRouteBuilder app)
         {
             var api = app.MapGroup("api");
-
-            var panel = api.MapGroup("panel");
 
             var auth = api.MapGroup("auth");
 
@@ -139,9 +139,20 @@ namespace API.Handlers
                 .WithTags("Assets")
                 .RequireAuthorization();
 
+            asset.MapGet("users-assets-for-operation",
+                async ([FromServices] IAssetHandler handler, [AsParameters] UserAssetsForOperationQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.UserAssetsForOperation(query, dispatcher, cancellationToken))
+                .WithName("User's Assets For Operation")
+                .WithTags("Assets")
+                .RequireAuthorization();
+
             var currency = api.MapGroup("currencies");
 
-            var currencyPanel = panel.MapGroup("currencies");
+            currency.MapGet("calculator",
+                async ([FromServices] ICurrencyHandler handler, [AsParameters] CalculatorQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.Calculator(query, dispatcher, cancellationToken))
+                .WithName("Calculator")
+                .WithTags("Currencies");
+
+            var currencyPanel = currency.MapGroup("panel");
 
             currencyPanel.MapGet("",
                 async ([FromServices] ICurrencyHandler handler, [AsParameters] CurrencyListQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.List(query, dispatcher, cancellationToken))
@@ -223,7 +234,7 @@ namespace API.Handlers
 
             var category = api.MapGroup("categories");
 
-            var categoryPanel = panel.MapGroup("categories");
+            var categoryPanel = category.MapGroup("panel");
 
             categoryPanel.MapPost("",
                 async ([FromServices] ICategoryHandler handler, [FromBody] AddCategoryCommand command, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.AddAsync(command, dispatcher, cancellationToken))
@@ -253,7 +264,6 @@ namespace API.Handlers
             categoryPanel.MapDelete("{categoryId}",
                 async ([FromServices] ICategoryHandler handler, [FromRoute(Name = "categoryId")] int categoryId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
                 {
-                    throw new Exception("sex");
                     return await handler.DeleteAsync(new DeleteCategoryCommand(categoryId), dispatcher, cancellationToken);
                 }) 
                 .WithName("Delete Category")

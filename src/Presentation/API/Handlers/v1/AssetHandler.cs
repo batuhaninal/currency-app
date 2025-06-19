@@ -9,6 +9,7 @@ using Application.CQRS.Queries.Assets.GetUserAssetHistory;
 using Application.CQRS.Queries.Assets.GetUserAssetInfo;
 using Application.CQRS.Queries.Assets.GetUsersAssets;
 using Application.CQRS.Queries.Assets.UserAssetItems;
+using Application.CQRS.Queries.Assets.UserAssetsForOperationQuery;
 using Application.CQRS.Queries.Assets.UserSummary;
 
 namespace API.Handlers.v1
@@ -66,6 +67,12 @@ namespace API.Handlers.v1
         public async Task<IResult> UserSummary(UserSummaryAssetQuery query, Dispatcher dispatcher, CancellationToken cancellationToken)
         {
             IBaseResult result = await dispatcher.SendQueryAsync<UserSummaryAssetQuery, IBaseResult>(query, cancellationToken);
+            return Results.Json(result, statusCode: result.StatusCode);
+        }
+
+        public async Task<IResult> UserAssetsForOperation(UserAssetsForOperationQuery query, Dispatcher dispatcher, CancellationToken cancellationToken)
+        {
+            IBaseResult result = await dispatcher.SendQueryAsync<UserAssetsForOperationQuery, IBaseResult>(query, cancellationToken);
             return Results.Json(result, statusCode: result.StatusCode);
         }
     }

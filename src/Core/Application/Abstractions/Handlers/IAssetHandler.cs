@@ -7,6 +7,7 @@ using Application.CQRS.Queries.Assets.GetUserAssetHistory;
 using Application.CQRS.Queries.Assets.GetUserAssetInfo;
 using Application.CQRS.Queries.Assets.GetUsersAssets;
 using Application.CQRS.Queries.Assets.UserAssetItems;
+using Application.CQRS.Queries.Assets.UserAssetsForOperationQuery;
 using Application.CQRS.Queries.Assets.UserSummary;
 using Microsoft.AspNetCore.Http;
 
@@ -23,5 +24,6 @@ namespace Application.Abstractions.Handlers
         Task<IResult> GetUsersAssetHistory(GetUserAssetHistoryQuery query, Dispatcher dispatcher, CancellationToken cancellationToken);
         Task<IResult> UserAssetItems(UserAssetItemsQuery query, Dispatcher dispatcher, CancellationToken cancellationToken);
         Task<IResult> UserSummary(UserSummaryAssetQuery query, Dispatcher dispatcher, CancellationToken cancellationToken);
+        Task<IResult> UserAssetsForOperation(UserAssetsForOperationQuery query, Dispatcher dispatcher, CancellationToken cancellationToken);
     }
 }

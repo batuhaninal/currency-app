@@ -5,9 +5,11 @@ using Application.CQRS.Queries.Assets.GetUserAssetHistory;
 using Application.CQRS.Queries.Assets.GetUserAssetInfo;
 using Application.CQRS.Queries.Assets.GetUsersAssets;
 using Application.CQRS.Queries.Assets.UserAssetItems;
+using Application.CQRS.Queries.Assets.UserAssetsForOperationQuery;
 using Application.CQRS.Queries.Assets.UserSummary;
 using Application.CQRS.Queries.Categories.Info;
 using Application.CQRS.Queries.Categories.List;
+using Application.CQRS.Queries.Currencies.Calculator;
 using Application.CQRS.Queries.Currencies.Info;
 using Application.CQRS.Queries.Currencies.List;
 using Application.CQRS.Queries.Currencies.WithHistoryInfo;
@@ -52,6 +54,9 @@ namespace Application.CQRS.Queries
 
             services.AddScoped<UserSummaryAssetQuery>();
             services.AddScoped<IQueryHandler<UserSummaryAssetQuery, IBaseResult>, UserSummaryAssetQueryHandler>();
+
+            services.AddScoped<UserAssetsForOperationQuery>();
+            services.AddScoped<IQueryHandler<UserAssetsForOperationQuery, IBaseResult>, UserAssetsForOperationQueryHandler>();
             #endregion
 
             #region Category
@@ -74,6 +79,9 @@ namespace Application.CQRS.Queries
 
             services.AddScoped<CurrencyPriceInfoQuery>();
             services.AddScoped<IQueryHandler<CurrencyPriceInfoQuery, IBaseResult>, CurrencyPriceInfoQueryHandler>();
+
+            services.AddScoped<CalculatorQuery>();
+            services.AddScoped<IQueryHandler<CalculatorQuery, IBaseResult>, CalculatorQueryHandler>();
             #endregion
         }
     }

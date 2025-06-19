@@ -7,6 +7,7 @@ namespace Client.Services.Assets
     public interface IAssetService
     {
         Task<BaseResult<List<UserAssetWithGroupResponse>>> UserAssetsWithGroupAsync(CancellationToken cancellationToken = default);
+        Task<BaseResult<List<UserAssetsForOperationResponse>>> UserAssetsForOperationAsync(CancellationToken cancellationToken = default);
         Task<BaseResult<UserAssetInfoResponse>> UserAssetInfoAsync(int assetId, CancellationToken cancellationToken = default);
         Task<BaseResult<PaginationResult<UserAssetItemResponse>>> UserAssetsAsync(AssetRequestParameter parameter, CancellationToken cancellationToken = default);
         Task<BaseResult<List<UserAssetSummaryResponse>>> UserAssetSummaryAsync(CancellationToken cancellationToken = default);

@@ -1,0 +1,243 @@
+@model List<CalculatorItemResponse>
+
+<div class="modal fade" id="calculator-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class='modal-header bg-info'>
+                <h5 class="modal-title">Hesap Makinesi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" id="modal-body">
+                <table class="table" id="calculator-asset-table">
+                    <thead>
+                        <tr>
+                            <th>Kategorisi</th>
+                            <th>Başlık</th>
+                            <th>Alt Başlık</th>
+                            <th>Alış Fiyatı</th>
+                            <th>Satış Fiyatı</th>
+                            <th>Seçilen Adet</th>
+                            <th>Ekle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var asset in Model)
+                        {
+                            <tr data-id="@asset.CurrencyId" data-title="@asset.Title" data-subtitle="@asset.SubTitle"
+                                data-purchase="@asset.PurchasePrice" data-sale="@asset.SalePrice">
+                                <td>@asset.Category.Title</td>
+                                <td>@asset.Title</td>
+                                <td>@asset.SubTitle</td>
+                                <td>@asset.PurchasePrice</td>
+                                <td>@asset.SalePrice</td>
+                                <td>
+                                    <input type="number" class="form-control count-input" min="1" />
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill bg-info p-2 add-calculator-asset-btn" role="button"
+                                        title="Birim ekle">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <hr />
+
+                <h4>Seçilen Varlıklar</h4>
+                <table class="table" id="calculator-selected-asset-table">
+                    <thead>
+                        <tr>
+                            <th>Başlık</th>
+                            <th>Adet</th>
+                            <th>Toplam Alış</th>
+                            <th>Toplam Satış</th>
+                            <th>Sil</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="2" class="text-end">Toplam:</th>
+                            <th id="calculator-total-purchase" style="color:#228D57;">0.00</th>
+                            <th id="calculator-total-sale" style="color:#228D57;">0.00</th>
+                        </tr>
+                    </tfoot>
+                </table>
+                <div class="text-end mt-2">
+                    <span class="badge rounded-pill bg-danger p-2" id="calculator-clear-btn" role="button" title="Tum birimleri temizle">
+                        <i class="fa-solid fa-toilet"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const assetTable = document.querySelector("#calculator-asset-table tbody");
+        const selectedAssetTable = document.querySelector("#calculator-selected-asset-table tbody");
+
+        document.querySelectorAll(".add-calculator-asset-btn").forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const row = this.closest('tr');
+                const id = row.dataset.id;
+                const title = row.dataset.title;
+                const subTitle = row.dataset.subtitle;
+                const purchase = parseFloat(row.dataset.purchase);
+                const sale = parseFloat(row.dataset.sale);
+                const countInput = row.querySelector('.count-input');
+                const count = parseInt(countInput.value);
+
+                if (!count || count < 1) {
+                    alert("Lutfen gecerli bir adet giriniz!");
+                    return;
+                }
+
+                let existingRow = selectedAssetTable.querySelector(`tr[data-id="${id}"]`);
+
+                if (existingRow) {
+                    const currentCount = parseInt(existingRow.dataset.count);
+                    const newCount = currentCount + count;
+                    existingRow.dataset.count = newCount;
+                    updateRow(existingRow, newCount, purchase, sale);
+                } else {
+                    const newRow = document.createElement('tr');
+                    newRow.dataset.id = id;
+                    newRow.dataset.title = title;
+                    newRow.dataset.subtitle = subTitle;
+                    newRow.dataset.count = count;
+                    newRow.dataset.purchase = purchase;
+                    newRow.dataset.sale = sale;
+
+                    newRow.innerHTML = `
+                        <td>${title}</td>
+                        <td class="calculator-count-cell">
+                            <span class="badge rounded-pill bg-secondary p-2 calculator-decrement-btn" role="button">
+                                <i class="fa-solid fa-minus"></i>
+                            </span>
+                            <input type="number" class="form-control fomr-control-sm calculator-count-edit-input d-inline-block mx-2 text-center" style="width: 80px;" min="1" value="${count}" />
+                            <span class="badge rounded-pill bg-secondary p-2 calculator-increment-btn" role="button">
+                                <i class="fa-solid fa-plus"></i>
+                            </span>
+                        </td>
+                        <td class="calculator-purchase-cell">
+                            ${(count * purchase).toFixed(2)}
+                        </td>
+                        <td class="calculator-sale-cell">
+                            ${(count * sale).toFixed(2)}
+                        </td>
+                        <td>
+                            <span class="badge rounded-pill bg-danger p-2 calculator-remove-row-btn" role="button">
+                                <i class="fa-solid fa-trash"></i>
+                            </span>
+                        </td>
+                    `;
+
+                    selectedAssetTable.appendChild(newRow);
+
+                    attachButtons(newRow);
+                }
+
+                countInput.value = "";
+                updateTotals();
+            });
+        });
+
+        document.getElementById("calculator-clear-btn").addEventListener('click', function () {
+            const selectedRows = selectedAssetTable.querySelectorAll("tbody tr");
+
+            selectedRows.forEach(row => {
+                row.remove();
+            });
+
+            updateTotals();
+        });
+
+        function updateRow(row, count, purchase, sale) {
+            row.querySelector('.calculator-count-cell input').value = count;
+            row.querySelector('.calculator-purchase-cell').textContent = (count * purchase).toFixed(2);
+            row.querySelector('.calculator-sale-cell').textContent = (count * sale).toFixed(2);
+        }
+
+        function attachButtons(row) {
+            const decrementBtn = row.querySelector(".calculator-decrement-btn");
+            const incrementBtn = row.querySelector(".calculator-increment-btn");
+            const countInput = row.querySelector(".calculator-count-edit-input");
+            const purchaseCell = row.querySelector(".calculator-purchase-cell");
+            const saleCell = row.querySelector(".calculator-sale-cell");
+            const id = row.dataset.id;
+            const purchase = parseFloat(row.dataset.purchase);
+            const sale = parseFloat(row.dataset.sale);
+
+            decrementBtn.addEventListener('click', function () {
+                let count = parseInt(countInput.value);
+                if (count > 1) {
+                    countInput.value = count - 1;
+                    countInput.dispatchEvent(new Event('change'));
+                }
+            });
+
+            incrementBtn.addEventListener('click', function () {
+                let count = parseInt(countInput.value);
+                if (count > 1) {
+                    countInput.value = count + 1;
+                    countInput.dispatchEvent(new Event('change'));
+                }
+            });
+
+            countInput.addEventListener('change', function () {
+                let newCount = parseInt(this.value);
+
+                const id = row.dataset.id;
+                const sourceRow = document.querySelector(`#assetTable tr[data-id="${id}"]`);
+                let previousCount = parseInt(row.dataset.count);
+
+                if (!newCount || newCount < 1) {
+                    alert("Geçerli bir adet giriniz.");
+                    this.value = previousCount;
+                    return;
+                }
+
+                const diff = newCount - previousCount;
+                row.dataset.count = newCount;
+
+                purchaseCell.textContent = (newCount * purchase).toFixed(2);
+                saleCell.textContent = (newCount * sale).toFixed(2);
+
+                updateTotals();
+            });
+
+            const removeBtn = row.querySelector(".calculator-remove-row-btn");
+            removeBtn.addEventListener('click', function () {
+                const id = row.dataset.id;
+                const count = parseInt(row.dataset.count);
+
+                row.remove();
+                updateTotals();
+            });
+        }
+
+        function updateTotals() {
+            let totalPurchase = 0;
+            let totalSale = 0;
+
+            selectedAssetTable.querySelectorAll("tbody tr").forEach(row => {
+                const purchase = parseFloat(row.querySelector(".calculator-purchase-cell").textContent);
+                const sale = parseFloat(row.querySelector(".calculator-sale-cell").textContent);
+
+                totalPurchase += purchase;
+                totalSale += sale;
+            });
+
+            document.getElementById("calculator-total-purchase").textContent = `₺${totalPurchase.toFixed(2)}`;
+            document.getElementById("calculator-total-sale").textContent = `₺${totalSale.toFixed(2)}`;
+
+        }
+    })();
+</script>

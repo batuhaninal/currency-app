@@ -6,6 +6,7 @@ using Application.CQRS.Commands.Currencies.Delete;
 using Application.CQRS.Commands.Currencies.Update;
 using Application.CQRS.Commands.Currencies.UpdateValue;
 using Application.CQRS.Commons.Services;
+using Application.CQRS.Queries.Currencies.Calculator;
 using Application.CQRS.Queries.Currencies.Info;
 using Application.CQRS.Queries.Currencies.List;
 using Application.CQRS.Queries.Currencies.WithHistoryInfo;
@@ -18,6 +19,12 @@ namespace API.Handlers.v1
         public async Task<IResult> Add(AddCurrencyCommand command, Dispatcher dispatcher, CancellationToken cancellationToken)
         {
             IBaseResult result = await dispatcher.SendCommandAsync<AddCurrencyCommand, IBaseResult>(command, cancellationToken);
+            return Results.Json(result, statusCode: result.StatusCode);
+        }
+
+        public async Task<IResult> Calculator(CalculatorQuery query, Dispatcher dispatcher, CancellationToken cancellationToken)
+        {
+            IBaseResult result = await dispatcher.SendQueryAsync<CalculatorQuery, IBaseResult>(query, cancellationToken);
             return Results.Json(result, statusCode: result.StatusCode);
         }
 

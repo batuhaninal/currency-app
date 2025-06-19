@@ -73,6 +73,15 @@ namespace Client.Controllers
             return PartialView("_AssetAddPopup", new AssetAddInput());
         }
 
+        [HttpGet]
+        public async Task<PartialViewResult> CalculatorPopup()
+        {
+            var result = await _assetService.UserAssetsForOperationAsync();
+            _ = this.ShowResultMessage(result);
+
+            return PartialView("_AssetOperationPopup", result.Data ?? new());
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddOperation([FromForm] AssetAddInput input)

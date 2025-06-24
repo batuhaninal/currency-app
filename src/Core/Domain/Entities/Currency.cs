@@ -1,7 +1,6 @@
-using Domain.Entities;
 using Domain.Entities.Commons;
 
-namespace Domain
+namespace Domain.Entities
 {
     public class Currency : BaseEntity
     {

@@ -4,19 +4,10 @@ using Application.Abstractions.Repositories.Commons;
 using Application.CQRS.Commons.Interfaces;
 using Application.Models.DTOs.Assets;
 using Application.Models.DTOs.Commons.Results;
-using Application.Models.DTOs.Currencies;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.CQRS.Queries.Assets.UserAssetsForOperationQuery
 {
-    public sealed record UserAssetsForOperationQuery : IQuery
-    {
-        public UserAssetsForOperationQuery()
-        {
-
-        }
-    }
-
     public sealed class UserAssetsForOperationQueryHandler : IQueryHandler<UserAssetsForOperationQuery, IBaseResult>
     {
         private readonly IUnitOfWork _unitOfWork;

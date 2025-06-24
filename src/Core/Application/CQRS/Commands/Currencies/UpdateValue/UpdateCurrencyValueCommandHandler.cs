@@ -6,7 +6,7 @@ using Application.Models.DTOs.Categories;
 using Application.Models.DTOs.Commons.Results;
 using Application.Models.DTOs.Currencies;
 using Application.Models.DTOs.CurrencyHistories;
-using Domain;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

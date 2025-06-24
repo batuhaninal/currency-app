@@ -40,8 +40,12 @@ namespace Application.Abstractions.Repositories.Commons
         IUserRule UserRule { get; }
         IRoleRule RoleRule { get; }
         IUserRoleRule UserRoleRule { get; }
+        IUserAssetHistoryRule UserAssetHistoryRule { get; }
 
         IDatabaseTransaction BeginTransaction();
+        Task<TResult> ExecuteWithRetryAsync<TResult>(
+            Func<IUnitOfWork, CancellationToken, Task<TResult>> operation,
+            CancellationToken cancellationToken);
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
         int SaveChanges();
     }

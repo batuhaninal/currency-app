@@ -1,5 +1,5 @@
 using Application.Abstractions.Repositories.Currencies;
-using Domain;
+using Domain.Entities;
 using Persistence.Contexts;
 using Persistence.Repositories.Commons;
 

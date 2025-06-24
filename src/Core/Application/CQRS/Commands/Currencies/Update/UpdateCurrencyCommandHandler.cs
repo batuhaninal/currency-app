@@ -4,7 +4,7 @@ using Application.CQRS.Commons.Interfaces;
 using Application.Models.DTOs.Categories;
 using Application.Models.DTOs.Commons.Results;
 using Application.Models.DTOs.Currencies;
-using Domain;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.CQRS.Commands.Currencies.Update

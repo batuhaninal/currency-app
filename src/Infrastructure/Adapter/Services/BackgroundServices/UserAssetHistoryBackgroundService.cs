@@ -34,7 +34,7 @@ namespace Adapter.Services.BackgroundServices
 
                     _logger.Info("background service execute started");
 
-                    if (DateTime.Now.Hour == 22)
+                    if (now.Hour >= 21 && now.Hour <= 24)
                     {
                         var userIds = await unitOfWork
                             .UserReadRepository
@@ -52,82 +52,163 @@ namespace Adapter.Services.BackgroundServices
                         }
 
                         _logger.Info($"background service execution finished succesfully now going to wait at: {DateTime.UtcNow.AddHours(12)}");
-                        await Task.Delay(1_000 * 60 * 12, stoppingToken);
+                        await Task.Delay(1_000 * 60 * 60 * 12, stoppingToken);
                     }
 
                     _logger.Info("background service execute finished");
-                    await Task.Delay(1_000 * 60 * 10, stoppingToken);
+                    await Task.Delay(1_000 * 60 * 60 * 1, stoppingToken);
                 }
             }
         }
 
         private async Task SaveUserAssetHistories(IUnitOfWork unitOfWork, int userId, CancellationToken cancellationToken)
         {
-            using (var tx = unitOfWork.BeginTransaction())
-            {
-                try
+            await unitOfWork.ExecuteWithRetryAsync(
+                async (uow, ct) =>
                 {
-                    DateTime now = DateTime.UtcNow;
-                    DateOnly doNow = DateOnly.FromDateTime(now);
-
-                    var toCreateItems = await unitOfWork
-                        .AssetReadRepository
-                        .Table
-                        .AsNoTracking()
-                        .Include(x => x.Currency)
-                        .Where(x => x.UserId == userId)
-                        .GroupBy(x => x.CurrencyId)
-                        .Select(x => new UserAssetItemHistory
-                        {
-                            CurrencyId = x.Key,
-                            Count = x.Sum(a => a.Count),
-                            Date = doNow,
-                            CreatedDate = now,
-                            UpdatedDate = now,
-                            IsActive = true,
-                            TotalCostPurchasePrice = x.Sum(a => a.PurchasePrice * a.Count),
-                            ItemAvgCostPurchasePrice = x.Average(a => a.PurchasePrice),
-                            TotalCostSalePrice = x.Sum(a => a.SalePrice * a.Count),
-                            ItemAvgCostSalePrice = x.Average(a => a.SalePrice),
-                            TotalCurrentPurchasePrice = x.Sum(a => a.CurrentPurchasePrice * a.Count),
-                            ItemAvgCurrentPurchasePrice = x.Average(a => a.CurrentPurchasePrice),
-                            TotalCurrentSalePrice = x.Sum(a => a.CurrentSalePrice * a.Count),
-                            ItemAvgCurrentSalePrice = x.Average(a => a.CurrentSalePrice),
-                            TotalPurchasePrice = x.Sum(a => a.Currency.PurchasePrice * a.Count),
-                            ItemAvgPurchasePrice = x.First().Currency.PurchasePrice,
-                            TotalSalePrice = x.Sum(a => a.Currency.SalePrice * a.Count),
-                            ItemAvgSalePrice = x.First().Currency.SalePrice,
-                        })
-                        .ToListAsync(cancellationToken);
-
-                    var toCreateUserHistory = new UserAssetHistory
+                    using (var tx = uow.BeginTransaction())
                     {
-                        UserId = userId,
-                        TotalPurchasePrice = toCreateItems.Sum(i => i.TotalPurchasePrice),
-                        TotalSalePrice = toCreateItems.Sum(i => i.TotalSalePrice),
-                        TotalCostPurchasePrice = toCreateItems.Sum(i => i.TotalCostPurchasePrice),
-                        TotalCostSalePrice = toCreateItems.Sum(i => i.TotalCostSalePrice),
-                        TotalCurrentPurchasePrice = toCreateItems.Sum(i => i.TotalCurrentPurchasePrice),
-                        TotalCurrentSalePrice = toCreateItems.Sum(i => i.TotalCurrentSalePrice),
-                        CreatedDate = now,
-                        UpdatedDate = now,
-                        IsActive = true,
-                        UserAssetItemHistories = toCreateItems,
-                        Date = doNow
-                    };
+                        try
+                        {
+                            DateTime now = DateTime.UtcNow;
+                            DateOnly doNow = DateOnly.FromDateTime(now);
 
-                    await unitOfWork.UserAssetHistoryWriteRepository.CreateAsync(toCreateUserHistory, cancellationToken);
+                            var rule = await uow.UserAssetHistoryRule.CheckValidByGivenDate(userId, doNow, cancellationToken);
+                            if (rule.Success)
+                            {
+                                var toCreateItems = await uow
+                                .AssetReadRepository
+                                .Table
+                                .AsNoTracking()
+                                .Include(x => x.Currency)
+                                .Where(x => x.UserId == userId)
+                                .GroupBy(x => x.CurrencyId)
+                                .Select(x => new UserAssetItemHistory
+                                {
+                                    CurrencyId = x.Key,
+                                    Count = x.Sum(a => a.Count),
+                                    Date = doNow,
+                                    CreatedDate = now,
+                                    UpdatedDate = now,
+                                    IsActive = true,
+                                    TotalCostPurchasePrice = x.Sum(a => a.PurchasePrice * a.Count),
+                                    ItemAvgCostPurchasePrice = x.Average(a => a.PurchasePrice),
+                                    TotalCostSalePrice = x.Sum(a => a.SalePrice * a.Count),
+                                    ItemAvgCostSalePrice = x.Average(a => a.SalePrice),
+                                    TotalCurrentPurchasePrice = x.Sum(a => a.CurrentPurchasePrice * a.Count),
+                                    ItemAvgCurrentPurchasePrice = x.Average(a => a.CurrentPurchasePrice),
+                                    TotalCurrentSalePrice = x.Sum(a => a.CurrentSalePrice * a.Count),
+                                    ItemAvgCurrentSalePrice = x.Average(a => a.CurrentSalePrice),
+                                    TotalPurchasePrice = x.Sum(a => a.Currency.PurchasePrice * a.Count),
+                                    ItemAvgPurchasePrice = x.First().Currency.PurchasePrice,
+                                    TotalSalePrice = x.Sum(a => a.Currency.SalePrice * a.Count),
+                                    ItemAvgSalePrice = x.First().Currency.SalePrice,
+                                })
+                                .ToListAsync(cancellationToken);
 
-                    await unitOfWork.SaveChangesAsync(cancellationToken);
+                                var toCreateUserHistory = new UserAssetHistory
+                                {
+                                    UserId = userId,
+                                    TotalPurchasePrice = toCreateItems.Sum(i => i.TotalPurchasePrice),
+                                    TotalSalePrice = toCreateItems.Sum(i => i.TotalSalePrice),
+                                    TotalCostPurchasePrice = toCreateItems.Sum(i => i.TotalCostPurchasePrice),
+                                    TotalCostSalePrice = toCreateItems.Sum(i => i.TotalCostSalePrice),
+                                    TotalCurrentPurchasePrice = toCreateItems.Sum(i => i.TotalCurrentPurchasePrice),
+                                    TotalCurrentSalePrice = toCreateItems.Sum(i => i.TotalCurrentSalePrice),
+                                    CreatedDate = now,
+                                    UpdatedDate = now,
+                                    IsActive = true,
+                                    UserAssetItemHistories = toCreateItems,
+                                    Date = doNow
+                                };
 
-                    await tx.CommitAsync(cancellationToken);
-                }
-                catch (System.Exception ex)
-                {
-                    _logger.Error(ex.Message);
-                    await tx.RollbackAsync(cancellationToken);
-                }
-            }
+                                await uow.UserAssetHistoryWriteRepository.CreateAsync(toCreateUserHistory, cancellationToken);
+
+                                await uow.SaveChangesAsync(cancellationToken);
+
+                                await tx.CommitAsync(cancellationToken);
+                            }
+                            return true;
+                        }
+                        catch (System.Exception ex)
+                        {
+                            _logger.Error(ex.Message);
+                            await tx.RollbackAsync(cancellationToken);
+                            return false;
+                        }
+                    }
+                },
+                cancellationToken
+            );
+            // using (var tx = unitOfWork.BeginTransaction())
+            // {
+            //     try
+            //     {
+            //         DateTime now = DateTime.UtcNow;
+            //         DateOnly doNow = DateOnly.FromDateTime(now);
+
+            //         var rule = await unitOfWork.UserAssetHistoryRule.CheckValidByGivenDate(userId, doNow, cancellationToken);
+            //         if (rule.Success)
+            //         {
+            //             var toCreateItems = await unitOfWork
+            //             .AssetReadRepository
+            //             .Table
+            //             .AsNoTracking()
+            //             .Include(x => x.Currency)
+            //             .Where(x => x.UserId == userId)
+            //             .GroupBy(x => x.CurrencyId)
+            //             .Select(x => new UserAssetItemHistory
+            //             {
+            //                 CurrencyId = x.Key,
+            //                 Count = x.Sum(a => a.Count),
+            //                 Date = doNow,
+            //                 CreatedDate = now,
+            //                 UpdatedDate = now,
+            //                 IsActive = true,
+            //                 TotalCostPurchasePrice = x.Sum(a => a.PurchasePrice * a.Count),
+            //                 ItemAvgCostPurchasePrice = x.Average(a => a.PurchasePrice),
+            //                 TotalCostSalePrice = x.Sum(a => a.SalePrice * a.Count),
+            //                 ItemAvgCostSalePrice = x.Average(a => a.SalePrice),
+            //                 TotalCurrentPurchasePrice = x.Sum(a => a.CurrentPurchasePrice * a.Count),
+            //                 ItemAvgCurrentPurchasePrice = x.Average(a => a.CurrentPurchasePrice),
+            //                 TotalCurrentSalePrice = x.Sum(a => a.CurrentSalePrice * a.Count),
+            //                 ItemAvgCurrentSalePrice = x.Average(a => a.CurrentSalePrice),
+            //                 TotalPurchasePrice = x.Sum(a => a.Currency.PurchasePrice * a.Count),
+            //                 ItemAvgPurchasePrice = x.First().Currency.PurchasePrice,
+            //                 TotalSalePrice = x.Sum(a => a.Currency.SalePrice * a.Count),
+            //                 ItemAvgSalePrice = x.First().Currency.SalePrice,
+            //             })
+            //             .ToListAsync(cancellationToken);
+
+            //             var toCreateUserHistory = new UserAssetHistory
+            //             {
+            //                 UserId = userId,
+            //                 TotalPurchasePrice = toCreateItems.Sum(i => i.TotalPurchasePrice),
+            //                 TotalSalePrice = toCreateItems.Sum(i => i.TotalSalePrice),
+            //                 TotalCostPurchasePrice = toCreateItems.Sum(i => i.TotalCostPurchasePrice),
+            //                 TotalCostSalePrice = toCreateItems.Sum(i => i.TotalCostSalePrice),
+            //                 TotalCurrentPurchasePrice = toCreateItems.Sum(i => i.TotalCurrentPurchasePrice),
+            //                 TotalCurrentSalePrice = toCreateItems.Sum(i => i.TotalCurrentSalePrice),
+            //                 CreatedDate = now,
+            //                 UpdatedDate = now,
+            //                 IsActive = true,
+            //                 UserAssetItemHistories = toCreateItems,
+            //                 Date = doNow
+            //             };
+
+            //             await unitOfWork.UserAssetHistoryWriteRepository.CreateAsync(toCreateUserHistory, cancellationToken);
+
+            //             await unitOfWork.SaveChangesAsync(cancellationToken);
+
+            //             await tx.CommitAsync(cancellationToken);
+            //         }
+            //     }
+            //     catch (System.Exception ex)
+            //     {
+            //         _logger.Error(ex.Message);
+            //         await tx.RollbackAsync(cancellationToken);
+            //     }
+            // }
         }
 
         public override Task StopAsync(CancellationToken cancellationToken)

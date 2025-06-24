@@ -1,6 +1,6 @@
 using Domain.Entities.Commons;
 
-namespace Domain
+namespace Domain.Entities
 {
     public class Category : BaseEntity
     {

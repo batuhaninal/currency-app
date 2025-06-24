@@ -3,7 +3,7 @@ using Application.Abstractions.Repositories.Commons;
 using Application.CQRS.Commons.Interfaces;
 using Application.Models.DTOs.Categories;
 using Application.Models.DTOs.Commons.Results;
-using Domain;
+using Domain.Entities;
 
 namespace Application.CQRS.Commands.Categories.Update
 {

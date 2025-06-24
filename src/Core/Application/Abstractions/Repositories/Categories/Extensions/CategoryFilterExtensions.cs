@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Application.Models.RequestParameters.Categories;
 using Application.Utilities.Helpers;
-using Domain;
+using Domain.Entities;
 
 namespace Application.Abstractions.Repositories.Categories.Extensions
 {

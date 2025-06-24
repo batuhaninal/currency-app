@@ -52,6 +52,7 @@ namespace Persistence.Repositories.Commons
         private readonly UserRule _userRule;
         private readonly AssetRule _assetRule;
         private readonly UserRoleRule _userRoleRule;
+        private readonly UserAssetHistoryRule _userAssetHistoryRule;
         #endregion
 
         public UnitOfWork(CurrencyContext context)
@@ -113,14 +114,30 @@ namespace Persistence.Repositories.Commons
 
         public IUserRoleRule UserRoleRule => _userRoleRule ?? new UserRoleRule(UserRoleReadRepository);
 
+        public IUserAssetHistoryRule UserAssetHistoryRule => _userAssetHistoryRule ?? new UserAssetHistoryRule(UserAssetHistoryReadRepository);
+
         #endregion
 
-        public IDatabaseTransaction BeginTransaction() => 
+        public IDatabaseTransaction BeginTransaction() =>
             new DatabaseTransaction(_context);
 
         public void Dispose() => _context.Dispose();
 
         public async ValueTask DisposeAsync() => await _context.DisposeAsync();
+
+        public async Task<TResult> ExecuteWithRetryAsync<TResult>(
+            Func<IUnitOfWork, CancellationToken, Task<TResult>> operation,
+            CancellationToken cancellationToken = default)
+        {
+            var strategy = _context.Database.CreateExecutionStrategy();
+
+            return await strategy.ExecuteAsync<IUnitOfWork, TResult>(
+                this,
+                async (ctx, uow, ct) => await operation(uow, ct),
+                verifySucceeded: null, // opsiyonel, istiyorsan ekleyebiliriz
+                cancellationToken
+            );
+        }
 
         public int SaveChanges() => _context.SaveChanges();
 

@@ -77,7 +77,7 @@ namespace Application.CQRS.Queries.Currencies.WithHistoryInfo
                 .Table
                 .AsNoTracking()
                 .Where(predicate)
-                .OrderBy(x => x.UpdatedDate)
+                .OrderByDescending(x => x.UpdatedDate)
                 .Select(x => new CurrencyHistoryItemDto(
                     x.Id,
                     x.CurrencyId,
@@ -103,7 +103,7 @@ namespace Application.CQRS.Queries.Currencies.WithHistoryInfo
                     .AsNoTracking()
                     .Where(predicate)
                     .GroupBy(key => key.Date)
-                    .OrderBy(x => x.Key)
+                    .OrderByDescending(x => x.Key)
                     .Select(x => new CurrencyHistoryItemDto(
                         x.First().Id,
                         x.First().CurrencyId,
@@ -129,7 +129,7 @@ namespace Application.CQRS.Queries.Currencies.WithHistoryInfo
                     .AsNoTracking()
                     .Where(predicate)
                     .GroupBy(key => key.Date.AddDays(-(int)key.Date.DayOfWeek))
-                    .OrderBy(x => x.Key)
+                    .OrderByDescending(x => x.Key)
                     .Select(x => new CurrencyHistoryItemDto(
                         x.First().Id,
                         x.First().CurrencyId,
@@ -155,7 +155,7 @@ namespace Application.CQRS.Queries.Currencies.WithHistoryInfo
                     .AsNoTracking()
                     .Where(predicate)
                     .GroupBy(key => new DateOnly(key.Date.Year, key.Date.Month, 1))
-                    .OrderBy(x => x.Key)
+                    .OrderByDescending(x => x.Key)
                     .Select(x => new CurrencyHistoryItemDto(
                         x.First().Id,
                         x.First().CurrencyId,
@@ -181,7 +181,7 @@ namespace Application.CQRS.Queries.Currencies.WithHistoryInfo
                     .AsNoTracking()
                     .Where(predicate)
                     .GroupBy(key => new DateOnly(key.Date.Year, 1, 1))
-                    .OrderBy(x => x.Key)
+                    .OrderByDescending(x => x.Key)
                     .Select(x => new CurrencyHistoryItemDto(
                         x.First().Id,
                         x.First().CurrencyId,

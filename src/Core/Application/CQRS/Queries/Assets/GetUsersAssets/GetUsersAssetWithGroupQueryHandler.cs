@@ -55,9 +55,17 @@ namespace Application.CQRS.Queries.Assets.GetUsersAssets
                     .Table
                     .AsNoTracking()
                     .Where(x => x.CurrencyId == item.CurrencyId)
-                    .OrderBy(x => x.UpdatedDate)
-                    .Take(20)
-                    .Select(ch => new CurrencyHistoryItemDto(ch.Id, ch.CurrencyId, ch.OldPurchasePrice, ch.NewPurchasePrice, ch.OldSalePrice, ch.NewSalePrice, ch.Date, ch.UpdatedDate))
+                    .OrderByDescending(x => x.UpdatedDate)
+                    .Take(24)
+                    .Select(ch => new CurrencyHistoryItemDto(
+                        ch.Id, ch.CurrencyId,
+                        ch.OldPurchasePrice,
+                        ch.NewPurchasePrice,
+                        ch.OldSalePrice,
+                        ch.NewSalePrice,
+                        ch.Date,
+                        ch.UpdatedDate
+                    ))
                     .ToListAsync(cancellationToken);
 
                 item.CurrencyHistories = currencyHistories;

@@ -64,7 +64,7 @@ namespace Application.CQRS.Queries.Assets.GetUserAssetInfo
                     .AsNoTracking()
                     .Include(x => x.Currency)
                     .Where(x => x.CurrencyId == asset!.Currency.CurrencyId && x.UserId == _userTokenService.UserId)
-                    .OrderBy(x => x.UpdatedDate)
+                    .OrderByDescending(x => x.UpdatedDate)
                     .GroupBy(e => e.CurrencyId)
                     .Select(x => new UserAssetInfoDto(
                         x.Key,
@@ -101,7 +101,7 @@ namespace Application.CQRS.Queries.Assets.GetUserAssetInfo
                     .Table
                     .AsNoTracking()
                     .Where(predicate)
-                    .OrderBy(x => x.UpdatedDate)
+                    .OrderByDescending(x => x.UpdatedDate)
                     .Select(x => new CurrencyHistoryItemDto(
                         x.Id,
                         x.CurrencyId,
@@ -127,7 +127,7 @@ namespace Application.CQRS.Queries.Assets.GetUserAssetInfo
                         .AsNoTracking()
                         .Where(predicate)
                         .GroupBy(key => key.Date)
-                        .OrderBy(x => x.Key)
+                        .OrderByDescending(x => x.Key)
                         .Select(x => new CurrencyHistoryItemDto(
                             x.First().Id,
                             x.First().CurrencyId,
@@ -153,7 +153,7 @@ namespace Application.CQRS.Queries.Assets.GetUserAssetInfo
                         .AsNoTracking()
                         .Where(predicate)
                         .GroupBy(key => key.Date.AddDays(-(int)key.Date.DayOfWeek))
-                        .OrderBy(x => x.Key)
+                        .OrderByDescending(x => x.Key)
                         .Select(x => new CurrencyHistoryItemDto(
                             x.First().Id,
                             x.First().CurrencyId,
@@ -179,7 +179,7 @@ namespace Application.CQRS.Queries.Assets.GetUserAssetInfo
                         .AsNoTracking()
                         .Where(predicate)
                         .GroupBy(key => new DateOnly(key.Date.Year, key.Date.Month, 1))
-                        .OrderBy(x => x.Key)
+                        .OrderByDescending(x => x.Key)
                         .Select(x => new CurrencyHistoryItemDto(
                             x.First().Id,
                             x.First().CurrencyId,
@@ -205,7 +205,7 @@ namespace Application.CQRS.Queries.Assets.GetUserAssetInfo
                         .AsNoTracking()
                         .Where(predicate)
                         .GroupBy(key => new DateOnly(key.Date.Year, 1, 1))
-                        .OrderBy(x => x.Key)
+                        .OrderByDescending(x => x.Key)
                         .Select(x => new CurrencyHistoryItemDto(
                             x.First().Id,
                             x.First().CurrencyId,

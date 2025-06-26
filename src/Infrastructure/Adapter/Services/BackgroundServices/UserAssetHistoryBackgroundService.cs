@@ -32,9 +32,11 @@ namespace Adapter.Services.BackgroundServices
                     IUnitOfWork unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
                     DateTime now = DateTime.UtcNow;
 
+                    _logger.Info(now.ToString());
+
                     _logger.Info("background service execute started");
 
-                    if (now.Hour >= 21 && now.Hour <= 24)
+                    if (DateTime.Now.Hour >= 21 && DateTime.Now.Hour <= 24)
                     {
                         var userIds = await unitOfWork
                             .UserReadRepository

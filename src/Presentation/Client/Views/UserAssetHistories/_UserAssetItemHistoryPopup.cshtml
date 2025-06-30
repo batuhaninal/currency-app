@@ -7,6 +7,19 @@
     decimal sTotal = Model.Sum(x=> x.TotalSalePrice);
     decimal cpTotal = Model.Sum(x=> x.PurchasedPurchasePriceTotal);
     decimal csTotal = Model.Sum(x=> x.PurchasedSalePriceTotal); *@
+    decimal currencyTotalPurchase = Model.Sum(a=> a.Count * a.Currency.PurchasePrice);
+    decimal curremcyTotalSale = Model.Sum(a=> a.Count * a.Currency.SalePrice);
+    
+    decimal totalPurchase = Model.Sum(x=> x.TotalPurchasePrice);
+    decimal totalSale = Model.Sum(x=> x.TotalSalePrice);
+
+    decimal currentTotalPurchase = Model.Sum(a=> a.TotalCurrentPurchasePrice);
+    decimal currentTotalSale = Model.Sum(a=> a.TotalCurrentSalePrice);
+
+    decimal costTotalPurchase = Model.Sum(a=> a.TotalCostPurchasePrice);
+    decimal costTotalSale = Model.Sum(a=> a.TotalCostSalePrice);
+
+    DateOnly date = Model.First().Date;
 }
 
 <div class="modal fade" id="user-asset-item-history-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
@@ -28,18 +41,19 @@
                         <th>Miktar</th>
                         <th>Guncel Piyasa Alış</th>
                         <th>Guncel Piyasa Satış</th>
-                        <th>Total Alis</th>
-                        <th>Ortalama Alis</th>
-                        <th>Total Satis</th>
-                        <th>Ortalama Satis</th>
-                        <th>Eklendigi Tarih Piyasa Alış</th>
-                        <th>Eklendigi Tarih Piyasa Ortalama Alış</th>
-                        <th>Eklendigi Tarih Piyasa Satış</th>
-                        <th>Eklendigi Tarih Piyasa Ortalama Satış</th>
+                        <th>@UIToolHelper.RenderDate(date) Tarihi Total Alis</th>
+                        <th>@UIToolHelper.RenderDate(date) Tarihi Ortalama Alis</th>
+                        <th>@UIToolHelper.RenderDate(date) Tarihi Total Satis</th>
+                        <th>@UIToolHelper.RenderDate(date) Tarihi Ortalama Satis</th>
+                        <th>Birimlerin Eklendigi Tarih Piyasa Alış</th>
+                        <th>Birimlerin Eklendigi Tarih Piyasa Ortalama Alış</th>
+                        <th>Birimlerin Eklendigi Tarih Piyasa Satış</th>
+                        <th>Birimlerin Eklendigi Tarih Piyasa Ortalama Satış</th>
                         <th>Satin Alindigi Toplam Alış</th>
                         <th>Satin Alindigi Toplam Ortalama Alış</th>
                         <th>Satin Alindigi Toplam Satış</th>
                         <th>Satin Alindigi Toplam Ortalama Satış</th>
+                        <th>Tarih</th>
                         <th>Olusturulma Tarihi</th>
                     </tr>
                 </thead>
@@ -96,39 +110,34 @@
                                 <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.ItemAvgCostSalePrice)</b></p>
                             </td>
                             <td>
+                                @UIToolHelper.RenderDate(item.Date)
+                            </td>
+                            <td>
                                 @UIToolHelper.RenderDateTime(item.CreatedDate)
                             </td>
                         </tr>
                     }
                 </tbody>
                 <tfoot class="table-primary">
-                    @* <tr>
-                        <th>#</th>
-                        <th>Miktar</th>
-                        <th>@currencyPTotal.ToString("N2")</th>
-                        <th>@currencySTotal.ToString("N2")</th>
-                        <th>@cpTotal.ToString("N2")</th>
-                        <th>@csTotal.ToString("N2")</th>
-                        <th>@pTotal.ToString("N2")</th>
-                        <th>@sTotal.ToString("N2")</th>
-                    </tr> *@
                     <tr class="text-center align-middle">
                         <th>Birim</th>
                         <th>Miktar</th>
-                        <th>Guncel Piyasa Alış</th>
-                        <th>Guncel Piyasa Satış</th>
-                        <th>Total Alis</th>
-                        <th>Ortalama Alis</th>
-                        <th>Total Satis</th>
-                        <th>Ortalama Satis</th>
-                        <th>Eklendigi Tarih Piyasa Alış</th>
-                        <th>Eklendigi Tarih Piyasa Ortalama Alış</th>
-                        <th>Eklendigi Tarih Piyasa Satış</th>
-                        <th>Eklendigi Tarih Piyasa Ortalama Satış</th>
-                        <th>Satin Alindigi Toplam Alış</th>
+                        <th><p><b style="color:#228D57;">@UIToolHelper.RenderTL(currencyTotalPurchase)</b></p></th>
+                        <th><p><b style="color:#228D57;">@UIToolHelper.RenderTL(curremcyTotalSale)</b></p></th>
+                        <th><p><b style="color:#228D57;">@UIToolHelper.RenderTL(totalPurchase)</b></p></th>
+                        <th>@UIToolHelper.RenderDate(date) Tarihi Ortalama Alis</th>
+                        <th><p><b style="color:#228D57;">@UIToolHelper.RenderTL(totalSale)</b></p></th>
+                        <th>@UIToolHelper.RenderDate(date) Tarihi Ortalama Satis</th>
+                        <th><p><b style="color:#228D57;">@UIToolHelper.RenderTL(currentTotalPurchase)</b></p></th>
+                        <th>Birimlerin Eklendigi Tarih Piyasa Ortalama Alış</th>
+                        <th><p><b style="color:#228D57;">@UIToolHelper.RenderTL(currentTotalSale)</b></p></th>
+                        <th>Birimlerin Eklendigi Tarih Piyasa Ortalama Satış</th>
+                        <th><p><b style="color:#228D57;">@UIToolHelper.RenderTL(costTotalPurchase)</b></p></th>
                         <th>Satin Alindigi Toplam Ortalama Alış</th>
-                        <th>Satin Alindigi Toplam Satış</th>
+                        <th><p><b style="color:#228D57;">@UIToolHelper.RenderTL(costTotalSale)</b></p></th>
                         <th>Satin Alindigi Toplam Ortalama Satış</th>
+                        <th>Tarih</th>
+                        <th>Olusturulma Tarihi</th>
                     </tr>
                 </tfoot>
             </table>

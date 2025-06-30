@@ -54,6 +54,21 @@
             <p>Hesap Gecmisi</p>
           </a>
         </li>
+        <li class="nav-header">Ayarlar</li>
+        <li class="nav-item">
+          <a asp-area="" asp-controller="Users" asp-action="Profile" class="nav-link">
+            <i class="fa-solid fa-id-card"></i>
+            <p>Profil Bilgileri</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <form asp-area="" asp-controller="Auth" asp-action="Logout" method="post">
+            <button type="submit" class="btn btn-round w-100 mt-3" title="Cikis yap">
+              <i class="fa-solid fa-power-off"></i>
+              Cikis Yap
+            </button>
+          </form>
+        </li>
       </ul>
       <!--end::Sidebar Menu-->
     </nav>

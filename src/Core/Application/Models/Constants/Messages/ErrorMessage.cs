@@ -129,6 +129,15 @@ namespace Application.Models.Constants.Messages
         };
         #endregion
 
+        #region User Asset History
+        public static string USERASSETHISTORYEXIST => CurrentLanguage switch
+        {
+            Language.TR => "Varlik tarihcesi bulunamadi!",
+            Language.EN => "User Asset History is not found!",
+            _ => "User Asset History is not found!"
+        };
+        #endregion
+
         #region Validation
         public static class Validation
         {

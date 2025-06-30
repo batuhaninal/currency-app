@@ -1,0 +1,236 @@
+@model PaginationResult<UserAssetHistoryItemResponse>
+@{
+  Layout = "_Layout";
+}
+
+<div class="row">
+  <div class="card mb-4">
+    <div class="card-header">
+      <div class="d-flex justify-content-between">
+        <div class="btn-group mb-2" role="group" aria-label="Basic mixed styles example">
+          @* <span class="badge rounded-pill bg-success p-2" role="button" id="add-asset-btn" title="Birim ekle">
+            <i class="fa-solid fa-plus"></i>
+          </span>
+          <span class="badge rounded-pill bg-primary p-2" role="button" id="user-summary-btn" title="Birim Ozeti">
+            <i class="fa-solid fa-landmark-dome"></i>
+          </span>
+          <span class="badge rounded-pill bg-primary p-2" role="button" id="calculator-btn" title="Hesap Makinesi">
+            <i class="fa-solid fa-calculator"></i>
+          </span>
+          <span class="badge rounded-pill bg-primary p-2" role="button" id="asset-calculator-btn" title="Birimlerim Hesap Makinesi">
+            <i class="fa-solid fa-calculator"></i>
+          </span>
+          <button type="button" class="badge rounded-pill bg-info p-2 border-0" id="filter-asset-btn"
+            title="Birim Filtrele" data-bs-toggle="modal" data-bs-target="#filter-asset-popup">
+            <i class="fa-solid fa-filter"></i>
+          </button>
+          <a asp-area="" asp-controller="Assets" asp-action="Index" class="badge rounded-pill bg-danger p-2 border-0"
+            id="filter-asset-btn" title="Filtreleri temizle">
+            <i class="fa-solid fa-filter"></i>
+          </a> *@
+          <button type="button" class="badge rounded-pill bg-info p-2 border-0" id="filter-user-asset-history-btn"
+            title="Birim Filtrele" data-bs-toggle="modal" data-bs-target="#filter-user-asset-history-popup">
+            <i class="fa-solid fa-filter"></i>
+          </button>
+          <a asp-area="" asp-controller="UserAssetHistories" asp-action="Index"
+            class="badge rounded-pill bg-danger p-2 border-0" id="filter-asset-btn" title="Filtreleri temizle">
+            <i class="fa-solid fa-filter"></i>
+          </a>
+        </div>
+        <h3 class="card-title">Hesap Gecmisi Tablosu</h3>
+        @await Html.PartialAsync("_SearchTool", new SearchModel())
+      </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+      <table class="table table-bordered">
+        <thead>
+          <tr class="text-center align-middle">
+            <th>
+              #
+              @await Html.PartialAsync("_OrderTool", new SortModel("id"))
+            </th>
+            <th>
+              Total Satin Alis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("t-p-price"))
+            </th>
+            <th>
+              Total Satis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("t-s-price"))
+            </th>
+            <th>
+              Tarihteki Total Satin Alis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("t-cu-p-price"))
+            </th>
+            <th>
+              Tarihteki Total Satis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("t-cu-s-price"))
+            </th>
+            <th>
+              Total Harcanan Satin Alma Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("t-co-p-price"))
+            </th>
+            <th>
+              Total Harcanan Satis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("t-co-s-price"))
+            </th>
+            <th>
+              Tarih
+              @await Html.PartialAsync("_OrderTool", new SortModel("date"))
+            </th>
+            <th style="width: 40px">Islemler</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var item in Model.Items)
+          {
+            <tr class="text-center align-middle">
+              <td>
+                @item.UserAssetHistoryId
+              </td>
+              <td>
+                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalPurchasePrice)</b></p>
+              </td>
+              <td>
+                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalSalePrice)</b></p>
+              </td>
+              <td>
+                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalCurrentPurchasePrice)</b></p>
+              </td>
+              <td>
+                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalCurrentSalePrice)</b></p>
+              </td>
+              <td>
+                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalCostPurchasePrice)</b></p>
+              </td>
+              <td>
+                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalCostSalePrice)</b></p>
+              </td>
+              <td>
+                @UIToolHelper.RenderDate(item.Date)
+              </td>
+
+              <td>
+                <div class="d-inline-flex gap-1">
+                  @* <a class="badge rounded-pill bg-info p-2" asp-area="" asp-controller="Assets" asp-action="Info"
+                    asp-route-assetId="@item.AssetId" title="@item.AssetId idli birim portfoyu">
+                    <i class="fa-solid fa-landmark"></i>
+                  </a>
+                  <span class="badge rounded-pill bg-warning p-2 update-asset-btn" role="button"
+                    data-asset-id="@item.AssetId" title="@item.AssetId idli varligi guncelle">
+                    <i class="fa-solid fa-pencil"></i>
+                  </span>
+                  <span class="badge rounded-pill bg-danger p-2 delete-asset-btn" role="button"
+                    data-asset-id="@item.AssetId" title="@item.AssetId idli varligi sil">
+                    <i class="fa-solid fa-trash"></i>
+                  </span> *@
+                  <span class="badge rounded-pill bg-info p-2 history-items-btn" role="button"
+                    data-user-asset-history-id="@item.UserAssetHistoryId"
+                    title="@item.UserAssetHistoryId idli hesap ozetini goster">
+                    <i class="fa-solid fa-landmark"></i>
+                  </span>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr class="text-center align-middle">
+            <th>
+              #
+              @await Html.PartialAsync("_OrderTool", new SortModel("id"))
+            </th>
+            <th>
+              Total Satin Alis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("t-p-price"))
+            </th>
+            <th>
+              Total Satis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("t-s-price"))
+            </th>
+            <th>
+              Tarihteki Total Satin Alis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("t-cu-p-price"))
+            </th>
+            <th>
+              Tarihteki Total Satis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("t-cu-s-price"))
+            </th>
+            <th>
+              Total Harcanan Satin Alma Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("t-co-p-price"))
+            </th>
+            <th>
+              Total Harcanan Satis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("t-co-s-price"))
+            </th>
+            <th>
+              Tarih
+              @await Html.PartialAsync("_OrderTool", new SortModel("date"))
+            </th>
+            <th style="width: 40px">Islemler</th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <!-- /.card-body -->
+    <div class="card-footer clearfix">
+      @await Html.PartialAsync("_PaginationTool", Model)
+    </div>
+  </div>
+</div>
+
+<div id="empty-container"></div>
+
+@await Html.PartialAsync("_UserAssetHistoryFilterPopup")
+
+@section Scripts {
+  <script>
+    $(document).ready(function () {
+      const d = $("#empty-container");
+
+      @* $("#add-asset-btn").off("click").on("click", function () {
+        const fetchUrl = '@Url.Action("AddOperation", "Assets")';
+        openPopup(d, '#add-asset-popup', fetchUrl)
+      }); 
+
+      $("#user-summary-btn").off("click").on("click", function () {
+        const fetchUrl = '@Url.Action("UserSummary", "Assets")';
+        openPopup(d, '#user-summary-popup', fetchUrl)
+      });
+
+      $("#asset-calculator-btn").off("click").on("click", function () {
+        const fetchUrl = '@Url.Action("CalculatorPopup", "Assets")';
+        openPopup(d, '#asset-calculator-popup', fetchUrl)
+      });
+
+      $("#calculator-btn").off("click").on("click", function () {
+        const fetchUrl = '@Url.Action("CalculatorPopup", "Currencies")';
+        openPopup(d, '#calculator-popup', fetchUrl)
+      });
+      *@
+
+        $(".history-items-btn").off("click").on("click", function () {
+          const id = $(this).data("user-asset-history-id");
+          const fetchUrl = '@Url.Action("UserAssetItemHistoryPopup", "UserAssetHistories")';
+          openPopup(d, '#user-asset-item-history-popup', fetchUrl + "?userAssetHistoryId=" + id)
+        });
+
+      @* $(".delete-asset-btn").off("click").on("click", function () {
+        const id = $(this).data("asset-id");
+        const fetchUrl = '@Url.Action("DeleteOperation", "Assets")';
+        deletePopup(fetchUrl + "?assetId=" + id)
+      });
+
+      $('#filter-asset-popup').on('shown.bs.modal', function () {
+        $('.js-currency-tool-multiple').select2({
+          dropdownParent: $('#filter-asset-popup'),
+          width: '100%',
+          placeholder: "Birim seçiniz",
+          allowClear: true
+        });
+      }); *@
+
+      });
+  </script>
+}

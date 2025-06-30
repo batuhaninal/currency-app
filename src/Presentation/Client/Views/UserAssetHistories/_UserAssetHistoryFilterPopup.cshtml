@@ -1,0 +1,34 @@
+@{
+    Layout = null;
+    var query = Context.Request.Query.ToDictionary(k => k.Key.ToLower(), v => v.Value);
+}
+
+<div class="modal fade" id="filter-user-asset-history-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class='modal-header bg-info'>
+                <h5 class="modal-title">Filtrele</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="get" class="d-inline">
+                <div class="modal-body" id="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Baslangic Tarihi</label>
+                        <input class="form-control" type="date" name="startDate" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Bitis Tarihi</label>
+                        <input class="form-control" type="date" name="endDate" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                    <a asp-area="panel" asp-controller="UserAssetHistories" asp-action="Index"
+                        class="btn btn-danger">Temizle</a>
+                    <button type="submit" class="btn btn-info">Filtreleri Uygula</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -28,7 +28,13 @@ namespace Application.CQRS.Queries.PriceInfo
                 .Table
                 .AsNoTracking()
                 .Where(x => x.Id == query.CurrencyId)
-                .Select(x => new CurrencyPriceInfoDto(x.Id, x.PurchasePrice, x.SalePrice))
+                .Select(x => new CurrencyPriceInfoDto(
+                    x.Id,
+                    x.Title,
+                    x.SubTitle,
+                    x.PurchasePrice,
+                    x.SalePrice
+                ))
                 .FirstOrDefaultAsync(cancellationToken))!;
 
             return new ResultDto(200, true, data);

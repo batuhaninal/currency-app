@@ -5,7 +5,7 @@ using Domain.Entities;
 
 namespace Application.Abstractions.Repositories.Assets.Extensions
 {
-    public static class CategoryFilterExtensions
+    public static class AssetFilterExtensions
     {
         public static IQueryable<Asset> FilterAllConditions(this IQueryable<Asset> source, AssetBaseRequestParameter parameter)
         {

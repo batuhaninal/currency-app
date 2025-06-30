@@ -13,6 +13,7 @@ namespace API.Handlers
             services.AddScoped<ICurrencyHandler, CurrencyHandler>();
             services.AddScoped<ICategoryHandler, CategoryHandler>();
             services.AddScoped<IToolHandler, ToolHandler>();
+            services.AddScoped<IUserAssetHistoryHandler, UserAssetHistoryHandler>();
         }
     }
 }

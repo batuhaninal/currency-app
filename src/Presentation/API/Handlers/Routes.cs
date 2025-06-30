@@ -31,6 +31,8 @@ using Application.CQRS.Queries.Currencies.WithHistoryInfo;
 using Application.CQRS.Queries.PriceInfo;
 using Application.CQRS.Queries.Tools;
 using Application.CQRS.Queries.Tools.GetCurrencyToolList;
+using Application.CQRS.Queries.UserAssetHistories.ItemList;
+using Application.CQRS.Queries.UserAssetHistories.List;
 using Application.Models.Constants.Roles;
 using Microsoft.AspNetCore.Mvc;
 
@@ -247,7 +249,7 @@ namespace API.Handlers
                 {
                     command.CategoryId = categoryId;
                     return await handler.UpdateAsync(command, dispatcher, cancellationToken);
-                }) 
+                })
                 .WithName("Update Category")
                 .WithTags("Categories")
                 .RequireAuthorization(AppRoles.Admin);
@@ -256,7 +258,7 @@ namespace API.Handlers
                 async ([FromServices] ICategoryHandler handler, [FromRoute(Name = "categoryId")] int categoryId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
                 {
                     return await handler.ChangeStatusAsync(new ChangeCategoryStatusCommand(categoryId), dispatcher, cancellationToken);
-                }) 
+                })
                 .WithName("Change Category Status")
                 .WithTags("Categories")
                 .RequireAuthorization(AppRoles.Admin);
@@ -265,7 +267,7 @@ namespace API.Handlers
                 async ([FromServices] ICategoryHandler handler, [FromRoute(Name = "categoryId")] int categoryId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
                 {
                     return await handler.DeleteAsync(new DeleteCategoryCommand(categoryId), dispatcher, cancellationToken);
-                }) 
+                })
                 .WithName("Delete Category")
                 .WithTags("Categories")
                 .RequireAuthorization(AppRoles.Admin);
@@ -285,17 +287,31 @@ namespace API.Handlers
                 .WithTags("Categories")
                 .RequireAuthorization(AppRoles.Admin);
 
-        var tool = api.MapGroup("tools");
+            var tool = api.MapGroup("tools");
 
-        tool.MapGet("category-list",
-                async([FromServices] IToolHandler handler, [AsParameters] GetCategoryToolListQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.CategoryToolList(query, dispatcher, cancellationToken))
-                .WithName("Category Tool List")
-                .WithTags("Tools");
+            tool.MapGet("category-list",
+                    async ([FromServices] IToolHandler handler, [AsParameters] GetCategoryToolListQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.CategoryToolList(query, dispatcher, cancellationToken))
+                    .WithName("Category Tool List")
+                    .WithTags("Tools");
 
-        tool.MapGet("currency-list",
-                async([FromServices] IToolHandler handler, [AsParameters] GetCurrencyToolListQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.CurrencyToolList(query, dispatcher, cancellationToken))
-                .WithName("Currency Tool List")
-                .WithTags("Tools");
+            tool.MapGet("currency-list",
+                    async ([FromServices] IToolHandler handler, [AsParameters] GetCurrencyToolListQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.CurrencyToolList(query, dispatcher, cancellationToken))
+                    .WithName("Currency Tool List")
+                    .WithTags("Tools");
+
+            var userAssetHistory = api.MapGroup("user-asset-histories");
+
+            userAssetHistory.MapGet("",
+                async ([FromServices] IUserAssetHistoryHandler handler, [AsParameters] UserAssetHistoryListQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.List(query, dispatcher, cancellationToken))
+                .WithName("User Asset History List")
+                .WithTags("User Asset Histories")
+                .RequireAuthorization();
+
+            userAssetHistory.MapGet("item/{userAssetHistoryId}",
+                async ([FromServices] IUserAssetHistoryHandler handler, [FromRoute(Name = "userAssetHistoryId")] int userAssetHistoryId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.ItemList(new UserAssetItemHistoryListQuery(userAssetHistoryId), dispatcher, cancellationToken))
+                .WithName("User Asset Item History List")
+                .WithTags("User Asset Histories")
+                .RequireAuthorization();
+        }
     }
-}
 }

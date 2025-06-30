@@ -16,6 +16,8 @@ using Application.CQRS.Queries.Currencies.WithHistoryInfo;
 using Application.CQRS.Queries.PriceInfo;
 using Application.CQRS.Queries.Tools;
 using Application.CQRS.Queries.Tools.GetCurrencyToolList;
+using Application.CQRS.Queries.UserAssetHistories.ItemList;
+using Application.CQRS.Queries.UserAssetHistories.List;
 using Application.CQRS.Queries.Users.GetProfile;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -82,6 +84,14 @@ namespace Application.CQRS.Queries
 
             services.AddScoped<CalculatorQuery>();
             services.AddScoped<IQueryHandler<CalculatorQuery, IBaseResult>, CalculatorQueryHandler>();
+            #endregion
+
+            #region User Asset History
+            services.AddScoped<UserAssetHistoryListQuery>();
+            services.AddScoped<IQueryHandler<UserAssetHistoryListQuery, IBaseResult>, UserAssetHistoryListQueryHandler>();
+
+            services.AddScoped<UserAssetItemHistoryListQuery>();
+            services.AddScoped<IQueryHandler<UserAssetItemHistoryListQuery, IBaseResult>, UserAssetItemHistoryListQueryHandler>();
             #endregion
         }
     }

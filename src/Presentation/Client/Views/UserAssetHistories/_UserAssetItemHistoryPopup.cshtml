@@ -1,0 +1,147 @@
+@model List<UserAssetItemHistoryItemResponse>
+@{
+    Layout = null;
+    @* decimal currencyPTotal = Model.Sum(x=> x.CurrentPurchasePriceTotal);
+    decimal currencySTotal = Model.Sum(x=> x.CurrentSalePriceTotal);
+    decimal pTotal = Model.Sum(x=> x.TotalPurchasePrice);
+    decimal sTotal = Model.Sum(x=> x.TotalSalePrice);
+    decimal cpTotal = Model.Sum(x=> x.PurchasedPurchasePriceTotal);
+    decimal csTotal = Model.Sum(x=> x.PurchasedSalePriceTotal); *@
+}
+
+<div class="modal fade" id="user-asset-item-history-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+        <div class="modal-content">
+            <div class='modal-header bg-primary'>
+                <h5 class="modal-title text-white">Kullanici Varlik Ozeti</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+                <div class="modal-body" id="modal-body">
+                    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive mb-3">
+            <table class="table table-sm table-bordered">
+                <thead class="table-primary">
+                    <tr class="text-center align-middle">
+                        <th>Birim</th>
+                        <th>Miktar</th>
+                        <th>Guncel Piyasa Alış</th>
+                        <th>Guncel Piyasa Satış</th>
+                        <th>Total Alis</th>
+                        <th>Ortalama Alis</th>
+                        <th>Total Satis</th>
+                        <th>Ortalama Satis</th>
+                        <th>Eklendigi Tarih Piyasa Alış</th>
+                        <th>Eklendigi Tarih Piyasa Ortalama Alış</th>
+                        <th>Eklendigi Tarih Piyasa Satış</th>
+                        <th>Eklendigi Tarih Piyasa Ortalama Satış</th>
+                        <th>Satin Alindigi Toplam Alış</th>
+                        <th>Satin Alindigi Toplam Ortalama Alış</th>
+                        <th>Satin Alindigi Toplam Satış</th>
+                        <th>Satin Alindigi Toplam Ortalama Satış</th>
+                        <th>Olusturulma Tarihi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="text-center align-middle">
+                            <td>@item.Currency.Title</td>
+                            <td>@item.Count</td>
+                            <td>
+                                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.Currency.PurchasePrice)</b></p>
+                  <p>@string.Format("({0} x {1}) = ", item.Count, UIToolHelper.RenderTL(item.Currency.PurchasePrice))<b
+                      style="color:#228D57;">@UIToolHelper.RenderTL(item.Count * item.Currency.PurchasePrice)</b></p>
+                            </td>
+                            <td>
+                                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.Currency.SalePrice)</b></p>
+                  <p>@string.Format("({0} x {1}) = ", item.Count, UIToolHelper.RenderTL(item.Currency.SalePrice))<b
+                      style="color:#228D57;">@UIToolHelper.RenderTL(item.Count * item.Currency.SalePrice)</b></p>
+                            </td>
+                            <td>
+                                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalPurchasePrice)</b></p>
+                            </td>
+                            <td>
+                                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.ItemAvgPurchasePrice)</b></p>
+                            </td>
+                            <td>
+                                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalSalePrice)</b></p>
+                            </td>
+                            <td>
+                                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.ItemAvgSalePrice)</b></p>
+                            </td>
+                            <td>
+                                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalCurrentPurchasePrice)</b></p>
+                            </td>
+                            <td>
+                                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.ItemAvgCurrentPurchasePrice)</b></p>
+                            </td>
+                            <td>
+                                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalCurrentSalePrice)</b></p>
+                            </td>
+                            <td>
+                                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.ItemAvgCurrentSalePrice)</b></p>
+                            </td>
+                             <td>
+                                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalCostPurchasePrice)</b></p>
+                            </td>
+                            <td>
+                                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.ItemAvgCostPurchasePrice)</b></p>
+                            </td>
+                            <td>
+                                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalCostSalePrice)</b></p>
+                            </td>
+                            <td>
+                                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.ItemAvgCostSalePrice)</b></p>
+                            </td>
+                            <td>
+                                @UIToolHelper.RenderDateTime(item.CreatedDate)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot class="table-primary">
+                    @* <tr>
+                        <th>#</th>
+                        <th>Miktar</th>
+                        <th>@currencyPTotal.ToString("N2")</th>
+                        <th>@currencySTotal.ToString("N2")</th>
+                        <th>@cpTotal.ToString("N2")</th>
+                        <th>@csTotal.ToString("N2")</th>
+                        <th>@pTotal.ToString("N2")</th>
+                        <th>@sTotal.ToString("N2")</th>
+                    </tr> *@
+                    <tr class="text-center align-middle">
+                        <th>Birim</th>
+                        <th>Miktar</th>
+                        <th>Guncel Piyasa Alış</th>
+                        <th>Guncel Piyasa Satış</th>
+                        <th>Total Alis</th>
+                        <th>Ortalama Alis</th>
+                        <th>Total Satis</th>
+                        <th>Ortalama Satis</th>
+                        <th>Eklendigi Tarih Piyasa Alış</th>
+                        <th>Eklendigi Tarih Piyasa Ortalama Alış</th>
+                        <th>Eklendigi Tarih Piyasa Satış</th>
+                        <th>Eklendigi Tarih Piyasa Ortalama Satış</th>
+                        <th>Satin Alindigi Toplam Alış</th>
+                        <th>Satin Alindigi Toplam Ortalama Alış</th>
+                        <th>Satin Alindigi Toplam Satış</th>
+                        <th>Satin Alindigi Toplam Ortalama Satış</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">Varlık özeti bulunamadı.</p>
+    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                </div>
+        </div>
+    </div>
+</div>

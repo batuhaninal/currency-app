@@ -5,6 +5,7 @@ using Client.Services.Auth;
 using Client.Services.Categories;
 using Client.Services.Currencies;
 using Client.Services.Tools;
+using Client.Services.UserAssetHistories;
 using Client.Services.Users;
 
 namespace Client.Services
@@ -44,6 +45,11 @@ namespace Client.Services
             services.AddHttpClient<IUserService, UserService>(opt =>
             {
                 opt.BaseAddress = new Uri($"{AppConstants.APIURL}/users/");
+            }).AddHttpMessageHandler<TokenMiddleware>();
+
+            services.AddHttpClient<IUserAssetHistoryService, UserAssetHistoryService>(opt =>
+            {
+                opt.BaseAddress = new Uri($"{AppConstants.APIURL}/user-asset-histories/");
             }).AddHttpMessageHandler<TokenMiddleware>();
         }
     }

@@ -12,6 +12,7 @@ using Application.CQRS.Commands.Currencies.Delete;
 using Application.CQRS.Commands.Currencies.Update;
 using Application.CQRS.Commands.Currencies.UpdateValue;
 using Application.CQRS.Commands.UpdateProfile;
+using Application.CQRS.Commands.UserAssetHistories.SaveUserAssetHistory;
 using Application.CQRS.Commands.Users.Login;
 using Application.CQRS.Commands.Users.Register;
 using Application.CQRS.Commons.Services;
@@ -310,6 +311,12 @@ namespace API.Handlers
             userAssetHistory.MapGet("item/{userAssetHistoryId}",
                 async ([FromServices] IUserAssetHistoryHandler handler, [FromRoute(Name = "userAssetHistoryId")] int userAssetHistoryId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.ItemList(new UserAssetItemHistoryListQuery(userAssetHistoryId), dispatcher, cancellationToken))
                 .WithName("User Asset Item History List")
+                .WithTags("User Asset Histories")
+                .RequireAuthorization();
+
+            userAssetHistory.MapPost("save",
+                async ([FromServices] IUserAssetHistoryHandler handler, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.Save(new SaveUserAssetHistoryCommand(), dispatcher, cancellationToken))
+                .WithName("Save User Asset History")
                 .WithTags("User Asset Histories")
                 .RequireAuthorization();
         }

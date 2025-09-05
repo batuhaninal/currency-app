@@ -1,5 +1,6 @@
 using Application.Abstractions.Commons.Results;
 using Application.Abstractions.Handlers;
+using Application.CQRS.Commands.UserAssetHistories.SaveUserAssetHistory;
 using Application.CQRS.Commons.Services;
 using Application.CQRS.Queries.UserAssetHistories.ItemList;
 using Application.CQRS.Queries.UserAssetHistories.List;
@@ -17,6 +18,12 @@ namespace API.Handlers.v1
         public async Task<IResult> List(UserAssetHistoryListQuery query, Dispatcher dispatcher, CancellationToken cancellationToken)
         {
             IBaseResult result = await dispatcher.SendQueryAsync<UserAssetHistoryListQuery, IBaseResult>(query, cancellationToken);
+            return Results.Json(result, statusCode: result.StatusCode);
+        }
+
+        public async Task<IResult> Save(SaveUserAssetHistoryCommand command, Dispatcher dispatcher, CancellationToken cancellationToken)
+        {
+            IBaseResult result = await dispatcher.SendCommandAsync<SaveUserAssetHistoryCommand, IBaseResult>(command, cancellationToken);
             return Results.Json(result, statusCode: result.StatusCode);
         }
     }

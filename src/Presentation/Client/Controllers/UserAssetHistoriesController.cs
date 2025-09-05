@@ -26,7 +26,15 @@ namespace Client.Controllers
         {
             var result = await _userAssetHistoryService.ItemListAsync(userAssetHistoryId);
             _ = this.ShowResultMessage(result);
-            return PartialView("_UserAssetItemHistoryPopup",result.Data ?? new());
+            return PartialView("_UserAssetItemHistoryPopup", result.Data ?? new());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Save()
+        {
+            var result = await _userAssetHistoryService.SaveAsync();
+            _ = this.ShowResultMessage(result);
+            return RedirectToAction(nameof(UserAssetHistoriesController.Index), "UserAssetHistories");
         }
     }
 }

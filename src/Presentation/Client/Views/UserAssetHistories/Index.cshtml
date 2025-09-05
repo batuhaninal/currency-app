@@ -28,6 +28,12 @@
             id="filter-asset-btn" title="Filtreleri temizle">
             <i class="fa-solid fa-filter"></i>
           </a> *@
+          <form asp-area="" asp-controller="UserAssetHistories" asp-action="Save" method="post">
+            <button type="submit" class="badge rounded-pill bg-success p-2 border-0" id="save-user-asset-history-btn"
+              title="Hesap Ozeti Al">
+              <i class="fa-solid fa-sd-card"></i>
+            </button>
+          </form>
           <button type="button" class="badge rounded-pill bg-info p-2 border-0" id="filter-user-asset-history-btn"
             title="Birim Filtrele" data-bs-toggle="modal" data-bs-target="#filter-user-asset-history-popup">
             <i class="fa-solid fa-filter"></i>
@@ -231,6 +237,6 @@
         });
       }); *@
 
-      });
+        });
   </script>
 }

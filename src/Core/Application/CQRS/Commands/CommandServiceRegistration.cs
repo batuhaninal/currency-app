@@ -12,6 +12,7 @@ using Application.CQRS.Commands.Currencies.Delete;
 using Application.CQRS.Commands.Currencies.Update;
 using Application.CQRS.Commands.Currencies.UpdateValue;
 using Application.CQRS.Commands.UpdateProfile;
+using Application.CQRS.Commands.UserAssetHistories.SaveUserAssetHistory;
 using Application.CQRS.Commands.Users.Login;
 using Application.CQRS.Commands.Users.Register;
 using Application.CQRS.Commons.Interfaces;
@@ -32,6 +33,12 @@ namespace Application.CQRS.Commands
 
             services.AddScoped<UpdateProfileCommand>();
             services.AddScoped<ICommandHandler<UpdateProfileCommand, IBaseResult>, UpdateProfileCommandHandler>();
+            #endregion
+
+            #region UserAssetHistory
+            services.AddScoped<SaveUserAssetHistoryCommand>();
+            services.AddScoped<ICommandHandler<SaveUserAssetHistoryCommand, IBaseResult>, SaveUserAssetHistoryCommandHandler>();
+
             #endregion
 
             #region Asset

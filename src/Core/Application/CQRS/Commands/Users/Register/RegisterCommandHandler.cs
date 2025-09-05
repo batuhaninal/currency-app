@@ -37,37 +37,45 @@ namespace Application.CQRS.Commands.Users.Register
                 byte[] pswHash, pswSalt;
                 _hashingService.CreatePasswordHash(command.Password, out pswHash, out pswSalt);
 
-                using (var tx = _unitOfWork.BeginTransaction())
-                {
-                    try
+                return await _unitOfWork.ExecuteWithRetryAsync<IBaseResult>(
+                    async (uow, ct) =>
                     {
-                        User user = await _unitOfWork.UserWriteRepository.CreateAsync(command.ToUser(ref pswHash, ref pswSalt), cancellationToken);
-
-                        await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-                        UserRole role = await _unitOfWork.UserRoleWriteRepository.CreateAsync(new UserRole
+                        using (var tx = uow.BeginTransaction())
                         {
-                            RoleId = AppRoles.UserRoleId,
-                            UserId = user.Id,
-                        });
+                            try
+                            {
+                                User user = await uow.UserWriteRepository.CreateAsync(command.ToUser(ref pswHash, ref pswSalt), ct);
 
-                        await _unitOfWork.SaveChangesAsync(cancellationToken);
+                                await uow.SaveChangesAsync(ct);
 
-                        user = (await _unitOfWork.UserReadRepository.Table.AsNoTracking().Include(x => x.UserRoles!).ThenInclude(x => x.Role).FirstOrDefaultAsync(x => x.Email == command.Username))!;
+                                UserRole role = await uow.UserRoleWriteRepository.CreateAsync(new UserRole
+                                {
+                                    RoleId = AppRoles.UserRoleId,
+                                    UserId = user.Id,
+                                });
 
-                        var token = _tokenService.CreateAccessToken(user, 60 * 24 * 30);
+                                await uow.SaveChangesAsync(ct);
 
-                        await tx.CommitAsync(cancellationToken);
+                                user = (await uow.UserReadRepository.Table.AsNoTracking().Include(x => x.UserRoles!).ThenInclude(x => x.Role).FirstOrDefaultAsync(x => x.Email == command.Username))!;
 
-                        result = new ResultDto(201, true, token);
-                    }
-                    catch (System.Exception ex)
-                    {
-                        _logger.LogError("{FunctionName} exception: {Exception}", typeof(RegisterCommandHandler).Name, ex);
-                        await tx.RollbackAsync(cancellationToken);
-                        return new ResultDto(500, false, null, ErrorMessage.INTERNAL);
-                    }
-                }
+                                var token = _tokenService.CreateAccessToken(user, 60 * 24 * 30);
+
+                                await tx.CommitAsync(ct);
+
+                                return new ResultDto(201, true, token);
+                            }
+                            catch (System.Exception ex)
+                            {
+                                _logger.LogError("{FunctionName} exception: {Exception}", typeof(RegisterCommandHandler).Name, ex);
+                                await tx.RollbackAsync(ct);
+                                return new ResultDto(500, false, null, ErrorMessage.INTERNAL);
+                            }
+                        }
+                    },
+                    cancellationToken
+                );
+
+
             }
 
             return result;

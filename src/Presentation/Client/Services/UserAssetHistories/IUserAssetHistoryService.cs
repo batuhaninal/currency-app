@@ -9,6 +9,7 @@ namespace Client.Services.UserAssetHistories
     {
         Task<BaseResult<PaginationResult<UserAssetHistoryItemResponse>>> ListAsync(UserAssetHistoryRequestParameter parameter, CancellationToken cancellationToken = default);
         Task<BaseResult<List<UserAssetItemHistoryItemResponse>>> ItemListAsync(int userAssetHistoryId, CancellationToken cancellationToken = default);
+        Task<BaseResult<NoContent>> SaveAsync(CancellationToken cancellationToken = default);
     }
 
     public sealed class UserAssetHistoryService : BaseService, IUserAssetHistoryService
@@ -29,6 +30,12 @@ namespace Client.Services.UserAssetHistories
         public async Task<BaseResult<PaginationResult<UserAssetHistoryItemResponse>>> ListAsync(UserAssetHistoryRequestParameter parameter, CancellationToken cancellationToken = default)
         {
             var result = await this.GetAsync<PaginationResult<UserAssetHistoryItemResponse>>(_httpClient, "", parameter.ToQueryString(), cancellationToken);
+            return result;
+        }
+
+        public async Task<BaseResult<NoContent>> SaveAsync(CancellationToken cancellationToken = default)
+        {
+            var result = await this.PostAsync<NoContent, NoContent>(_httpClient, "save", null, cancellationToken);
             return result;
         }
     }

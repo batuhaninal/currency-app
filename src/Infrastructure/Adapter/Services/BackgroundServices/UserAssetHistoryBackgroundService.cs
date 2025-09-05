@@ -65,6 +65,7 @@ namespace Adapter.Services.BackgroundServices
 
         private async Task SaveUserAssetHistories(IUnitOfWork unitOfWork, int userId, CancellationToken cancellationToken)
         {
+            // Retry mekanizmasi ile manuel transaction kullanmak mumkun degil
             await unitOfWork.ExecuteWithRetryAsync(
                 async (uow, ct) =>
                 {

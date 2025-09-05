@@ -1,3 +1,4 @@
+using Application.CQRS.Commands.UserAssetHistories.SaveUserAssetHistory;
 using Application.CQRS.Commons.Services;
 using Application.CQRS.Queries.UserAssetHistories.ItemList;
 using Application.CQRS.Queries.UserAssetHistories.List;
@@ -9,5 +10,6 @@ namespace Application.Abstractions.Handlers
     {
         Task<IResult> List(UserAssetHistoryListQuery query, Dispatcher dispatcher, CancellationToken cancellationToken);
         Task<IResult> ItemList(UserAssetItemHistoryListQuery query, Dispatcher dispatcher, CancellationToken cancellationToken);
+        Task<IResult> Save(SaveUserAssetHistoryCommand command, Dispatcher dispatcher, CancellationToken cancellationToken);
     }
 }

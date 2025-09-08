@@ -39,6 +39,12 @@ namespace Client.Services.Currencies
             return result;
         }
 
+        public async Task<BaseResult<PaginationResult<EUCurrencyItemResponse>>> EUListAsync(CurrencyRequestParameter parameter, CancellationToken cancellationToken = default)
+        {
+            BaseResult<PaginationResult<EUCurrencyItemResponse>> result = await this.GetAsync<PaginationResult<EUCurrencyItemResponse>>(_httpClient, "", parameter.ToQueryString(), cancellationToken);
+            return result;
+        }
+
         public async Task<BaseResult<CurrencyWithHistoryResponse>> HistoryInfoAsync(int currencyId, CurrencyHistoryRequestParameter parameter, CancellationToken cancellationToken = default)
         {
             BaseResult<CurrencyWithHistoryResponse> result = await this.GetAsync<CurrencyWithHistoryResponse>(_httpClient, $"{panel}/history-info/{currencyId}", parameter.ToQueryString(), cancellationToken);

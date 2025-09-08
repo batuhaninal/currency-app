@@ -26,7 +26,10 @@ namespace Client.Controllers
             var result = await _assetService.UserAssetsAsync(parameter);
             _ = this.ShowResultMessage(result);
 
-            var data = await _toolService.CurrencyTools(new ToolRequestParameter());
+            var data = await _toolService.CurrencyTools(new ToolRequestParameter
+            {
+                IsActive = true
+            });
             _ = this.ShowResultMessage(data);
 
             ViewBag.CurrencyTool = data.Data ?? new();
@@ -64,7 +67,10 @@ namespace Client.Controllers
         [HttpGet]
         public async Task<PartialViewResult> AddOperation()
         {
-            var result = await _toolService.CurrencyTools(new ToolRequestParameter());
+            var result = await _toolService.CurrencyTools(new ToolRequestParameter
+            {
+                IsActive = true
+            });
             if (!result.Success)
                 TempData["ErrorMessage"] = result.Message ?? "Beklenmeyen hata!";
 

@@ -9,27 +9,35 @@
     ? categoryIds.ToArray()
     : null;
 
-    Model.IsActive = query.ContainsKey("isactive");
-
+    // Min - Max fiyat parametreleri
     string minPPrice = query.TryGetValue("minpurchaseprice", out var minPVal) ? minPVal.ToString() : "";
     string maxPPrice = query.TryGetValue("maxpurchaseprice", out var maxPVal) ? maxPVal.ToString() : "";
 
     string minSPrice = query.TryGetValue("minsaleprice", out var minSVal) ? minSVal.ToString() : "";
     string maxSPrice = query.TryGetValue("maxsaleprice", out var maxSVal) ? maxSVal.ToString() : "";
+
 }
 
-<div class="modal fade" id="filter-currency-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
-    aria-hidden="true">
+<div class="modal fade" id="eu-filter-currency-popup" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class='modal-header bg-info'>
-                <h5 class="modal-title">Birim Guncelle</h5>
+                <h5 class="modal-title">Birim Filtrele</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="get" class="d-inline">
                 <div class="modal-body" id="modal-body">
-                    @await Html.PartialAsync("_DropdownTool", new DropdownModel("Kategori Seciniz",
-                    "filter-category-dropdown", "CategoryId", "js-category-tool-multiple", Model.Categories, true, selectedCategories))
+                    @await Html.PartialAsync("_DropdownTool", new DropdownModel(
+                    "Kategori Seciniz",
+                                        "eu-filter-category-dropdown",
+                                        "CategoryId",
+                                        "js-eu-category-tool-multiple",
+                                        Model.Categories,
+                                        true,
+                                        selectedCategories
+                                        ))
+
                     <div class="mt-3">
                         <label for="minPurchasePrice" class="form-label">Min Satın Alım Fiyatı</label>
                         <input type="number" step="0.01" class="form-control" id="minPurchasePrice"
@@ -49,25 +57,10 @@
                         <input type="number" step="0.01" class="form-control" id="maxSalePrice" name="maxSalePrice"
                             value="@maxSPrice" />
                     </div>
-                    <div class="mb-3">
-                        <label for="isActiveFilter" class="form-label">Durum</label>
-                        <select id="isActiveFilter" asp-for="IsActive" class="form-select">
-                            <option value="">
-                                Seçiniz
-                            </option>
-                            <option value="true">
-                                Aktif
-                            </option>
-                            <option value="false">
-                                Pasif
-                            </option>
-                        </select>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-                    <a asp-area="panel" asp-controller="Currencies" asp-action="Index"
-                        class="btn btn-danger">Temizle</a>
+                    <a asp-area="" asp-controller="Currencies" asp-action="Index" class="btn btn-danger">Temizle</a>
                     <button type="submit" class="btn btn-info">Filtreleri Uygula</button>
                 </div>
             </form>

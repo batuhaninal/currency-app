@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Application.Models.RequestParameters.Commons;
 using Application.Models.RequestParameters.Currencies;
 using Application.Utilities.Helpers;
 using Domain.Entities;
@@ -15,6 +16,15 @@ namespace Application.Abstractions.Repositories.Currencies.Extensions
 
             return source.OrderQuery(parameter.OrderBy);
         }
+        
+        public static IQueryable<Currency> FilterAllConditions(this IQueryable<Currency> source, ToolRequestParameter parameter)
+        {
+            source = source.Filter(parameter);
+
+            source = source.Search(parameter.Condition);
+
+            return source.OrderQuery(parameter.OrderBy);
+        }
 
         public static IQueryable<Currency> Filter(this IQueryable<Currency> source, CurrencyBaseRequestParameter parameter)
         {
@@ -22,6 +32,28 @@ namespace Application.Abstractions.Repositories.Currencies.Extensions
 
             if (parameter.CategoryId is not null && parameter.CategoryId.Length > 0)
                 predicate = predicate.And(x => parameter.CategoryId.Contains(x.CategoryId));
+
+            if (parameter.IsActive is not null)
+                predicate = predicate.And(x => x.IsActive == parameter.IsActive);
+
+            if (parameter.MinPurchasePrice is not null && parameter.MinPurchasePrice > 0)
+                predicate = predicate.And(x => x.PurchasePrice >= parameter.MinPurchasePrice.Value);
+
+            if (parameter.MaxPurchasePrice is not null && parameter.MaxPurchasePrice > 0)
+                predicate = predicate.And(x => x.PurchasePrice <= parameter.MaxPurchasePrice.Value);
+
+            if (parameter.MinSalePrice is not null && parameter.MinSalePrice > 0)
+                predicate = predicate.And(x => x.SalePrice >= parameter.MinSalePrice.Value);
+
+            if (parameter.MaxSalePrice is not null && parameter.MaxSalePrice > 0)
+                predicate = predicate.And(x => x.SalePrice <= parameter.MaxSalePrice.Value);
+
+            return source.Where(predicate);
+        }
+
+        public static IQueryable<Currency> Filter(this IQueryable<Currency> source, ToolRequestParameter parameter)
+        {
+            var predicate = PredicateBuilderHelper.True<Currency>();
 
             if (parameter.IsActive is not null)
                 predicate = predicate.And(x => x.IsActive == parameter.IsActive);
@@ -44,7 +76,8 @@ namespace Application.Abstractions.Repositories.Currencies.Extensions
         public static IQueryable<Currency> OrderQuery(this IQueryable<Currency> source, string? orderBy)
         {
             if (string.IsNullOrWhiteSpace(orderBy))
-                return source.OrderBy(x=> x.Id);
+                return source.OrderBy(x => x.CategoryId)
+                    .ThenBy(x=> x.Title);
 
             string normalizedConditiom = orderBy.TrimStart().TrimEnd().ToLower();
             

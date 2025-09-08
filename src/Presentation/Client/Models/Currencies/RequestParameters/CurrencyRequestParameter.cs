@@ -10,6 +10,10 @@ namespace Client.Models.Currencies.RequestParameters
         }
 
         public int[]? CategoryId { get; set; }
+        public decimal? MinPurchasePrice { get; set; }
+        public decimal? MaxPurchasePrice { get; set; }
+        public decimal? MinSalePrice { get; set; }
+        public decimal? MaxSalePrice { get; set; }
 
         internal KeyValuePair<string, object>[] ToQueryString()
         {
@@ -37,6 +41,18 @@ namespace Client.Models.Currencies.RequestParameters
                     result.Add(new KeyValuePair<string, object>("categoryId", categoryId));
                 }
             }
+
+            if (this.MinPurchasePrice.HasValue && this.MinPurchasePrice.Value > 0)
+                result.Add(new KeyValuePair<string, object>("minPurchasePrice", this.MinPurchasePrice.Value));
+
+            if (this.MaxPurchasePrice.HasValue && this.MaxPurchasePrice.Value > 0)
+                result.Add(new KeyValuePair<string, object>("maxPurchasePrice", this.MaxPurchasePrice.Value));
+
+            if (this.MinSalePrice.HasValue && this.MinSalePrice.Value > 0)
+                result.Add(new KeyValuePair<string, object>("minSalePrice", this.MinSalePrice.Value));
+
+            if (this.MaxSalePrice.HasValue && this.MaxSalePrice.Value > 0)
+                result.Add(new KeyValuePair<string, object>("maxSalePrice", this.MaxSalePrice.Value));
 
             return result.ToArray();
         }

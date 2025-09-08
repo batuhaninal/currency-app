@@ -4,6 +4,7 @@ using Application.Abstractions.Repositories.Commons;
 using Application.CQRS.Commons.Interfaces;
 using Application.Models.DTOs.Categories;
 using Application.Models.DTOs.Commons.Results;
+using Application.Models.RequestParameters.Categories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.CQRS.Queries.Tools
@@ -23,8 +24,7 @@ namespace Application.CQRS.Queries.Tools
                 .CategoryReadRepository
                 .Table
                 .AsNoTracking()
-                .Search(query.Condition)
-                .OrderQuery(query.OrderBy)
+                .FilterAllConditions(query)
                 .Select(x=> new CategoryToolDto(x.Id, x.Title, x.IsActive))
                 .ToListAsync(cancellationToken);
 

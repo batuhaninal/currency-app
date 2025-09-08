@@ -23,8 +23,7 @@ namespace Application.CQRS.Queries.Tools.GetCurrencyToolList
                 .CurrencyReadRepository
                 .Table
                 .AsNoTracking()
-                .Search(query.Condition)
-                .OrderQuery(query.OrderBy)
+                .FilterAllConditions(query)
                 .Select(x => new CurrencyToolDto(x.Id, x.Title, x.SubTitle, x.IsActive))
                 .ToListAsync(cancellationToken);
                 

@@ -13,6 +13,8 @@ namespace Client.Models.Commons
             set => _condition = value?.TrimStart().TrimEnd().ToLower();
         }
         public string? OrderBy { get; set; }
+
+        public bool? IsActive { get; set; }
         
         internal KeyValuePair<string, object>[] ToQueryString()
         {
@@ -24,6 +26,9 @@ namespace Client.Models.Commons
             if (this.OrderBy != null)
                 result.Add(new KeyValuePair<string, object>("orderBy", this.OrderBy));
 
+            if (this.IsActive.HasValue)
+                result.Add(new KeyValuePair<string, object>("isActive", this.IsActive.Value));
+                
             return result.ToArray();
         }
     }

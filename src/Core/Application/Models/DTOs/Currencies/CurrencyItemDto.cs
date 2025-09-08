@@ -7,7 +7,7 @@ namespace Application.Models.DTOs.Currencies
     {
         public CurrencyItemDto()
         {
-            
+
         }
 
         public CurrencyItemDto(int currencyId, string title, string? subTitle, string? tvCode, string? xPath, decimal purchasePrice, decimal salePrice, bool isActive, CategoryRelationDto? category = null)
@@ -20,7 +20,7 @@ namespace Application.Models.DTOs.Currencies
             PurchasePrice = purchasePrice;
             SalePrice = salePrice;
             IsActive = isActive;
-            Category = category ?? new CategoryRelationDto(0, ErrorMessage.PASSIVEorDELETED); 
+            Category = category ?? new CategoryRelationDto(0, ErrorMessage.PASSIVEorDELETED);
         }
 
         public int CurrencyId { get; init; }
@@ -31,6 +31,31 @@ namespace Application.Models.DTOs.Currencies
         public decimal PurchasePrice { get; init; }
         public decimal SalePrice { get; init; }
         public bool IsActive { get; init; }
+        public CategoryRelationDto Category { get; init; } = null!;
+    }
+    
+    public sealed record EUCurrencyItemDto
+    {
+        public EUCurrencyItemDto()
+        {
+            
+        }
+
+        public EUCurrencyItemDto(int currencyId, string title, string? subTitle, decimal purchasePrice, decimal salePrice, CategoryRelationDto? category = null)
+        {
+            CurrencyId = currencyId;
+            Title = title;
+            SubTitle = subTitle;
+            PurchasePrice = purchasePrice;
+            SalePrice = salePrice;
+            Category = category ?? new CategoryRelationDto(0, ErrorMessage.PASSIVEorDELETED); 
+        }
+
+        public int CurrencyId { get; init; }
+        public string Title { get; init; } = null!;
+        public string? SubTitle { get; init; }
+        public decimal PurchasePrice { get; init; }
+        public decimal SalePrice { get; init; }
         public CategoryRelationDto Category { get; init; } = null!;
     }
 }

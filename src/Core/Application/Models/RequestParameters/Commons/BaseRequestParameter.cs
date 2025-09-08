@@ -20,15 +20,15 @@ namespace Application.Models.RequestParameters.Commons
         [JsonIgnore]
         protected virtual int DefaultSize { get; set; } = 20;
 
-        public virtual int? PageIndex 
-        { 
-            get => _pageIndex <= 0 ? 1 : _pageIndex; 
-            set => _pageIndex = value <= 0 ? 1 : value; 
-        }
-        public virtual int? PageSize 
+        public virtual int? PageIndex
         {
-            get => _pageSize == 0 || _pageSize <= 0 ? DefaultSize : _pageSize; 
-            set => _pageSize = (value <= 0 || value > MaxSize) ? DefaultSize : value; 
+            get => _pageIndex <= 0 ? 1 : _pageIndex;
+            set => _pageIndex = value <= 0 ? 1 : value;
+        }
+        public virtual int? PageSize
+        {
+            get => _pageSize == 0 || _pageSize <= 0 ? DefaultSize : _pageSize;
+            set => _pageSize = (value <= 0 || value > MaxSize) ? DefaultSize : value;
         }
     }
 }

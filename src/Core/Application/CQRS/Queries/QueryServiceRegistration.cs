@@ -10,6 +10,7 @@ using Application.CQRS.Queries.Assets.UserSummary;
 using Application.CQRS.Queries.Categories.Info;
 using Application.CQRS.Queries.Categories.List;
 using Application.CQRS.Queries.Currencies.Calculator;
+using Application.CQRS.Queries.Currencies.EUList;
 using Application.CQRS.Queries.Currencies.Info;
 using Application.CQRS.Queries.Currencies.List;
 using Application.CQRS.Queries.Currencies.WithHistoryInfo;
@@ -72,6 +73,9 @@ namespace Application.CQRS.Queries
             #region Currency
             services.AddScoped<CurrencyListQuery>();
             services.AddScoped<IQueryHandler<CurrencyListQuery, IBaseResult>, CurrencyListQueryHandler>();
+
+            services.AddScoped<EUCurrencyListQuery>();
+            services.AddScoped<IQueryHandler<EUCurrencyListQuery, IBaseResult>, EUCurrencyListQueryHandler>();
 
             services.AddScoped<CurrencyInfoQuery>();
             services.AddScoped<IQueryHandler<CurrencyInfoQuery, IBaseResult>, CurrencyInfoQueryHandler>();

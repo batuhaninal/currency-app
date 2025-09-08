@@ -26,6 +26,7 @@ using Application.CQRS.Queries.Assets.UserSummary;
 using Application.CQRS.Queries.Categories.Info;
 using Application.CQRS.Queries.Categories.List;
 using Application.CQRS.Queries.Currencies.Calculator;
+using Application.CQRS.Queries.Currencies.EUList;
 using Application.CQRS.Queries.Currencies.Info;
 using Application.CQRS.Queries.Currencies.List;
 using Application.CQRS.Queries.Currencies.WithHistoryInfo;
@@ -154,6 +155,12 @@ namespace API.Handlers
                 async ([FromServices] ICurrencyHandler handler, [AsParameters] CalculatorQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.Calculator(query, dispatcher, cancellationToken))
                 .WithName("Calculator")
                 .WithTags("Currencies");
+
+            currency.MapGet("",
+                async ([FromServices] ICurrencyHandler handler, [AsParameters] EUCurrencyListQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
+                    await handler.EUList(query, dispatcher, cancellationToken))
+                    .WithName("EU Currency List")
+                    .WithTags("Currencies");
 
             var currencyPanel = currency.MapGroup("panel");
 

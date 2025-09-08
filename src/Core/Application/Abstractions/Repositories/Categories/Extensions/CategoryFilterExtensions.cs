@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Application.Models.RequestParameters.Categories;
+using Application.Models.RequestParameters.Commons;
 using Application.Utilities.Helpers;
 using Domain.Entities;
 
@@ -16,7 +17,26 @@ namespace Application.Abstractions.Repositories.Categories.Extensions
             return source.OrderQuery(parameter.OrderBy);
         }
 
+        public static IQueryable<Category> FilterAllConditions(this IQueryable<Category> source, ToolRequestParameter parameter)
+        {
+            source = source.Filter(parameter);
+
+            source = source.Search(parameter.Condition);
+
+            return source.OrderQuery(parameter.OrderBy);
+        }
+
         public static IQueryable<Category> Filter(this IQueryable<Category> source, CategoryBaseRequestParameter parameter)
+        {
+            var predicate = PredicateBuilderHelper.True<Category>();
+
+            if (parameter.IsActive is not null)
+                predicate = predicate.And(x => x.IsActive == parameter.IsActive);
+
+            return source.Where(predicate);
+        }
+
+        public static IQueryable<Category> Filter(this IQueryable<Category> source, ToolRequestParameter parameter)
         {
             var predicate = PredicateBuilderHelper.True<Category>();
 
@@ -44,7 +64,7 @@ namespace Application.Abstractions.Repositories.Categories.Extensions
                 return source;
 
             string normalizedConditiom = orderBy.TrimStart().TrimEnd().ToLower();
-            
+
             string[] orderByQuery = orderBy.Split('_');
 
             Expression<Func<Category, object>> keySelector = orderByQuery[0] switch
@@ -55,7 +75,7 @@ namespace Application.Abstractions.Repositories.Categories.Extensions
                 _ => category => category.Id
             };
 
-            if(normalizedConditiom.Contains("_desc"))
+            if (normalizedConditiom.Contains("_desc"))
                 source = source.OrderByDescending(keySelector);
             else
                 source = source.OrderBy(keySelector);
@@ -81,9 +101,9 @@ namespace Application.Abstractions.Repositories.Categories.Extensions
             };
 
             if (normalizedConditiom.Contains("_desc"))
-                source = source.OrderByDescending(keySelector).ThenByDescending(x=> x.Id);
+                source = source.OrderByDescending(keySelector).ThenByDescending(x => x.Id);
             else
-                source = source.OrderBy(keySelector).ThenBy(x=> x.Id);
+                source = source.OrderBy(keySelector).ThenBy(x => x.Id);
 
             return source;
         }

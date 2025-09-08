@@ -5,6 +5,7 @@ using Application.CQRS.Commands.Currencies.Update;
 using Application.CQRS.Commands.Currencies.UpdateValue;
 using Application.CQRS.Commons.Services;
 using Application.CQRS.Queries.Currencies.Calculator;
+using Application.CQRS.Queries.Currencies.EUList;
 using Application.CQRS.Queries.Currencies.Info;
 using Application.CQRS.Queries.Currencies.List;
 using Application.CQRS.Queries.Currencies.WithHistoryInfo;
@@ -21,6 +22,7 @@ namespace Application.Abstractions.Handlers
         Task<IResult> ChangeStatus(ChangeCurrencyStatusCommand command, Dispatcher dispatcher, CancellationToken cancellationToken);
         Task<IResult> UpdateValue(UpdateCurrencyValueCommand command, Dispatcher dispatcher, CancellationToken cancellationToken);
         Task<IResult> List(CurrencyListQuery query, Dispatcher dispatcher, CancellationToken cancellationToken);
+        Task<IResult> EUList(EUCurrencyListQuery query, Dispatcher dispatcher, CancellationToken cancellationToken);
         Task<IResult> Info(CurrencyInfoQuery query, Dispatcher dispatcher, CancellationToken cancellationToken);
         Task<IResult> HistoryInfo(CurrencyWithHistoryInfoQuery query, Dispatcher dispatcher, CancellationToken cancellationToken);
         Task<IResult> PriceInfo(CurrencyPriceInfoQuery query, Dispatcher dispatcher, CancellationToken cancellationToken);

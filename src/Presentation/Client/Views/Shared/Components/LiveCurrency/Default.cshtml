@@ -1,0 +1,24 @@
+@model EUCurrencyInfoResponse
+
+<div class="col-lg-3 col-6 mb-4">
+    <div class="card shadow-sm border-0 rounded-3 h-100" id="card-@Model.CurrencyId">
+        <div class="card-body text-center">
+            <h5 class="card-title fw-bold mb-2" id="currency-card-title-@Model.CurrencyId">
+                @Model.Title
+            </h5>
+            <span class="badge bg-primary mb-3">@Model.Category.Title</span>
+
+            <div class="info-box-content">
+                <p class="text-muted mb-1">Alış Fiyatı</p>
+                <h4 class="text-success fw-bold" id="currency-purchase-@Model.CurrencyId">
+                    @Model.PurchasePrice ₺
+                </h4>
+
+                <p class="text-muted mt-3 mb-1">Satış Fiyatı</p>
+                <h4 class="text-danger fw-bold" id="currency-sale-@Model.CurrencyId">
+                    @Model.SalePrice ₺
+                </h4>
+            </div>
+        </div>
+    </div>
+</div>

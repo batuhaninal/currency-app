@@ -1,4 +1,5 @@
 using Application.Abstractions.Commons.Results;
+using Application.Abstractions.Notifiers;
 using Application.Abstractions.Repositories.Commons;
 using Application.CQRS.Commons.Interfaces;
 using Application.Models.Constants.Messages;
@@ -6,6 +7,7 @@ using Application.Models.DTOs.Categories;
 using Application.Models.DTOs.Commons.Results;
 using Application.Models.DTOs.Currencies;
 using Application.Models.DTOs.CurrencyHistories;
+using Application.Models.Events;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -15,12 +17,14 @@ namespace Application.CQRS.Commands.Currencies.UpdateValue
     public sealed class UpdateCurrencyValueCommandHandler : ICommandHandler<UpdateCurrencyValueCommand, IBaseResult>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICurrencyNotifierService _currencyNotifierService;
         private readonly ILogger<UpdateCurrencyValueCommandHandler> _logger;
 
-        public UpdateCurrencyValueCommandHandler(IUnitOfWork unitOfWork, ILogger<UpdateCurrencyValueCommandHandler> logger)
+        public UpdateCurrencyValueCommandHandler(IUnitOfWork unitOfWork, ILogger<UpdateCurrencyValueCommandHandler> logger, ICurrencyNotifierService currencyNotifierService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _currencyNotifierService = currencyNotifierService;
         }
 
         public async Task<IBaseResult> Handle(UpdateCurrencyValueCommand command, CancellationToken cancellationToken = default)
@@ -28,6 +32,7 @@ namespace Application.CQRS.Commands.Currencies.UpdateValue
             return await _unitOfWork.ExecuteWithRetryAsync<IBaseResult>(
                 async (uow, ct) =>
                 {
+                    PriceUpdatedEvent @event = new();
                     using (var tx = uow.BeginTransaction())
                     {
                         try
@@ -90,9 +95,12 @@ namespace Application.CQRS.Commands.Currencies.UpdateValue
                                 }
                                 CategoryRelationDto? category = await uow.CategoryReadRepository.Table.AsNoTracking().Where(x => x.Id == currency.CategoryId).Select(x => new CategoryRelationDto(x.Id, x.Title)).FirstOrDefaultAsync();
                                 result = new ResultDto(200, true, new CurrencyItemDto(currency.Id, currency.Title, currency.SubTitle, currency.TVCode, currency.XPath, currency.PurchasePrice, currency.SalePrice, currency.IsActive, category));
+                                @event = new PriceUpdatedEvent(currency.Id, currency.Title, currency.PurchasePrice, currency.SalePrice);
                             }
 
                             await tx.CommitAsync(ct);
+
+                            await _currencyNotifierService.NotifyPriceAsync(@event, ct);
 
                             return result;
                         }

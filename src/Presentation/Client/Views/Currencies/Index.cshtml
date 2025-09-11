@@ -1,7 +1,10 @@
 @{
-    Layout = "_Layout";    
-    var data = ViewBag.CategoryTool as List<CategoryToolResponse>;
-    SelectList categoryTool = new SelectList(data, "CategoryId", "Title");
+  Layout = "_Layout";
+  var data = ViewBag.CategoryTool as List<CategoryToolResponse>;
+  SelectList categoryTool = new SelectList(data, "CategoryId", "Title");
+
+  var follows = ViewBag.Follows as int[];
+  follows ??= new int[] { };
 }
 
 @model PaginationResult<EUCurrencyItemResponse>
@@ -11,10 +14,12 @@
     <div class="card-header">
       <div class="d-flex justify-content-between">
         <div class="btn-group mb-2" role="group" aria-label="Basic mixed styles example">
-          <button type="button" class="badge rounded-pill bg-info p-2 border-0" id="eu-filter-currency-btn" title="Birim Filtrele" data-bs-toggle="modal" data-bs-target="#eu-filter-currency-popup">
+          <button type="button" class="badge rounded-pill bg-info p-2 border-0" id="eu-filter-currency-btn"
+            title="Birim Filtrele" data-bs-toggle="modal" data-bs-target="#eu-filter-currency-popup">
             <i class="fa-solid fa-filter"></i>
           </button>
-          <a asp-area="" asp-controller="Currencies" asp-action="Index"  class="badge rounded-pill bg-danger p-2 border-0" id="filter-currency-btn" title="Filtreleri temizle">
+          <a asp-area="" asp-controller="Currencies" asp-action="Index"
+            class="badge rounded-pill bg-danger p-2 border-0" id="filter-currency-btn" title="Filtreleri temizle">
             <i class="fa-solid fa-filter"></i>
           </a>
         </div>
@@ -47,6 +52,7 @@
               Satis Fiyati
               @await Html.PartialAsync("_OrderTool", new SortModel("salePrice"))
             </th>
+            <th style="width: 40px">Islemler</th>
           </tr>
         </thead>
         <tbody>
@@ -67,6 +73,46 @@
               </td>
               <td>
                 <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.SalePrice)</b></p>
+              </td>
+              <td>
+                <div class="d-inline-flex gap-1">
+                  @if (follows is not null)
+                  {
+                    @if (follows.Contains(item.CurrencyId))
+                    {
+                      <form asp-area="" asp-controller="UserCurrencyFollows" asp-action="DeleteFav">
+                        <input type="hidden" name="currencyId" value="@item.CurrencyId" />
+                        <input type="hidden" name="redirectUrl"
+                          value="@($"{Context.Request.Path}{Context.Request.QueryString}")" />
+                        <button type="submit" class="badge rounded-pill bg-danger p-2"
+                          title="@item.CurrencyId idli birimi favorilerden kaldir">
+                          <i class="fa-solid fa-thumbtack-slash"></i>
+                        </button>
+                      </form>
+                    }
+                    else
+                    {
+                      <form asp-area="" asp-controller="UserCurrencyFollows" asp-action="AddToFav">
+                        <input type="hidden" name="currencyId" value="@item.CurrencyId" />
+                        <input type="hidden" name="redirectUrl"
+                          value="@($"{Context.Request.Path}{Context.Request.QueryString}")" />
+                        <button type="submit" class="badge rounded-pill bg-info p-2"
+                          title="@item.CurrencyId idli birimi favorilere ekle">
+                          <i class="fa-solid fa-thumbs-up"></i>
+                        </button>
+                      </form>
+                      <form asp-area="" asp-controller="UserCurrencyFollows" asp-action="AddToBroadcast">
+                        <input type="hidden" name="currencyId" value="@item.CurrencyId" />
+                        <input type="hidden" name="redirectUrl"
+                          value="@($"{Context.Request.Path}{Context.Request.QueryString}")" />
+                        <button type="submit" class="badge rounded-pill bg-warning p-2"
+                          title="@item.CurrencyId idli birimi izlemeye al">
+                          <i class="fa-solid fa-tower-broadcast"></i>
+                        </button>
+                      </form>
+                    }
+                  }
+                </div>
               </td>
             </tr>
           }
@@ -91,10 +137,10 @@
 
       $('#eu-filter-currency-popup').on('shown.bs.modal', function () {
         $('.js-eu-category-tool-multiple').select2({
-            dropdownParent: $('#eu-filter-currency-popup'),
-            width: '100%',
-            placeholder: "Kategori seçiniz",
-            allowClear: true
+          dropdownParent: $('#eu-filter-currency-popup'),
+          width: '100%',
+          placeholder: "Kategori seçiniz",
+          allowClear: true
         });
       });
 

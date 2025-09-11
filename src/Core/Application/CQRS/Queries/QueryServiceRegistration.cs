@@ -9,6 +9,7 @@ using Application.CQRS.Queries.Assets.UserAssetsForOperationQuery;
 using Application.CQRS.Queries.Assets.UserSummary;
 using Application.CQRS.Queries.Categories.Info;
 using Application.CQRS.Queries.Categories.List;
+using Application.CQRS.Queries.Currencies.BroadcastInfo;
 using Application.CQRS.Queries.Currencies.Calculator;
 using Application.CQRS.Queries.Currencies.EUList;
 using Application.CQRS.Queries.Currencies.Info;
@@ -19,6 +20,7 @@ using Application.CQRS.Queries.Tools;
 using Application.CQRS.Queries.Tools.GetCurrencyToolList;
 using Application.CQRS.Queries.UserAssetHistories.ItemList;
 using Application.CQRS.Queries.UserAssetHistories.List;
+using Application.CQRS.Queries.UserCurrencyFollows.UserCurrencyFavList;
 using Application.CQRS.Queries.Users.GetProfile;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -88,6 +90,9 @@ namespace Application.CQRS.Queries
 
             services.AddScoped<CalculatorQuery>();
             services.AddScoped<IQueryHandler<CalculatorQuery, IBaseResult>, CalculatorQueryHandler>();
+
+            services.AddScoped<EUCurrencyInfoQuery>();
+            services.AddScoped<IQueryHandler<EUCurrencyInfoQuery, IBaseResult>, EUCurrencyInfoHandler>();
             #endregion
 
             #region User Asset History
@@ -96,6 +101,11 @@ namespace Application.CQRS.Queries
 
             services.AddScoped<UserAssetItemHistoryListQuery>();
             services.AddScoped<IQueryHandler<UserAssetItemHistoryListQuery, IBaseResult>, UserAssetItemHistoryListQueryHandler>();
+            #endregion
+
+            #region User Currency Follow
+            services.AddScoped<UserCurrencyFavListQuery>();
+            services.AddScoped<IQueryHandler<UserCurrencyFavListQuery, IBaseResult>, UserCurrencyFavListQueryHandler>();
             #endregion
         }
     }

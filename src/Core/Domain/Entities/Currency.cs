@@ -15,5 +15,6 @@ namespace Domain.Entities
         public virtual ICollection<CurrencyHistory>? CurrencyHistories { get; set; }
         public virtual ICollection<Asset>? Assets { get; set; }
         public virtual ICollection<UserAssetItemHistory>? UserAssetItemHistories { get; set; }
+        public virtual ICollection<UserCurrencyFollow>? UserCurrencyFollows { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using Application.Abstractions.Repositories.Currencies;
 using Application.Abstractions.Repositories.CurrencyHistories;
 using Application.Abstractions.Repositories.Roles;
 using Application.Abstractions.Repositories.UserAssetHistories;
+using Application.Abstractions.Repositories.UserCurrencyFollows;
 using Application.Abstractions.Repositories.UserRoles;
 using Application.Abstractions.Repositories.Users;
 using Application.Abstractions.Rules;
@@ -31,6 +32,8 @@ namespace Application.Abstractions.Repositories.Commons
         IUserAssetHistoryWriteRepository UserAssetHistoryWriteRepository { get; }
         IUserAssetItemHistoryReadRepository UserAssetItemHistoryReadRepository { get; }
         IUserAssetItemHistoryWriteRepository UserAssetItemHistoryWriteRepository { get; }
+        IUserCurrencyFollowReadRepository UserCurrencyFollowReadRepository { get; }
+        IUserCurrencyFollowWriteRepository UserCurrencyFollowWriteRepository { get; }
 
         // Rules
         IAssetRule AssetRule { get; }
@@ -41,6 +44,7 @@ namespace Application.Abstractions.Repositories.Commons
         IRoleRule RoleRule { get; }
         IUserRoleRule UserRoleRule { get; }
         IUserAssetHistoryRule UserAssetHistoryRule { get; }
+        IUserCurrencyFollowRule UserCurrencyFollowRule { get; }
 
         IDatabaseTransaction BeginTransaction();
         Task<TResult> ExecuteWithRetryAsync<TResult>(

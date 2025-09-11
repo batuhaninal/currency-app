@@ -28,8 +28,10 @@ namespace Client.Controllers
             bool valid = result.Success;
             if (valid)
             {
-                if(!string.IsNullOrEmpty(result.Message))
+                if (!string.IsNullOrEmpty(result.Message))
                     TempData["SuccessMessage"] = result.Message;
+                else
+                    TempData["SuccessMessage"] = "Basarili";
             }
             else
             {

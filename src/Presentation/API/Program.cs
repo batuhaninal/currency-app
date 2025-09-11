@@ -11,6 +11,9 @@ using System.Net;
 using Application.Models.DTOs.Commons.Results;
 using API.Middlewares;
 using API.Middlewares.ExceptionHandlers;
+using API.Notifiers;
+using API.Hubs;
+using System.Text.Json;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -18,8 +21,15 @@ builder.Services.BindApplicationServices(builder.Configuration);
 builder.Services.BindPersistenceServices(builder.Configuration, builder.Environment);
 builder.Services.BindAdapterServices(builder.Configuration);
 builder.Services.BindHandlerService();
+builder.Services.BindNotifiers(builder.Configuration);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddSignalR()
+    .AddJsonProtocol(options =>
+    {
+        options.PayloadSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
+
 
 builder.Services.AddAuthentication(opt =>
 {
@@ -45,6 +55,18 @@ builder.Services.AddAuthentication(opt =>
         NameClaimType = ClaimTypes.Name,
     };
 });
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("https://localhost:7092") // client port
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials(); // signalR için önemli
+    });
+});
+
 
 builder.Services.AddExceptionHandler<NotFoundExceptionHandler>();
 builder.Services.AddExceptionHandler<BusinessExceptionHandler>();
@@ -100,5 +122,7 @@ app.RouteMap();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors();
+app.MapHubs();
 
 app.Run();

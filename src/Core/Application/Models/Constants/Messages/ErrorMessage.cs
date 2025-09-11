@@ -138,6 +138,15 @@ namespace Application.Models.Constants.Messages
         };
         #endregion
 
+        #region User Currency Follow
+        public static string FOLLOWDUPLICATE => CurrentLanguage switch
+        {
+            Language.TR => "Bu birimi zaten takiptesiniz!",
+            Language.EN => "Currency is already followed!",
+            _ => "Currency is already followed!"
+        };
+        #endregion
+
         #region Validation
         public static class Validation
         {

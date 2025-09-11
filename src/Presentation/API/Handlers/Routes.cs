@@ -13,6 +13,8 @@ using Application.CQRS.Commands.Currencies.Update;
 using Application.CQRS.Commands.Currencies.UpdateValue;
 using Application.CQRS.Commands.UpdateProfile;
 using Application.CQRS.Commands.UserAssetHistories.SaveUserAssetHistory;
+using Application.CQRS.Commands.UserCurrencyFollows.Add;
+using Application.CQRS.Commands.UserCurrencyFollows.Delete;
 using Application.CQRS.Commands.Users.Login;
 using Application.CQRS.Commands.Users.Register;
 using Application.CQRS.Commons.Services;
@@ -25,6 +27,7 @@ using Application.CQRS.Queries.Assets.UserAssetsForOperationQuery;
 using Application.CQRS.Queries.Assets.UserSummary;
 using Application.CQRS.Queries.Categories.Info;
 using Application.CQRS.Queries.Categories.List;
+using Application.CQRS.Queries.Currencies.BroadcastInfo;
 using Application.CQRS.Queries.Currencies.Calculator;
 using Application.CQRS.Queries.Currencies.EUList;
 using Application.CQRS.Queries.Currencies.Info;
@@ -35,6 +38,7 @@ using Application.CQRS.Queries.Tools;
 using Application.CQRS.Queries.Tools.GetCurrencyToolList;
 using Application.CQRS.Queries.UserAssetHistories.ItemList;
 using Application.CQRS.Queries.UserAssetHistories.List;
+using Application.CQRS.Queries.UserCurrencyFollows.UserCurrencyFavList;
 using Application.Models.Constants.Roles;
 using Microsoft.AspNetCore.Mvc;
 
@@ -161,6 +165,14 @@ namespace API.Handlers
                     await handler.EUList(query, dispatcher, cancellationToken))
                     .WithName("EU Currency List")
                     .WithTags("Currencies");
+            
+            currency.MapGet("{currencyId}",
+                async ([FromServices] ICurrencyHandler handler, [FromRoute(Name = "currencyId")] int currencyId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
+                {
+                    return await handler.EUInfo(new EUCurrencyInfoQuery(currencyId), dispatcher, cancellationToken);
+                })
+                .WithName("End-User Currency info")
+                .WithTags("Currencies");
 
             var currencyPanel = currency.MapGroup("panel");
 
@@ -325,6 +337,26 @@ namespace API.Handlers
                 async ([FromServices] IUserAssetHistoryHandler handler, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.Save(new SaveUserAssetHistoryCommand(), dispatcher, cancellationToken))
                 .WithName("Save User Asset History")
                 .WithTags("User Asset Histories")
+                .RequireAuthorization();
+
+            var userCurrencyFollow = api.MapGroup("user-currency-follows");
+
+            userCurrencyFollow.MapPost("",
+                async ([FromServices] IUserCurrencyFollowHandler handler, [FromBody] AddUserCurrencyFollowCommand command, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.AddAsync(command, dispatcher, cancellationToken))
+                .WithName("Add User Currency Follow")
+                .WithTags("User Currency Follows")
+                .RequireAuthorization();
+
+            userCurrencyFollow.MapDelete("{currencyId}",
+                async ([FromServices] IUserCurrencyFollowHandler handler, [FromRoute(Name = "currencyId")] int currencyId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.DeleteAsync(new DeleteUserCurrencyFollowCommand(currencyId), dispatcher, cancellationToken))
+                .WithName("Delete User Currency Follow")
+                .WithTags("User Currency Follows")
+                .RequireAuthorization();
+
+            userCurrencyFollow.MapGet("fav-list",
+                async ([FromServices] IUserCurrencyFollowHandler handler, [AsParameters] UserCurrencyFavListQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.FavListAsync(query, dispatcher, cancellationToken))
+                .WithName("Broadcast List User Currency Follows")
+                .WithTags("User Currency Follows")
                 .RequireAuthorization();
         }
     }

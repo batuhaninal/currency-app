@@ -39,6 +39,29 @@ namespace Application.Models.DTOs.Currencies
         public CategoryRelationDto Category { get; init; } = null!;
     }
 
+    public sealed record EUCurrencyInfoDto
+    {
+        public EUCurrencyInfoDto()
+        {
+
+        }
+
+        public EUCurrencyInfoDto(int currencyId, string title, decimal purchasePrice, decimal salePrice, CategoryRelationDto? category = null)
+        {
+            CurrencyId = currencyId;
+            Title = title;
+            PurchasePrice = purchasePrice;
+            SalePrice = salePrice;
+            Category = category ?? new CategoryRelationDto(0, ErrorMessage.PASSIVEorDELETED);
+        }
+
+        public int CurrencyId { get; init; }
+        public string Title { get; init; } = null!;
+        public decimal PurchasePrice { get; init; }
+        public decimal SalePrice { get; init; }
+        public CategoryRelationDto Category { get; init; } = null!;
+    }
+
     public sealed record CurrencyWithHistoryDto
     {
         public CurrencyWithHistoryDto()

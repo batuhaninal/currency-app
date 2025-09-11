@@ -6,6 +6,7 @@ using Client.Services.Categories;
 using Client.Services.Currencies;
 using Client.Services.Tools;
 using Client.Services.UserAssetHistories;
+using Client.Services.UserCurrencyFollows;
 using Client.Services.Users;
 
 namespace Client.Services
@@ -50,6 +51,11 @@ namespace Client.Services
             services.AddHttpClient<IUserAssetHistoryService, UserAssetHistoryService>(opt =>
             {
                 opt.BaseAddress = new Uri($"{AppConstants.APIURL}/user-asset-histories/");
+            }).AddHttpMessageHandler<TokenMiddleware>();
+
+            services.AddHttpClient<IUserCurrencyFollowService, UserCurrencyFollowService>(opt =>
+            {
+                opt.BaseAddress = new Uri($"{AppConstants.APIURL}/user-currency-follows/");
             }).AddHttpMessageHandler<TokenMiddleware>();
         }
     }

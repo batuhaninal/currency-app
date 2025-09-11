@@ -1,9 +1,11 @@
 using Application.Abstractions.Commons.Logger;
 using Application.Abstractions.Commons.Results;
+using Application.Abstractions.Notifiers;
 using Application.Abstractions.Repositories.Commons;
 using Application.Abstractions.Services.Externals;
 using Application.Models.DTOs.CurrencyHistories;
 using Application.Models.DTOs.Externals;
+using Application.Models.Events;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,13 +18,15 @@ namespace Adapter.Services.BackgroundServices
         private readonly IWebScrappingService _webScrappingService;
         private readonly IServiceProvider _serviceProvider;
         // private readonly ILogger<HourlyScrapperBackgroundService> _logger;
+        private readonly ICurrencyNotifierService _currencyNotifierService;
         private readonly ILoggerService<HourlyScrapperBackgroundService> _logger;
 
-        public HourlyScrapperBackgroundService(IWebScrappingService webScrappingService, IServiceProvider serviceProvider, ILoggerService<HourlyScrapperBackgroundService> logger)
+        public HourlyScrapperBackgroundService(IWebScrappingService webScrappingService, IServiceProvider serviceProvider, ILoggerService<HourlyScrapperBackgroundService> logger, ICurrencyNotifierService currencyNotifierService)
         {
             _webScrappingService = webScrappingService;
             _serviceProvider = serviceProvider;
             _logger = logger;
+            _currencyNotifierService = currencyNotifierService;
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
@@ -65,6 +69,7 @@ namespace Adapter.Services.BackgroundServices
                     }
 
                     await Task.Delay(1_000 * 60 * 60, cancellationToken);
+                    // await Task.Delay(1_000 * 60 * 1, cancellationToken);
                 }
             }
         }
@@ -142,6 +147,8 @@ namespace Adapter.Services.BackgroundServices
                             }
 
                             await tx.CommitAsync(cancellationToken);
+
+                            await _currencyNotifierService.NotifyPriceAsync(new PriceUpdatedEvent(currency.Id, currency.Title, currency.PurchasePrice, currency.SalePrice), cancellationToken);
 
                             return true;
                         }

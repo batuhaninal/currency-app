@@ -58,10 +58,16 @@ namespace Persistence.Configurations.FluentMappings.PostgreSQL
                     .HasForeignKey(ch => ch.CurrencyId)
                     .IsRequired()
                     .OnDelete(DeleteBehavior.Cascade);
-                    
-                c.HasMany(x=> x.UserAssetItemHistories)
+
+                c.HasMany(x => x.UserAssetItemHistories)
                     .WithOne(ch => ch.Currency)
                     .HasForeignKey(ch => ch.CurrencyId)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                c.HasMany(x => x.UserCurrencyFollows)
+                    .WithOne(ucf => ucf.Currency)
+                    .HasForeignKey(f => f.CurrencyId)
                     .IsRequired()
                     .OnDelete(DeleteBehavior.Cascade);
             });

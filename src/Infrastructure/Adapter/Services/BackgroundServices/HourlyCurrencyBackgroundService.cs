@@ -1,10 +1,13 @@
 using Application.Abstractions.Commons.Logger;
 using Application.Abstractions.Commons.Results;
+using Application.Abstractions.Notifiers;
 using Application.Abstractions.Repositories.Commons;
 using Application.Abstractions.Services.Externals;
 using Application.Models.DTOs.CurrencyHistories;
 using Application.Models.DTOs.Externals;
+using Application.Models.Events;
 using Domain.Entities;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,13 +19,15 @@ namespace Adapter.Services.BackgroundServices
         private readonly ITradingViewService _tradingViewService;
         private readonly IServiceProvider _serviceProvider;
         // private readonly ILogger<HourlyCurrencyBackgroundService> _logger;
+        private readonly ICurrencyNotifierService _currencyNotifierService;
         private readonly ILoggerService<HourlyCurrencyBackgroundService> _logger;
 
-        public HourlyCurrencyBackgroundService(ITradingViewService tradingViewService, IServiceProvider serviceProvider, ILoggerService<HourlyCurrencyBackgroundService> logger)
+        public HourlyCurrencyBackgroundService(ITradingViewService tradingViewService, IServiceProvider serviceProvider, ILoggerService<HourlyCurrencyBackgroundService> logger, ICurrencyNotifierService currencyNotifierService)
         {
             _tradingViewService = tradingViewService;
             _serviceProvider = serviceProvider;
             _logger = logger;
+            _currencyNotifierService = currencyNotifierService;
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
@@ -140,6 +145,8 @@ namespace Adapter.Services.BackgroundServices
                             }
 
                             await tx.CommitAsync(cancellationToken);
+
+                            await _currencyNotifierService.NotifyPriceAsync(new PriceUpdatedEvent(currency.Id, currency.Title, currency.PurchasePrice, currency.SalePrice), cancellationToken);
 
                             return true;
                         }

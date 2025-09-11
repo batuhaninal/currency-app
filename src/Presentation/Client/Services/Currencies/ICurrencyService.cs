@@ -12,6 +12,7 @@ namespace Client.Services.Currencies
         Task<BaseResult<NoContent>> DeleteAsync(int currencyId, CancellationToken cancellationToken = default);
         Task<BaseResult<NoContent>> ChangeStatusAsync(int currencyId, CancellationToken cancellationToken = default);
         Task<BaseResult<CurrencyInfoResponse>> InfoAsync(int currencyId, CancellationToken cancellationToken = default);
+        Task<BaseResult<EUCurrencyInfoResponse>> EUInfoAsync(int currencyId, CancellationToken cancellationToken = default);
         Task<BaseResult<CurrencyWithHistoryResponse>> HistoryInfoAsync(int currencyId, CurrencyHistoryRequestParameter parameter, CancellationToken cancellationToken = default);
         Task<BaseResult<CurrencyPriceInfoResponse>> PriceInfoAsync(int currencyId, CancellationToken cancellationToken = default);
         Task<BaseResult<PaginationResult<CurrencyItemResponse>>> ListAsync(CurrencyRequestParameter parameter, CancellationToken cancellationToken = default);

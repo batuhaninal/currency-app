@@ -5,6 +5,7 @@ using Application.Abstractions.Repositories.Currencies;
 using Application.Abstractions.Repositories.CurrencyHistories;
 using Application.Abstractions.Repositories.Roles;
 using Application.Abstractions.Repositories.UserAssetHistories;
+using Application.Abstractions.Repositories.UserCurrencyFollows;
 using Application.Abstractions.Repositories.UserRoles;
 using Application.Abstractions.Repositories.Users;
 using Application.Abstractions.Rules;
@@ -12,6 +13,7 @@ using Persistence.Contexts;
 using Persistence.Repositories.Categories;
 using Persistence.Repositories.Roles;
 using Persistence.Repositories.UserAssetHistories;
+using Persistence.Repositories.UserCurrencyFollows;
 using Persistence.Repositories.UserRoles;
 using Persistence.Repositories.Users;
 using Persistence.Services.Rules;
@@ -41,6 +43,8 @@ namespace Persistence.Repositories.Commons
         private readonly UserAssetHistoryWriteRepository _userAssetHistoryWriteRepository;
         private readonly UserAssetItemHistoryReadRepository _userAssetItemHistoryReadRepository;
         private readonly UserAssetItemHistoryWriteRepository _userAssetItemHistoryWriteRepository;
+        private readonly UserCurrencyFollowReadRepository _userCurrencyFollowReadRepository;
+        private readonly UserCurrencyFollowWriteRepository _userCurrencyFollowWriteRepository;
         #endregion
 
         #region Rule Interfaces
@@ -53,6 +57,7 @@ namespace Persistence.Repositories.Commons
         private readonly AssetRule _assetRule;
         private readonly UserRoleRule _userRoleRule;
         private readonly UserAssetHistoryRule _userAssetHistoryRule;
+        private readonly UserCurrencyFollowRule _userCurrencyRule;
         #endregion
 
         public UnitOfWork(CurrencyContext context)
@@ -97,6 +102,8 @@ namespace Persistence.Repositories.Commons
         public IUserAssetItemHistoryReadRepository UserAssetItemHistoryReadRepository => _userAssetItemHistoryReadRepository ?? new UserAssetItemHistoryReadRepository(_context);
 
         public IUserAssetItemHistoryWriteRepository UserAssetItemHistoryWriteRepository => _userAssetItemHistoryWriteRepository ?? new UserAssetItemHistoryWriteRepository(_context);
+        public IUserCurrencyFollowReadRepository UserCurrencyFollowReadRepository => _userCurrencyFollowReadRepository ?? new UserCurrencyFollowReadRepository(_context);
+        public IUserCurrencyFollowWriteRepository UserCurrencyFollowWriteRepository => _userCurrencyFollowWriteRepository ?? new UserCurrencyFollowWriteRepository(_context);
         #endregion
 
         #region Rule Instances
@@ -115,6 +122,7 @@ namespace Persistence.Repositories.Commons
         public IUserRoleRule UserRoleRule => _userRoleRule ?? new UserRoleRule(UserRoleReadRepository);
 
         public IUserAssetHistoryRule UserAssetHistoryRule => _userAssetHistoryRule ?? new UserAssetHistoryRule(UserAssetHistoryReadRepository);
+        public IUserCurrencyFollowRule UserCurrencyFollowRule => _userCurrencyRule ?? new UserCurrencyFollowRule(UserCurrencyFollowReadRepository);
 
         #endregion
 

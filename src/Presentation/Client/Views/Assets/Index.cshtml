@@ -5,6 +5,8 @@
   var data = ViewBag.CurrencyTool as List<CurrencyToolResponse>;
   SelectList currencyTool = new SelectList(data, "CurrencyId", "Title");
 
+  var follows = ViewBag.Follows as int[];
+
   decimal currencyPTotal = Model.Items.Sum(x => x.Count * x.Currency.PurchasePrice);
   decimal currencySTotal = Model.Items.Sum(x => x.Count * x.Currency.SalePrice);
   decimal pTotal = Model.Items.Sum(x => x.Count * x.PurchasePrice);
@@ -14,6 +16,16 @@
 }
 
 <div class="row">
+  <div class="row">
+    @if (follows is not null)
+    {
+      @foreach (var currencyId in follows)
+      {
+        @await Component.InvokeAsync("LiveCurrency", new { currencyId = currencyId })
+      }
+    }
+  </div>
+
   <div class="card mb-4">
     <div class="card-header">
       <div class="d-flex justify-content-between">
@@ -27,7 +39,8 @@
           <span class="badge rounded-pill bg-primary p-2" role="button" id="calculator-btn" title="Hesap Makinesi">
             <i class="fa-solid fa-calculator"></i>
           </span>
-          <span class="badge rounded-pill bg-primary p-2" role="button" id="asset-calculator-btn" title="Birimlerim Hesap Makinesi">
+          <span class="badge rounded-pill bg-primary p-2" role="button" id="asset-calculator-btn"
+            title="Birimlerim Hesap Makinesi">
             <i class="fa-solid fa-calculator"></i>
           </span>
           <button type="button" class="badge rounded-pill bg-info p-2 border-0" id="filter-asset-btn"
@@ -39,7 +52,7 @@
             <i class="fa-solid fa-filter"></i>
           </a>
         </div>
-        <h3 class="card-title">Birimler Tablosu</h3>
+        <h3 class="card-title">Varliklarim Tablosu</h3>
         @await Html.PartialAsync("_SearchTool", new SearchModel())
       </div>
     </div>
@@ -246,9 +259,45 @@
 @await Html.PartialAsync("_AssetFilterPopup", new AssetFilterViewModel(currencyTool))
 
 @section Scripts {
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+  <script src="~/js/signalr.js"></script>
   <script>
     $(document).ready(function () {
       const d = $("#empty-container");
+
+      const connection = new signalR
+        .HubConnectionBuilder()
+        .withUrl("https://localhost:7250/hubs/currencies")
+        .build();
+
+
+      connection.on("ReceivePrice", function (response) {
+        console.log("Event listening for " + response.currencyId);
+        console.log(response);
+        const card = document.getElementById(`card-${response.currencyId}`);
+
+        if (card) {
+          card.querySelector("#currency-card-title-" + response.currencyId).innerText = response.title;
+          card.querySelector("#currency-purchase-" + response.currencyId).innerText = response.purchasePrice;
+          card.querySelector("#currency-sale-" + response.currencyId).innerText = response.salePrice;
+
+          // opsiyonel: fiyat değişince renk animasyonu
+          card.classList.add(response.purchasePriceChanged > 0 ? "price-up" : "price-down");
+          setTimeout(() => card.classList.remove("price-up", "price-down"), 1000);
+        }
+      });
+
+      connection.start()
+        .then(() => {
+          console.log("SignalR connected");
+          const follows = @Json.Serialize(follows ?? new int[] { });
+          follows.forEach(currencyId => {
+            connection.invoke("SubscribeToCurrency", currencyId)
+              .then(() => console.log(`Subscribed to currency-${currencyId}`))
+              .catch(err => console.error(`Subscribe failed for ${currencyId}:`, err));
+          });
+        })
+        .catch(err => console.error(err));
 
       $("#add-asset-btn").off("click").on("click", function () {
         const fetchUrl = '@Url.Action("AddOperation", "Assets")';

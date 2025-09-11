@@ -1,8 +1,10 @@
 using Client.Models.Assets;
 using Client.Models.Assets.RequestParameters;
 using Client.Models.Commons;
+using Client.Models.UserCurrencyFollows.RequestParameters;
 using Client.Services.Assets;
 using Client.Services.Tools;
+using Client.Services.UserCurrencyFollows;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,11 +15,13 @@ namespace Client.Controllers
     {
         private readonly IAssetService _assetService;
         private readonly IToolService _toolService;
+        private readonly IUserCurrencyFollowService _userCurrencyFollowService;
 
-        public AssetsController(IAssetService assetService, IToolService toolService)
+        public AssetsController(IAssetService assetService, IToolService toolService, IUserCurrencyFollowService userCurrencyFollowService)
         {
             _assetService = assetService;
             _toolService = toolService;
+            _userCurrencyFollowService = userCurrencyFollowService;
         }
 
         [HttpGet]
@@ -33,6 +37,10 @@ namespace Client.Controllers
             _ = this.ShowResultMessage(data);
 
             ViewBag.CurrencyTool = data.Data ?? new();
+
+            var follows = await _userCurrencyFollowService.TopFollowList(new BroadcastParameters() {All = false, IsBroadcast = true});
+
+            ViewBag.Follows = follows.Data ?? new int[] {};
 
             return View(result.Data ?? new());
         }

@@ -1,4 +1,5 @@
 using Client.Models.UserCurrencyFollows;
+using Client.Models.UserCurrencyFollows.RequestParameters;
 using Client.Services.UserCurrencyFollows;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,16 @@ namespace Client.Controllers
         public UserCurrencyFollowsController(IUserCurrencyFollowService userCurrencyFollowService)
         {
             _userCurrencyFollowService = userCurrencyFollowService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Index([FromQuery] UserCurrencyFollowRequestParameter parameter)
+        {
+            var result = await _userCurrencyFollowService.ListAsync(parameter);
+
+            _ = this.ShowResultMessage(result);
+
+            return View(result.Data ?? new());
         }
 
         [HttpPost]
@@ -47,6 +58,30 @@ namespace Client.Controllers
                 return RedirectToAction(nameof(CurrenciesController.Index), "Currencies");
 
             return Redirect(redirectUrl);
+        }
+
+        [HttpGet]
+        public async Task<PartialViewResult> UpdateOperation(int userCurrencyFollowId)
+        {
+            var data = await _userCurrencyFollowService.InfoAsync(userCurrencyFollowId);
+
+            _ = this.ShowResultMessage(data);
+
+            return PartialView("_UserCurrencyFollowPopup", data.Data ?? new());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateOperation([FromQuery] int userCurrencyFollowId, [FromForm] ChangeCurrencyFollowInput input)
+        {
+            if (CheckModelStateValid(ModelState))
+            {
+                var result = await _userCurrencyFollowService.ChangeStatusAsync(userCurrencyFollowId, input);
+
+                _ = this.ShowResultMessage(result);
+            }
+
+            return RedirectToAction(nameof(UserCurrencyFollowsController.Index), "Assets");
         }
     }
 }

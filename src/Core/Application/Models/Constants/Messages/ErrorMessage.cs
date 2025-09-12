@@ -139,6 +139,12 @@ namespace Application.Models.Constants.Messages
         #endregion
 
         #region User Currency Follow
+        public static string USERFAVEXIST => CurrentLanguage switch
+        {
+            Language.TR => "Favori birim bulunamadi!",
+            Language.EN => "User Currency Favorite is not found!",
+            _ => "User Currency Favorite is not found!"
+        };
         public static string FOLLOWDUPLICATE => CurrentLanguage switch
         {
             Language.TR => "Bu birimi zaten takiptesiniz!",

@@ -15,6 +15,12 @@ namespace Persistence.Services.Rules
             _userCurrencyFollowReadRepository = userCurrencyFollowReadRepository;
         }
 
+        public async Task<IBaseResult> CheckExistAsync(int id, int userId, CancellationToken cancellationToken = default)
+        {
+            bool result = await _userCurrencyFollowReadRepository.AnyAsync(x => x.UserId == userId && x.Id == id, cancellationToken);
+            return new ResultDto(400, result, ErrorMessage.USERFAVEXIST);
+        }
+
         public async Task<IBaseResult> CheckUserFollowCurrency(int userId, int currencyId, CancellationToken cancellationToken = default)
         {
             bool result = await _userCurrencyFollowReadRepository.AnyAsync(x => x.UserId == userId && x.CurrencyId == currencyId, cancellationToken);

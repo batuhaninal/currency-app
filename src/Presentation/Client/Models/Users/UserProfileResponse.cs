@@ -4,7 +4,7 @@ namespace Client.Models.Users
     {
         public UserProfileResponse()
         {
-            
+
         }
 
         public UserProfileResponse(int userId, string firstName, string lastName, string email, string role)
@@ -21,5 +21,26 @@ namespace Client.Models.Users
         public string LastName { get; init; } = null!;
         public string Email { get; init; } = null!;
         public string Role { get; init; } = null!;
+    }
+
+    public sealed record UserRelationResponse
+    {
+        public UserRelationResponse()
+        {
+            
+        }
+
+        public UserRelationResponse(int userId, string firstName, string lastName, string email)
+        {
+            UserId = userId;
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+        }
+
+        public int UserId { get; init; }
+        public string FirstName { get; init; } = null!;
+        public string LastName { get; init; } = null!;
+        public string Email { get; init; } = null!;
     }
 }

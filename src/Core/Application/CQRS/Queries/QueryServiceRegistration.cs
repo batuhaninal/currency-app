@@ -20,6 +20,8 @@ using Application.CQRS.Queries.Tools;
 using Application.CQRS.Queries.Tools.GetCurrencyToolList;
 using Application.CQRS.Queries.UserAssetHistories.ItemList;
 using Application.CQRS.Queries.UserAssetHistories.List;
+using Application.CQRS.Queries.UserCurrencyFollows.Info;
+using Application.CQRS.Queries.UserCurrencyFollows.List;
 using Application.CQRS.Queries.UserCurrencyFollows.UserCurrencyFavList;
 using Application.CQRS.Queries.Users.GetProfile;
 using Microsoft.Extensions.DependencyInjection;
@@ -106,6 +108,12 @@ namespace Application.CQRS.Queries
             #region User Currency Follow
             services.AddScoped<UserCurrencyFavListQuery>();
             services.AddScoped<IQueryHandler<UserCurrencyFavListQuery, IBaseResult>, UserCurrencyFavListQueryHandler>();
+
+            services.AddScoped<UserCurrencyListQuery>();
+            services.AddScoped<IQueryHandler<UserCurrencyListQuery, IBaseResult>, UserCurrencyListQueryHandler>();
+
+            services.AddScoped<UserCurrencyFollowInfoQuery>();
+            services.AddScoped<IQueryHandler<UserCurrencyFollowInfoQuery, IBaseResult>, UserCurrencyFollowInfoQueryHandler>();
             #endregion
         }
     }

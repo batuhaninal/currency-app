@@ -14,6 +14,7 @@ using Application.CQRS.Commands.Currencies.UpdateValue;
 using Application.CQRS.Commands.UpdateProfile;
 using Application.CQRS.Commands.UserAssetHistories.SaveUserAssetHistory;
 using Application.CQRS.Commands.UserCurrencyFollows.Add;
+using Application.CQRS.Commands.UserCurrencyFollows.ChangeStatus;
 using Application.CQRS.Commands.UserCurrencyFollows.Delete;
 using Application.CQRS.Commands.Users.Login;
 using Application.CQRS.Commands.Users.Register;
@@ -38,6 +39,8 @@ using Application.CQRS.Queries.Tools;
 using Application.CQRS.Queries.Tools.GetCurrencyToolList;
 using Application.CQRS.Queries.UserAssetHistories.ItemList;
 using Application.CQRS.Queries.UserAssetHistories.List;
+using Application.CQRS.Queries.UserCurrencyFollows.Info;
+using Application.CQRS.Queries.UserCurrencyFollows.List;
 using Application.CQRS.Queries.UserCurrencyFollows.UserCurrencyFavList;
 using Application.Models.Constants.Roles;
 using Microsoft.AspNetCore.Mvc;
@@ -165,7 +168,7 @@ namespace API.Handlers
                     await handler.EUList(query, dispatcher, cancellationToken))
                     .WithName("EU Currency List")
                     .WithTags("Currencies");
-            
+
             currency.MapGet("{currencyId}",
                 async ([FromServices] ICurrencyHandler handler, [FromRoute(Name = "currencyId")] int currencyId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
                 {
@@ -347,6 +350,16 @@ namespace API.Handlers
                 .WithTags("User Currency Follows")
                 .RequireAuthorization();
 
+            userCurrencyFollow.MapPut("{userCurrencyFollowId}",
+                async ([FromServices] IUserCurrencyFollowHandler handler, [FromRoute(Name = "userCurrencyFollowId")] int userCurrencyFollowId, [FromBody] ChangeUserCurrencyFollowStatusCommand command, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken)=>
+                {
+                    command.UserCurrencyFollowId = userCurrencyFollowId;
+                    return await handler.ChangeStatusAsync(command, dispatcher, cancellationToken);
+                })
+                .WithName("Add User Currency Follow")
+                .WithTags("User Currency Follows")
+                .RequireAuthorization();
+
             userCurrencyFollow.MapDelete("{currencyId}",
                 async ([FromServices] IUserCurrencyFollowHandler handler, [FromRoute(Name = "currencyId")] int currencyId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.DeleteAsync(new DeleteUserCurrencyFollowCommand(currencyId), dispatcher, cancellationToken))
                 .WithName("Delete User Currency Follow")
@@ -356,6 +369,18 @@ namespace API.Handlers
             userCurrencyFollow.MapGet("fav-list",
                 async ([FromServices] IUserCurrencyFollowHandler handler, [AsParameters] UserCurrencyFavListQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.FavListAsync(query, dispatcher, cancellationToken))
                 .WithName("Broadcast List User Currency Follows")
+                .WithTags("User Currency Follows")
+                .RequireAuthorization();
+
+            userCurrencyFollow.MapGet("",
+                async ([FromServices] IUserCurrencyFollowHandler handler, [AsParameters] UserCurrencyListQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.ListAsync(query, dispatcher, cancellationToken))
+                .WithName("User Currency Follow List")
+                .WithTags("User Currency Follows")
+                .RequireAuthorization();
+                
+            userCurrencyFollow.MapGet("{userCurrencyFollowId}",
+                async ([FromServices] IUserCurrencyFollowHandler handler, [FromRoute(Name="userCurrencyFollowId")] int userCurrencyFollowId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.InfoAsync(new UserCurrencyFollowInfoQuery(userCurrencyFollowId), dispatcher, cancellationToken))
+                .WithName("User Currency Follow List")
                 .WithTags("User Currency Follows")
                 .RequireAuthorization();
         }

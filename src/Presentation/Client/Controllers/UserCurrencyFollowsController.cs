@@ -1,5 +1,8 @@
+using Client.Models.Commons;
 using Client.Models.UserCurrencyFollows;
 using Client.Models.UserCurrencyFollows.RequestParameters;
+using Client.Services.Currencies;
+using Client.Services.Tools;
 using Client.Services.UserCurrencyFollows;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +11,12 @@ namespace Client.Controllers
     public sealed class UserCurrencyFollowsController : BaseController
     {
         private readonly IUserCurrencyFollowService _userCurrencyFollowService;
+        private readonly IToolService _toolService;
 
-        public UserCurrencyFollowsController(IUserCurrencyFollowService userCurrencyFollowService)
+        public UserCurrencyFollowsController(IUserCurrencyFollowService userCurrencyFollowService, IToolService toolService)
         {
             _userCurrencyFollowService = userCurrencyFollowService;
+            _toolService = toolService;
         }
 
         [HttpGet]
@@ -20,6 +25,18 @@ namespace Client.Controllers
             var result = await _userCurrencyFollowService.ListAsync(parameter);
 
             _ = this.ShowResultMessage(result);
+
+            var follows = await _userCurrencyFollowService.TopFollowList(new BroadcastParameters() { All = false, IsBroadcast = true });
+
+            _ = this.ShowResultMessage(follows);
+
+            ViewBag.Follows = follows.Data ?? new int[] { };
+
+            var currencyTools = await _toolService.CurrencyTools(new ToolRequestParameter() { });
+
+            _ = this.ShowResultMessage(currencyTools);
+
+            ViewBag.CurrencyTool = currencyTools.Data ?? new();
 
             return View(result.Data ?? new());
         }
@@ -60,19 +77,9 @@ namespace Client.Controllers
             return Redirect(redirectUrl);
         }
 
-        [HttpGet]
-        public async Task<PartialViewResult> UpdateOperation(int userCurrencyFollowId)
-        {
-            var data = await _userCurrencyFollowService.InfoAsync(userCurrencyFollowId);
-
-            _ = this.ShowResultMessage(data);
-
-            return PartialView("_UserCurrencyFollowPopup", data.Data ?? new());
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateOperation([FromQuery] int userCurrencyFollowId, [FromForm] ChangeCurrencyFollowInput input)
+        public async Task<IActionResult> UpdateOperation([FromQuery] int userCurrencyFollowId, [FromForm] ChangeCurrencyFollowInput input, [FromForm] string? redirectUrl)
         {
             if (CheckModelStateValid(ModelState))
             {
@@ -81,7 +88,10 @@ namespace Client.Controllers
                 _ = this.ShowResultMessage(result);
             }
 
-            return RedirectToAction(nameof(UserCurrencyFollowsController.Index), "Assets");
+            if (string.IsNullOrEmpty(redirectUrl))
+                return RedirectToAction(nameof(UserCurrencyFollowsController.Index), "UserCurrencyFollows");
+
+            return Redirect(redirectUrl);
         }
     }
 }

@@ -81,7 +81,7 @@ namespace Application.CQRS.Queries.UserCurrencyFollows.UserCurrencyFavList
                 .Table
                 .AsNoTracking()
                 .Where(x => x.UserId == userId && x.IsActive)
-                .OrderByDescending(x => x.CreatedDate)
+                .OrderByDescending(x => x.UpdatedDate)
                 .Take(query.Take ?? 4)
                 .Select(x => x.CurrencyId)
                 .ToArrayAsync(cancellationToken);
@@ -95,7 +95,7 @@ namespace Application.CQRS.Queries.UserCurrencyFollows.UserCurrencyFavList
                 .Table
                 .AsNoTracking()
                 .Where(x => x.UserId == userId)
-                .OrderByDescending(x => x.CreatedDate)
+                .OrderByDescending(x => x.UpdatedDate)
                 .Take(query.Take ?? 4)
                 .Select(x => x.CurrencyId)
                 .ToArrayAsync(cancellationToken);

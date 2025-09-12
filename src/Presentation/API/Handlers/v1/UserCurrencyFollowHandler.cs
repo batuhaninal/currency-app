@@ -1,6 +1,7 @@
 using Application.Abstractions.Commons.Results;
 using Application.Abstractions.Handlers;
 using Application.CQRS.Commands.UserCurrencyFollows.Add;
+using Application.CQRS.Commands.UserCurrencyFollows.AddRange;
 using Application.CQRS.Commands.UserCurrencyFollows.ChangeStatus;
 using Application.CQRS.Commands.UserCurrencyFollows.Delete;
 using Application.CQRS.Commons.Services;
@@ -45,6 +46,12 @@ namespace API.Handlers.v1
         public async Task<IResult> InfoAsync(UserCurrencyFollowInfoQuery query, Dispatcher dispatcher, CancellationToken cancellationToken)
         {
             IBaseResult result = await dispatcher.SendQueryAsync<UserCurrencyFollowInfoQuery, IBaseResult>(query, cancellationToken);
+            return Results.Json(result, statusCode: result.StatusCode);
+        }
+
+        public async Task<IResult> AddRangeAsync(AddRangeUserCurrencyFollowCommand command, Dispatcher dispatcher, CancellationToken cancellationToken)
+        {
+            IBaseResult result = await dispatcher.SendCommandAsync<AddRangeUserCurrencyFollowCommand, IBaseResult>(command, cancellationToken);
             return Results.Json(result, statusCode: result.StatusCode);
         }
     }

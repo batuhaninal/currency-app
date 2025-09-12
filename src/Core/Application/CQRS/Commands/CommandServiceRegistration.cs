@@ -14,6 +14,7 @@ using Application.CQRS.Commands.Currencies.UpdateValue;
 using Application.CQRS.Commands.UpdateProfile;
 using Application.CQRS.Commands.UserAssetHistories.SaveUserAssetHistory;
 using Application.CQRS.Commands.UserCurrencyFollows.Add;
+using Application.CQRS.Commands.UserCurrencyFollows.AddRange;
 using Application.CQRS.Commands.UserCurrencyFollows.ChangeStatus;
 using Application.CQRS.Commands.UserCurrencyFollows.Delete;
 using Application.CQRS.Commands.Users.Login;
@@ -89,6 +90,9 @@ namespace Application.CQRS.Commands
             #region User Currency Follow
             services.AddScoped<AddUserCurrencyFollowCommand>();
             services.AddScoped<ICommandHandler<AddUserCurrencyFollowCommand, IBaseResult>, AddUserCurrencyFollowCommandHandler>();
+
+            services.AddScoped<AddRangeUserCurrencyFollowCommand>();
+            services.AddScoped<ICommandHandler<AddRangeUserCurrencyFollowCommand, IBaseResult>, AddRangeUserCurrencyFollowCommandHandler>();
 
             services.AddScoped<DeleteUserCurrencyFollowCommand>();
             services.AddScoped<ICommandHandler<DeleteUserCurrencyFollowCommand, IBaseResult>, DeleteUserCurrencyFollowCommandHandler>();

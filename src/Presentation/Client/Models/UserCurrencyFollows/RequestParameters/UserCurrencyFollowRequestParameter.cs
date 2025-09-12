@@ -9,7 +9,7 @@ namespace Client.Models.UserCurrencyFollows.RequestParameters
 
         }
 
-        public int[]? CurrencyIds { get; set; }
+        public int[]? CurrencyId { get; set; }
         public DateTime? MinUpdatedDate { get; set; }
         public DateTime? MaxUpdatedDate { get; set; }
 
@@ -38,11 +38,11 @@ namespace Client.Models.UserCurrencyFollows.RequestParameters
             if (this.MaxUpdatedDate.HasValue)
                 result.Add(new KeyValuePair<string, object>("maxUpdatedDate", this.MaxUpdatedDate.Value));
 
-            if (this.CurrencyIds is not null && this.CurrencyIds.Any())
+            if (this.CurrencyId is not null && this.CurrencyId.Any())
             {
-                foreach (var currencyId in this.CurrencyIds)
+                foreach (var currencyId in this.CurrencyId)
                 {
-                    result.Add(new KeyValuePair<string, object>("currencyIds", currencyId));
+                    result.Add(new KeyValuePair<string, object>("currencyId", currencyId));
                 }
             }
 

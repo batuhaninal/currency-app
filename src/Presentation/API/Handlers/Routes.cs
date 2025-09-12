@@ -14,6 +14,7 @@ using Application.CQRS.Commands.Currencies.UpdateValue;
 using Application.CQRS.Commands.UpdateProfile;
 using Application.CQRS.Commands.UserAssetHistories.SaveUserAssetHistory;
 using Application.CQRS.Commands.UserCurrencyFollows.Add;
+using Application.CQRS.Commands.UserCurrencyFollows.AddRange;
 using Application.CQRS.Commands.UserCurrencyFollows.ChangeStatus;
 using Application.CQRS.Commands.UserCurrencyFollows.Delete;
 using Application.CQRS.Commands.Users.Login;
@@ -350,13 +351,19 @@ namespace API.Handlers
                 .WithTags("User Currency Follows")
                 .RequireAuthorization();
 
+            userCurrencyFollow.MapPost("add-multiple",
+                async ([FromServices] IUserCurrencyFollowHandler handler, [FromBody] AddRangeUserCurrencyFollowCommand command, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.AddRangeAsync(command, dispatcher, cancellationToken))
+                .WithName("Add Multiple User Currency Follow")
+                .WithTags("User Currency Follows")
+                .RequireAuthorization();
+
             userCurrencyFollow.MapPut("{userCurrencyFollowId}",
                 async ([FromServices] IUserCurrencyFollowHandler handler, [FromRoute(Name = "userCurrencyFollowId")] int userCurrencyFollowId, [FromBody] ChangeUserCurrencyFollowStatusCommand command, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken)=>
                 {
                     command.UserCurrencyFollowId = userCurrencyFollowId;
                     return await handler.ChangeStatusAsync(command, dispatcher, cancellationToken);
                 })
-                .WithName("Add User Currency Follow")
+                .WithName("Change User Currency Follow")
                 .WithTags("User Currency Follows")
                 .RequireAuthorization();
 
@@ -380,7 +387,7 @@ namespace API.Handlers
                 
             userCurrencyFollow.MapGet("{userCurrencyFollowId}",
                 async ([FromServices] IUserCurrencyFollowHandler handler, [FromRoute(Name="userCurrencyFollowId")] int userCurrencyFollowId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.InfoAsync(new UserCurrencyFollowInfoQuery(userCurrencyFollowId), dispatcher, cancellationToken))
-                .WithName("User Currency Follow List")
+                .WithName("User Currency Follow Info")
                 .WithTags("User Currency Follows")
                 .RequireAuthorization();
         }

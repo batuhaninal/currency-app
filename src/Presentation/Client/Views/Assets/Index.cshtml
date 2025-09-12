@@ -260,7 +260,7 @@
 
 @section Scripts {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
-  <script src="~/js/signalr.js"></script>
+  @* <script src="~/js/signalr.js"></script> *@
   <script>
     $(document).ready(function () {
       const d = $("#empty-container");
@@ -281,9 +281,9 @@
           card.querySelector("#currency-purchase-" + response.currencyId).innerText = response.purchasePrice;
           card.querySelector("#currency-sale-" + response.currencyId).innerText = response.salePrice;
 
-          // opsiyonel: fiyat değişince renk animasyonu
+          @* // opsiyonel: fiyat değişince renk animasyonu
           card.classList.add(response.purchasePriceChanged > 0 ? "price-up" : "price-down");
-          setTimeout(() => card.classList.remove("price-up", "price-down"), 1000);
+          setTimeout(() => card.classList.remove("price-up", "price-down"), 1000); *@
         }
       });
 

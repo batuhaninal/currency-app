@@ -20,8 +20,8 @@ namespace Application.Abstractions.Repositories.UserCurrencyFollows.Extensions
         {
             var predicate = PredicateBuilderHelper.True<UserCurrencyFollow>();
 
-            if (parameter.CurrencyIds is not null && parameter.CurrencyIds.Any())
-                predicate = predicate.And(x => parameter.CurrencyIds.Contains(x.CurrencyId));
+            if (parameter.CurrencyId is not null && parameter.CurrencyId.Any())
+                predicate = predicate.And(x => parameter.CurrencyId.Contains(x.CurrencyId));
 
             // if (parameter.UserIds is not null && parameter.UserIds.Any())
             //     predicate = predicate.And(x => parameter.UserIds.Contains(x.UserId));

@@ -1,4 +1,5 @@
 using Application.CQRS.Commands.UserCurrencyFollows.Add;
+using Application.CQRS.Commands.UserCurrencyFollows.AddRange;
 using Application.CQRS.Commands.UserCurrencyFollows.ChangeStatus;
 using Application.CQRS.Commands.UserCurrencyFollows.Delete;
 using Application.CQRS.Commons.Services;
@@ -12,6 +13,7 @@ namespace Application.Abstractions.Handlers
     public interface IUserCurrencyFollowHandler
     {
         Task<IResult> AddAsync(AddUserCurrencyFollowCommand command, Dispatcher dispatcher, CancellationToken cancellationToken);
+        Task<IResult> AddRangeAsync(AddRangeUserCurrencyFollowCommand command, Dispatcher dispatcher, CancellationToken cancellationToken);
         Task<IResult> DeleteAsync(DeleteUserCurrencyFollowCommand command, Dispatcher dispatcher, CancellationToken cancellationToken);
         Task<IResult> ChangeStatusAsync(ChangeUserCurrencyFollowStatusCommand command,Dispatcher dispatcher, CancellationToken cancellationToken);
         Task<IResult> FavListAsync(UserCurrencyFavListQuery query, Dispatcher dispatcher, CancellationToken cancellationToken);

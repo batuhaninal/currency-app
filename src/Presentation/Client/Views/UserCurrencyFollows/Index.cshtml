@@ -1,0 +1,198 @@
+@using Client.Models.UserCurrencyFollows
+@{
+  Layout = "_Layout";
+  var follows = ViewBag.Follows as int[];
+
+  var data = ViewBag.CurrencyTool as List<CurrencyToolResponse>;
+  SelectList currencyTool = new SelectList(data, "CurrencyId", "Title");
+}
+
+@model PaginationResult<UserCurrencyFollowItemResponse>
+
+<div class="row">
+    <div class="row">
+        @if (follows is not null)
+        {
+            @foreach (var currencyId in follows)
+            {
+                @await Component.InvokeAsync("LiveCurrency", new { currencyId = currencyId })
+            }
+        }
+    </div>
+  <div class="card mb-4">
+    <div class="card-header">
+      <div class="d-flex justify-content-between">
+        <div class="btn-group mb-2" role="group" aria-label="Basic mixed styles example">
+          <button type="button" class="badge rounded-pill bg-info p-2 border-0" id="eu-filter-user-currency-follow-btn"
+            title="Birim Filtrele" data-bs-toggle="modal" data-bs-target="#eu-filter-user-currency-follow-popup">
+            <i class="fa-solid fa-filter"></i>
+          </button>
+          <a asp-area="" asp-controller="UserCurrencyFollows" asp-action="Index"
+            class="badge rounded-pill bg-danger p-2 border-0" id="filter-currency-btn" title="Filtreleri temizle">
+            <i class="fa-solid fa-filter"></i>
+          </a>
+          <a asp-area=""asp-controller="Currencies" asp-action="Index" title="Birimleri Gor">
+            <i class="fa-solid"></i>
+          </a>
+        </div>
+        <h3 class="card-title">Favoriler Tablosu</h3>
+        @await Html.PartialAsync("_SearchTool", new SearchModel())
+      </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+      <table class="table table-bordered">
+        <thead>
+          <tr class="text-center align-middle">
+            <th>
+              Birim Kisaltmasi
+              @await Html.PartialAsync("_OrderTool", new SortModel("title"))
+            </th>
+            <th>
+              Birim Ismi
+              @await Html.PartialAsync("_OrderTool", new SortModel("subTitle"))
+            </th>
+            <th>
+              Alis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("purchasePrice"))
+            </th>
+            <th>
+              Satis Fiyati
+              @await Html.PartialAsync("_OrderTool", new SortModel("salePrice"))
+            </th>
+            <th>
+                Durum
+                @await Html.PartialAsync("_OrderTool", new SortModel("is_active"))
+            </th>
+            <th style="width: 40px">Islemler</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var item in Model.Items)
+          {
+            <tr class="text-center align-middle">
+              <td>
+                @item.Currency.Title
+              </td>
+              <td>
+                @item.Currency.SubTitle
+              </td>
+              <td>
+                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.Currency.PurchasePrice)</b></p>
+              </td>
+              <td>
+                <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.Currency.SalePrice)</b></p>
+              </td>
+              <td>
+                <span class='badge @(item.IsActive ? "bg-primary" : "bg-info")'>
+                  @(item.IsActive ? "Broadcast" : "Takip")
+                </span>
+              </td>
+              <td>
+                <div class="d-inline-flex gap-1">
+                    @if (item.IsActive)
+                    {
+                      <form asp-area="" asp-controller="UserCurrencyFollows" asp-action="UpdateOperation" asp-route-userCurrencyFollowId="@item.UserCurrencyFollowId">
+                        <input type="hidden" name="userCurrencyFollowId" value="@item.UserCurrencyFollowId" />
+                        <input type="hidden" name="isActive" value="false" />
+                        @* <input type="hidden" name="redirectUrl" 
+                          value="@($"{Context.Request.Path}{Context.Request.QueryString}")" /> *@
+                        <button type="submit" class="badge rounded-pill bg-info p-2"
+                          title="@item.CurrencyId idli birimi favorilere ekle">
+                          <i class="fa-solid fa-thumbs-up"></i>
+                        </button>
+                      </form>
+                    }
+                    else
+                    {
+                      
+                      <form asp-area="" asp-controller="UserCurrencyFollows" asp-action="UpdateOperation" asp-route-userCurrencyFollowId="@item.UserCurrencyFollowId">
+                         <input type="hidden" name="userCurrencyFollowId" value="@item.UserCurrencyFollowId" />
+                        <input type="hidden" name="isActive" value="true" />
+                        @* <input type="hidden" name="redirectUrl"
+                          value="@($"{Context.Request.Path}{Context.Request.QueryString}")" /> *@
+                        <button type="submit" class="badge rounded-pill bg-warning p-2"
+                          title="@item.CurrencyId idli birimi izlemeye al">
+                          <i class="fa-solid fa-tower-broadcast"></i>
+                        </button>
+                      </form>
+                    }
+                    <form asp-area="" asp-controller="UserCurrencyFollows" asp-action="DeleteFav">
+                        <input type="hidden" name="currencyId" value="@item.CurrencyId" />
+                        <input type="hidden" name="redirectUrl"
+                          value="@($"{Context.Request.Path}{Context.Request.QueryString}")" />
+                        <button type="submit" class="badge rounded-pill bg-danger p-2"
+                          title="@item.CurrencyId idli birimi favorilerden kaldir">
+                          <i class="fa-solid fa-thumbtack-slash"></i>
+                        </button>
+                    </form>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <!-- /.card-body -->
+    <div class="card-footer clearfix">
+      @await Html.PartialAsync("_PaginationTool", Model)
+    </div>
+  </div>
+</div>
+
+<div id="empty-container"></div>
+
+@await Html.PartialAsync("_EUUserCurrencyFollowFilterPopup", new UserCurrencyFollowFilterViewModel(currencyTool))
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      const d = $("#empty-container");
+
+      const connection = new signalR
+        .HubConnectionBuilder()
+        .withUrl("https://localhost:7250/hubs/currencies")
+        .build();
+
+
+      connection.on("ReceivePrice", function (response) {
+        console.log("Event listening for " + response.currencyId);
+        console.log(response);
+        const card = document.getElementById(`card-${response.currencyId}`);
+
+        if (card) {
+          card.querySelector("#currency-card-title-" + response.currencyId).innerText = response.title;
+          card.querySelector("#currency-purchase-" + response.currencyId).innerText = response.purchasePrice;
+          card.querySelector("#currency-sale-" + response.currencyId).innerText = response.salePrice;
+
+          // opsiyonel: fiyat değişince renk animasyonu
+          card.classList.add(response.purchasePriceChanged > 0 ? "price-up" : "price-down");
+          setTimeout(() => card.classList.remove("price-up", "price-down"), 1000);
+        }
+      });
+
+      connection.start()
+        .then(() => {
+          console.log("SignalR connected");
+          const follows = @Json.Serialize(follows ?? new int[] { });
+          follows.forEach(currencyId => {
+            connection.invoke("SubscribeToCurrency", currencyId)
+              .then(() => console.log(`Subscribed to currency-${currencyId}`))
+              .catch(err => console.error(`Subscribe failed for ${currencyId}:`, err));
+          });
+        })
+        .catch(err => console.error(err));
+
+      $('#eu-filter-user-currency-follow-popup').on('shown.bs.modal', function () {
+        $('.js-eu-currency-tool-multiple').select2({
+          dropdownParent: $('#eu-filter-user-currency-follow-popup'),
+          width: '100%',
+          placeholder: "Birim seçiniz",
+          allowClear: true
+        });
+      });
+
+    });
+  </script>
+}

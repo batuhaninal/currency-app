@@ -5,6 +5,7 @@ namespace Application.Abstractions.Rules
     public interface ICurrencyRule
     {
         Task<IBaseResult> CheckExistAsync(int id, CancellationToken cancellationToken = default);
+        Task<IBaseResult> CheckAnyNotExistAsync(int[] ids, CancellationToken cancellationToken = default);
         Task<IBaseResult> CheckTitleValidAsync(string title, CancellationToken cancellationToken = default);
         Task<IBaseResult> CheckTitleValidAsync(int id, string title, CancellationToken cancellationToken = default);
     }

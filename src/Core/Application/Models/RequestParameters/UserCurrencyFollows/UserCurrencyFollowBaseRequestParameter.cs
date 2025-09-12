@@ -8,7 +8,7 @@ namespace Application.Models.RequestParameters.UserCufrrencyFollows
         {
 
         }
-        public int[]? CurrencyIds { get; set; }
+        public int[]? CurrencyId { get; set; }
         public DateTime? MinUpdatedDate { get; set; }
         public DateTime? MaxUpdatedDate { get; set; }
     }

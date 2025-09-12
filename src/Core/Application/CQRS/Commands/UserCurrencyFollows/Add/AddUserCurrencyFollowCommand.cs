@@ -51,13 +51,17 @@ namespace Application.CQRS.Commands.UserCurrencyFollows.Add
             if (!result.Success)
                 return result;
 
+            DateTime now = DateTime.UtcNow;
+
             await _unitOfWork
                 .UserCurrencyFollowWriteRepository
                 .CreateAsync(new Domain.Entities.UserCurrencyFollow()
                 {
                     CurrencyId = command.CurrencyId,
                     UserId = userId,
-                    IsActive = command.IsBroadcast
+                    IsActive = command.IsBroadcast,
+                    CreatedDate = now,
+                    UpdatedDate = now
                 }, cancellationToken);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);

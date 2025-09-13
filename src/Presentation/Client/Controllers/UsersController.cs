@@ -1,9 +1,13 @@
+using Client.Attributes;
 using Client.Models.Users;
 using Client.Services.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Client.Controllers
 {
+    [Authorize]
+    [Breadcrumb("Kullanici")]
     public sealed class UsersController : BaseController
     {
         private readonly IUserService _userService;
@@ -14,6 +18,7 @@ namespace Client.Controllers
         }
 
         [HttpGet]
+        [Breadcrumb("Profil")]
         public async Task<IActionResult> Profile()
         {
             var result = await _userService.ProfileAsync();

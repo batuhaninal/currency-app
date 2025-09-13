@@ -1,13 +1,16 @@
+using Client.Attributes;
 using Client.Models.Commons;
 using Client.Models.UserCurrencyFollows;
 using Client.Models.UserCurrencyFollows.RequestParameters;
-using Client.Services.Currencies;
 using Client.Services.Tools;
 using Client.Services.UserCurrencyFollows;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Client.Controllers
 {
+    [Authorize]
+    [Breadcrumb("Favoriler")]
     public sealed class UserCurrencyFollowsController : BaseController
     {
         private readonly IUserCurrencyFollowService _userCurrencyFollowService;
@@ -20,6 +23,7 @@ namespace Client.Controllers
         }
 
         [HttpGet]
+        [Breadcrumb("Favoriler Listesi")]
         public async Task<IActionResult> Index([FromQuery] UserCurrencyFollowRequestParameter parameter)
         {
             var result = await _userCurrencyFollowService.ListAsync(parameter);

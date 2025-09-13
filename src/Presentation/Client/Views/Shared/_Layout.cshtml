@@ -15,6 +15,8 @@
   {
     dbValidationErrors = JsonSerializer.Deserialize<Dictionary<string, string[]>>(dbValidationErrorsJson);
   }
+
+  var history = ViewData["BreadcrumbHistory"] as List<BreadcrumbItem>;
 }
 <!DOCTYPE html>
 <html lang="tr">
@@ -54,13 +56,30 @@
           <!--begin::Row-->
           <div class="row">
             <div class="col-sm-6">
-              <h3 class="mb-0">Dashboard v3</h3>
+              <h3 class="mb-0">@(ViewBag.Title)</h3>
             </div>
             <div class="col-sm-6">
-              <ol class="breadcrumb float-sm-end">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Dashboard v3</li>
-              </ol>
+              @if (history != null && history.Any())
+              {
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb float-sm-end">
+                    @for (int i = 0; i < history.Count; i++)
+                    {
+                      var bc = history[i];
+                      if (i < history.Count - 1)
+                      {
+                        <li class="breadcrumb-item">
+                          <a href="@bc.Url">@bc.Title</a>
+                        </li>
+                      }
+                      else
+                      {
+                        <li class="breadcrumb-item active" aria-current="page">@bc.Title</li>
+                      }
+                    }
+                  </ol>
+                </nav>
+              }
             </div>
           </div>
           <!--end::Row-->

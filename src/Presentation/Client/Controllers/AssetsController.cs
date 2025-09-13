@@ -1,3 +1,4 @@
+using Client.Attributes;
 using Client.Models.Assets;
 using Client.Models.Assets.RequestParameters;
 using Client.Models.Commons;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Client.Controllers
 {
     [Authorize]
+    [Breadcrumb("Varliklar")]
     public sealed class AssetsController : BaseController
     {
         private readonly IAssetService _assetService;
@@ -25,6 +27,7 @@ namespace Client.Controllers
         }
 
         [HttpGet]
+        [Breadcrumb("Varliklar Listesi")]
         public async Task<IActionResult> Index([FromQuery] AssetRequestParameter parameter)
         {
             var result = await _assetService.UserAssetsAsync(parameter);
@@ -38,14 +41,15 @@ namespace Client.Controllers
 
             ViewBag.CurrencyTool = data.Data ?? new();
 
-            var follows = await _userCurrencyFollowService.TopFollowList(new BroadcastParameters() {All = false, IsBroadcast = true});
+            var follows = await _userCurrencyFollowService.TopFollowList(new BroadcastParameters() { All = false, IsBroadcast = true });
 
-            ViewBag.Follows = follows.Data ?? new int[] {};
+            ViewBag.Follows = follows.Data ?? new int[] { };
 
             return View(result.Data ?? new());
         }
 
         [HttpGet]
+        [Breadcrumb("Gruplanmis Varliklar Listesi")]
         public async Task<IActionResult> UserAssetWithGroup()
         {
             var result = await _assetService.UserAssetsWithGroupAsync();
@@ -55,6 +59,7 @@ namespace Client.Controllers
         }
 
         [HttpGet]
+        [Breadcrumb("Varlik Bilgisi")]
         public async Task<IActionResult> Info([FromQuery] int assetId)
         {
             var result = await _assetService.UserAssetInfoAsync(assetId);

@@ -1,9 +1,13 @@
+using Client.Attributes;
 using Client.Models.UserAssetHistories.RequestParameters;
 using Client.Services.UserAssetHistories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Client.Controllers
 {
+    [Authorize]
+    [Breadcrumb("Varlik Gecmisi")]
     public sealed class UserAssetHistoriesController : BaseController
     {
         private readonly IUserAssetHistoryService _userAssetHistoryService;
@@ -14,6 +18,7 @@ namespace Client.Controllers
         }
 
         [HttpGet]
+        [Breadcrumb("Varlik Gecmisi Listesi")]
         public async Task<IActionResult> Index([FromQuery] UserAssetHistoryRequestParameter parameter)
         {
             var result = await _userAssetHistoryService.ListAsync(parameter);

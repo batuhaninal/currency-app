@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Client.Attributes;
 using Client.Controllers;
 using Client.Models.Categories;
 using Client.Models.Categories.RequestParameters;
@@ -21,6 +22,7 @@ namespace Client.Areas.Panel.Controllers
         }
 
         [HttpGet]
+        [Breadcrumb("Kategoriler Listesi")]
         public async Task<IActionResult> Index([FromQuery] CategoryBaseRequestParameter parameter)
         {
             var data = await _categoryService.ListAsync(parameter);

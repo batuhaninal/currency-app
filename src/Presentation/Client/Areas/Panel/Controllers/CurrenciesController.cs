@@ -1,3 +1,4 @@
+using Client.Attributes;
 using Client.Controllers;
 using Client.Models.Commons;
 using Client.Models.Constants;
@@ -24,6 +25,7 @@ namespace Client.Areas.Panel.Controllers
         }
 
         [HttpGet]
+        [Breadcrumb("Birimler Listesi")]
         public async Task<IActionResult> Index([FromQuery] CurrencyRequestParameter parameter)
         {
             var result = await _toolService.CategoryTools(new ToolRequestParameter());
@@ -36,6 +38,7 @@ namespace Client.Areas.Panel.Controllers
         }
 
         [HttpGet]
+        [Breadcrumb("Birim Detayi")]
         public async Task<IActionResult> Info([FromQuery] int currencyId, [FromQuery] CurrencyHistoryRequestParameter parameter)
         {
             var result = await _currencyService.HistoryInfoAsync(currencyId, parameter);

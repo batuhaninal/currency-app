@@ -2,12 +2,14 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Client.Models;
 using Microsoft.AspNetCore.Authorization;
+using Client.Attributes;
 
 namespace Client.Controllers;
 
 [Authorize]
 public class HomeController : Controller
 {
+    [Breadcrumb("Ana Sayfa")]
     public IActionResult Index()
     {
         if (HttpContext.User.IsInRole("admin"))

@@ -30,8 +30,6 @@ namespace Client.Controllers
             {
                 if (!string.IsNullOrEmpty(result.Message))
                     TempData["SuccessMessage"] = result.Message;
-                else
-                    TempData["SuccessMessage"] = "Basarili";
             }
             else
             {

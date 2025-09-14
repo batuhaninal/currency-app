@@ -3,6 +3,67 @@
 
 // Write your JavaScript code.
 
+document.addEventListener("DOMContentLoaded", function () {
+    const navLinks = document.querySelectorAll(".sidebar-menu .nav-link");
+    const currentPath = window.location.pathname;
+    
+
+    // Sayfa yüklenince URL'ye göre aktif menü ayarla
+    navLinks.forEach(link => {
+        // Önce tüm aktifleri temizle
+        link.classList.remove("active");
+        
+        if (link.getAttribute("href") === currentPath) {
+            link.classList.add("active");
+
+            // Üst parent menüleri aç
+            let parent = link.closest(".nav-treeview");
+            while (parent) {
+                const parentLink = parent.previousElementSibling;
+                if (parentLink) {
+                    parentLink.classList.add("active");
+                    parentLink.closest(".nav-item").classList.add("menu-open");
+                }
+                parent = parent.parentElement.closest(".nav-treeview");
+            }
+        }
+    });
+
+    // Tıklama olaylarını dinle -> For SPA
+    // navLinks.forEach(link => {
+    //     link.addEventListener("click", function (e) {
+    //         const parentItem = this.closest(".nav-item");
+
+    //         // Alt menü varsa sadece aç/kapa yap
+    //         if (parentItem.querySelector(".nav-treeview")) {
+    //             e.preventDefault();
+    //             parentItem.classList.toggle("menu-open");
+    //             this.classList.toggle("active");
+    //             return;
+    //         }
+
+    //         // Önce tüm aktifleri temizle
+    //         navLinks.forEach(l => l.classList.remove("active"));
+
+    //         // Yeni aktif linki ekle
+    //         this.classList.add("active");
+
+    //         // Üst parentleri de aktif yap
+    //         let parent = this.closest(".nav-treeview");
+    //         while (parent) {
+    //             const parentLink = parent.previousElementSibling;
+    //             if (parentLink) {
+    //                 parentLink.classList.add("active");
+    //                 parentLink.closest(".nav-item").classList.add("menu-open");
+    //             }
+    //             parent = parent.parentElement.closest(".nav-treeview");
+    //         }
+    //     });
+    // });
+});
+
+
+
 function deletePopup(uri, title = 'Silme Islemi', text = 'Silinmiş veri geri alınamaz') {
   const swalWithBootstrapButtons = Swal.mixin({
     customClass: {

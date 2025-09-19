@@ -76,6 +76,10 @@
               </td>
               <td>
                 <div class="d-inline-flex gap-1">
+                  <a class="badge rounded-pill bg-info p-2" asp-area="" asp-controller="Currencies" asp-action="Info"
+                    asp-route-currencyId="@item.CurrencyId" title="@item.Title adli birim fiyat gecmisi">
+                    <i class="fa-solid fa-landmark"></i>
+                  </a>
                   @if (follows is not null)
                   {
                     @if (follows.Contains(item.CurrencyId))
@@ -96,7 +100,7 @@
                         <input type="hidden" name="currencyId" value="@item.CurrencyId" />
                         <input type="hidden" name="redirectUrl"
                           value="@($"{Context.Request.Path}{Context.Request.QueryString}")" />
-                        <button type="submit" class="badge rounded-pill bg-info p-2"
+                        <button type="submit" class="badge rounded-pill bg-primary p-2"
                           title="@item.CurrencyId idli birimi favorilere ekle">
                           <i class="fa-solid fa-thumbs-up"></i>
                         </button>

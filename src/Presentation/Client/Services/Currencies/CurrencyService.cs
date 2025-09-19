@@ -53,7 +53,7 @@ namespace Client.Services.Currencies
 
         public async Task<BaseResult<CurrencyWithHistoryResponse>> HistoryInfoAsync(int currencyId, CurrencyHistoryRequestParameter parameter, CancellationToken cancellationToken = default)
         {
-            BaseResult<CurrencyWithHistoryResponse> result = await this.GetAsync<CurrencyWithHistoryResponse>(_httpClient, $"{panel}/history-info/{currencyId}", parameter.ToQueryString(), cancellationToken);
+            BaseResult<CurrencyWithHistoryResponse> result = await this.GetAsync<CurrencyWithHistoryResponse>(_httpClient, $"history-info/{currencyId}", parameter.ToQueryString(), cancellationToken);
             return result;
         }
 

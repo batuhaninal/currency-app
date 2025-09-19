@@ -57,15 +57,18 @@
 <div class="card mb-4">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h3 class="card-title mb-0">
-            @Model.Title 
-        @if (!string.IsNullOrEmpty(Model.SubTitle)) 
-        {
-            <small class="text-muted">(@Model.SubTitle)</small>
-        }
+            @Model.Title
+            @if (!string.IsNullOrEmpty(Model.SubTitle))
+            {
+                <small class="text-muted">(@Model.SubTitle)</small>
+            }
         </h3>
-        <span class='badge @(Model.IsActive ? "bg-primary" : "bg-info")'>
-            @(Model.IsActive ? "Aktif" : "Pasif")
-        </span>
+        @if (User.IsInRole("admin"))
+        {
+            <span class='badge @(Model.IsActive ? "bg-primary" : "bg-info")'>
+                @(Model.IsActive ? "Aktif" : "Pasif")
+            </span>
+        }
     </div>
     <div class="card-body">
         <dl class="row">
@@ -77,9 +80,12 @@
 
             <dt class="col-sm-3">Kategori</dt>
             <dd class="col-sm-9">@Model.Category?.Title</dd>
-
-            <dt class="col-sm-3">Kod</dt>
-            <dd class="col-sm-9">@Model.TvCode</dd>
+            
+            @if (User.IsInRole("admin"))
+            {
+                <dt class="col-sm-3">Kod</dt>
+                <dd class="col-sm-9">@Model.TvCode</dd>
+            }
 
             <dt class="col-sm-3">Oluşturulma</dt>
             <dd class="col-sm-9">@Model.CreatedDate.ToString("dd.MM.yyyy HH:mm")</dd>
@@ -91,56 +97,56 @@
 </div>
 
 <div class="row">
-        <div class="col-12 col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Fiyat Geçmişi (Saatlik)</h3>
-                </div>
-                <div class="card-body">
-                    <canvas id="price-history-hourly"></canvas>
-                </div>
+    <div class="col-12 col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Fiyat Geçmişi (Saatlik)</h3>
+            </div>
+            <div class="card-body">
+                <canvas id="price-history-hourly"></canvas>
             </div>
         </div>
-        <div class="col-12 col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Fiyat Geçmişi (Gunluk)</h3>
-                </div>
-                <div class="card-body">
-                    <canvas id="price-history-daily"></canvas>
-                </div>
+    </div>
+    <div class="col-12 col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Fiyat Geçmişi (Gunluk)</h3>
+            </div>
+            <div class="card-body">
+                <canvas id="price-history-daily"></canvas>
             </div>
         </div>
-        <div class="col-12 col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Fiyat Geçmişi (Haftalik)</h3>
-                </div>
-                <div class="card-body">
-                    <canvas id="price-history-weekly"></canvas>
-                </div>
+    </div>
+    <div class="col-12 col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Fiyat Geçmişi (Haftalik)</h3>
+            </div>
+            <div class="card-body">
+                <canvas id="price-history-weekly"></canvas>
             </div>
         </div>
-        <div class="col-12 col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Fiyat Geçmişi (Aylik)</h3>
-                </div>
-                <div class="card-body">
-                    <canvas id="price-history-monthly"></canvas>
-                </div>
+    </div>
+    <div class="col-12 col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Fiyat Geçmişi (Aylik)</h3>
             </div>
-        </div>   
-        <div class="col-12 col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Fiyat Geçmişi (Yillik)</h3>
-                </div>
-                <div class="card-body">
-                    <canvas id="price-history-yearly"></canvas>
-                </div>
+            <div class="card-body">
+                <canvas id="price-history-monthly"></canvas>
             </div>
-        </div>   
+        </div>
+    </div>
+    <div class="col-12 col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Fiyat Geçmişi (Yillik)</h3>
+            </div>
+            <div class="card-body">
+                <canvas id="price-history-yearly"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
 
 

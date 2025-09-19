@@ -10,15 +10,15 @@
 @model PaginationResult<UserCurrencyFollowItemResponse>
 
 <div class="row">
-    <div class="row">
-        @if (follows is not null)
-        {
-            @foreach (var currencyId in follows)
-            {
-                @await Component.InvokeAsync("LiveCurrency", new { currencyId = currencyId })
-            }
-        }
-    </div>
+  <div class="row">
+    @if (follows is not null)
+    {
+      @foreach (var currencyId in follows)
+      {
+        @await Component.InvokeAsync("LiveCurrency", new { currencyId = currencyId })
+      }
+    }
+  </div>
   <div class="card mb-4">
     <div class="card-header">
       <div class="d-flex justify-content-between">
@@ -31,7 +31,7 @@
             class="badge rounded-pill bg-danger p-2 border-0" id="filter-currency-btn" title="Filtreleri temizle">
             <i class="fa-solid fa-filter"></i>
           </a>
-          <a asp-area=""asp-controller="Currencies" asp-action="Index" title="Birimleri Gor">
+          <a asp-area="" asp-controller="Currencies" asp-action="Index" title="Birimleri Gor">
             <i class="fa-solid"></i>
           </a>
         </div>
@@ -61,8 +61,8 @@
               @await Html.PartialAsync("_OrderTool", new SortModel("salePrice"))
             </th>
             <th>
-                Durum
-                @await Html.PartialAsync("_OrderTool", new SortModel("is_active"))
+              Durum
+              @await Html.PartialAsync("_OrderTool", new SortModel("is_active"))
             </th>
             <th style="width: 40px">Islemler</th>
           </tr>
@@ -90,42 +90,48 @@
               </td>
               <td>
                 <div class="d-inline-flex gap-1">
-                    @if (item.IsActive)
-                    {
-                      <form asp-area="" asp-controller="UserCurrencyFollows" asp-action="UpdateOperation" asp-route-userCurrencyFollowId="@item.UserCurrencyFollowId">
-                        <input type="hidden" name="userCurrencyFollowId" value="@item.UserCurrencyFollowId" />
-                        <input type="hidden" name="isActive" value="false" />
-                        @* <input type="hidden" name="redirectUrl" 
+                  <a class="badge rounded-pill bg-info p-2" asp-area="" asp-controller="Currencies" asp-action="Info"
+                    asp-route-currencyId="@item.CurrencyId" title="@item.Currency.Title adli birim fiyat gecmisi">
+                    <i class="fa-solid fa-landmark"></i>
+                  </a>
+                  @if (item.IsActive)
+                  {
+                    <form asp-area="" asp-controller="UserCurrencyFollows" asp-action="UpdateOperation"
+                      asp-route-userCurrencyFollowId="@item.UserCurrencyFollowId">
+                      <input type="hidden" name="userCurrencyFollowId" value="@item.UserCurrencyFollowId" />
+                      <input type="hidden" name="isActive" value="false" />
+                      @* <input type="hidden" name="redirectUrl" 
                           value="@($"{Context.Request.Path}{Context.Request.QueryString}")" /> *@
-                        <button type="submit" class="badge rounded-pill bg-info p-2"
-                          title="@item.CurrencyId idli birimi favorilere ekle">
-                          <i class="fa-solid fa-thumbs-up"></i>
-                        </button>
-                      </form>
-                    }
-                    else
-                    {
-                      
-                      <form asp-area="" asp-controller="UserCurrencyFollows" asp-action="UpdateOperation" asp-route-userCurrencyFollowId="@item.UserCurrencyFollowId">
-                         <input type="hidden" name="userCurrencyFollowId" value="@item.UserCurrencyFollowId" />
-                        <input type="hidden" name="isActive" value="true" />
-                        @* <input type="hidden" name="redirectUrl"
-                          value="@($"{Context.Request.Path}{Context.Request.QueryString}")" /> *@
-                        <button type="submit" class="badge rounded-pill bg-warning p-2"
-                          title="@item.CurrencyId idli birimi izlemeye al">
-                          <i class="fa-solid fa-tower-broadcast"></i>
-                        </button>
-                      </form>
-                    }
-                    <form asp-area="" asp-controller="UserCurrencyFollows" asp-action="DeleteFav">
-                        <input type="hidden" name="currencyId" value="@item.CurrencyId" />
-                        <input type="hidden" name="redirectUrl"
-                          value="@($"{Context.Request.Path}{Context.Request.QueryString}")" />
-                        <button type="submit" class="badge rounded-pill bg-danger p-2"
-                          title="@item.CurrencyId idli birimi favorilerden kaldir">
-                          <i class="fa-solid fa-thumbtack-slash"></i>
-                        </button>
+                      <button type="submit" class="badge rounded-pill bg-primary p-2"
+                        title="@item.CurrencyId idli birimi favorilere ekle">
+                        <i class="fa-solid fa-thumbs-up"></i>
+                      </button>
                     </form>
+                  }
+                  else
+                  {
+
+                    <form asp-area="" asp-controller="UserCurrencyFollows" asp-action="UpdateOperation"
+                      asp-route-userCurrencyFollowId="@item.UserCurrencyFollowId">
+                      <input type="hidden" name="userCurrencyFollowId" value="@item.UserCurrencyFollowId" />
+                      <input type="hidden" name="isActive" value="true" />
+                      @* <input type="hidden" name="redirectUrl"
+                          value="@($"{Context.Request.Path}{Context.Request.QueryString}")" /> *@
+                      <button type="submit" class="badge rounded-pill bg-warning p-2"
+                        title="@item.CurrencyId idli birimi izlemeye al">
+                        <i class="fa-solid fa-tower-broadcast"></i>
+                      </button>
+                    </form>
+                  }
+                  <form asp-area="" asp-controller="UserCurrencyFollows" asp-action="DeleteFav">
+                    <input type="hidden" name="currencyId" value="@item.CurrencyId" />
+                    <input type="hidden" name="redirectUrl"
+                      value="@($"{Context.Request.Path}{Context.Request.QueryString}")" />
+                    <button type="submit" class="badge rounded-pill bg-danger p-2"
+                      title="@item.CurrencyId idli birimi favorilerden kaldir">
+                      <i class="fa-solid fa-thumbtack-slash"></i>
+                    </button>
+                  </form>
                 </div>
               </td>
             </tr>
@@ -145,7 +151,7 @@
 @await Html.PartialAsync("_EUUserCurrencyFollowFilterPopup", new UserCurrencyFollowFilterViewModel(currencyTool))
 
 @section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
   <script>
     $(document).ready(function () {
       const d = $("#empty-container");

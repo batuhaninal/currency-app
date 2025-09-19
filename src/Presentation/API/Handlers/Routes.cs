@@ -178,6 +178,16 @@ namespace API.Handlers
                 .WithName("End-User Currency info")
                 .WithTags("Currencies");
 
+            currency.MapGet("history-info/{currencyId}",
+                async ([FromServices] ICurrencyHandler handler, [FromRoute(Name = "currencyId")] int currencyId, [AsParameters] CurrencyWithHistoryInfoQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
+                {
+                    query.CurrencyId = currencyId;
+                    return await handler.HistoryInfo(query, dispatcher, cancellationToken);
+                })
+                .WithName("Currency History Info")
+                .WithTags("Currencies")
+                .RequireAuthorization();
+
             var currencyPanel = currency.MapGroup("panel");
 
             currencyPanel.MapGet("",
@@ -226,16 +236,6 @@ namespace API.Handlers
                     return await handler.Info(new CurrencyInfoQuery(currencyId), dispatcher, cancellationToken);
                 })
                 .WithName("Currency info")
-                .WithTags("Currencies")
-                .RequireAuthorization(AppRoles.Admin);
-
-            currencyPanel.MapGet("history-info/{currencyId}",
-                async ([FromServices] ICurrencyHandler handler, [FromRoute(Name = "currencyId")] int currencyId, [AsParameters] CurrencyWithHistoryInfoQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
-                {
-                    query.CurrencyId = currencyId;
-                    return await handler.HistoryInfo(query, dispatcher, cancellationToken);
-                })
-                .WithName("Currency History Info")
                 .WithTags("Currencies")
                 .RequireAuthorization(AppRoles.Admin);
 

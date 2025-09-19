@@ -38,16 +38,6 @@ namespace Client.Areas.Panel.Controllers
         }
 
         [HttpGet]
-        [Breadcrumb("Birim Detayi")]
-        public async Task<IActionResult> Info([FromQuery] int currencyId, [FromQuery] CurrencyHistoryRequestParameter parameter)
-        {
-            var result = await _currencyService.HistoryInfoAsync(currencyId, parameter);
-            _ = this.ShowResultMessage(result);
-
-            return View(result.Data ?? new());
-        }
-
-        [HttpGet]
         public async Task<PartialViewResult> UpdateOperation(int currencyId)
         {
             var data = await _currencyService.InfoAsync(currencyId);

@@ -10,17 +10,19 @@ namespace Client.Middlewares
     {
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IAuthService _authService;
-        private readonly ILogger<TokenMiddleware> _logger;
+        private readonly IConfiguration _configuration;
 
-        public TokenMiddleware(IHttpContextAccessor contextAccessor, IAuthService authService, ILogger<TokenMiddleware> logger)
+        public TokenMiddleware(IHttpContextAccessor contextAccessor, IAuthService authService, IConfiguration configuration)
         {
             _contextAccessor = contextAccessor;
             _authService = authService;
-            _logger = logger;
+            _configuration = configuration;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            request.Headers.Add("X-API-KEY", _configuration.GetValue<string>("APIKEY"));
+
             var context = _contextAccessor.HttpContext;
 
             var accessToken = context.User?.FindFirst("access-token")?.Value;

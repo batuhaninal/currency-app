@@ -97,5 +97,23 @@ namespace Client.Controllers
 
             return Redirect(redirectUrl);
         }
+
+        [HttpGet]
+        public async Task<PartialViewResult> BroadcastCurrencyPopup()
+        {
+            var result = await _toolService.CurrencyToolWithoutFavs(true);
+            _ = this.ShowResultMessage(result);
+
+            return PartialView("_BroadcastCurrencyPopup", result.Data ?? new());
+        }
+
+        [HttpGet]
+        public async Task<PartialViewResult> FavCurrencyPopup()
+        {
+            var result = await _toolService.CurrencyToolWithoutFavs(false);
+            _ = this.ShowResultMessage(result);
+
+            return PartialView("_FavCurrencyPopup", result.Data ?? new());
+        }
     }
 }

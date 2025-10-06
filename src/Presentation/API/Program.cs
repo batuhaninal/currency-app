@@ -14,7 +14,17 @@ using API.Middlewares.ExceptionHandlers;
 using API.Notifiers;
 using API.Hubs;
 using System.Text.Json;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
+using API.Middlewares.Extensions;
 var builder = WebApplication.CreateBuilder(args);
+
+//For .exe
+// Kestrel config’ini appsettings.json’dan oku
+// builder.WebHost.ConfigureKestrel((context, options) =>
+// {
+//     options.Configure(context.Configuration.GetSection("Kestrel"));
+// });
 
 // Add services to the container.
 builder.Services.BindApplicationServices(builder.Configuration);
@@ -55,6 +65,8 @@ builder.Services.AddAuthentication(opt =>
         NameClaimType = ClaimTypes.Name,
     };
 });
+
+builder.Services.ConfigureRateLimiting();
 
 builder.Services.AddCors(options =>
 {
@@ -118,10 +130,14 @@ app.UseStatusCodePages(async context => // 401 / 403 gibi durum kodlarına özel
 });
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ApiKeyAuthMiddleware>();
+
 app.RouteMap();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRateLimiter();
 app.UseCors();
 app.MapHubs();
 

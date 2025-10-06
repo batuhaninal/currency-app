@@ -59,7 +59,7 @@ namespace Client.Areas.Panel.Controllers
                 var result = await _currencyService.UpdateAsync(currencyId, input);
 
                 if (!result.Success)
-                    this.ShowResultMessage(result);
+                    _ = this.ShowResultMessage(result);
             }
 
             return RedirectToAction(nameof(CurrenciesController.Index), "Currencies", new { Area = AppConstants.PANELAREA });
@@ -82,7 +82,7 @@ namespace Client.Areas.Panel.Controllers
                 var result = await _currencyService.UpdatePriceAsync(currencyId, input);
 
                 if (!result.Success)
-                    this.ShowResultMessage(result);
+                    _ = this.ShowResultMessage(result);
             }
 
             return RedirectToAction(nameof(CurrenciesController.Index), "Currencies", new { Area = AppConstants.PANELAREA });
@@ -107,7 +107,7 @@ namespace Client.Areas.Panel.Controllers
             {
                 var result = await _currencyService.AddAsync(input);
                 if (!result.Success)
-                    this.ShowResultMessage(result);
+                    _ = this.ShowResultMessage(result);
             }
 
             return RedirectToAction(nameof(CurrenciesController.Index), "Currencies", new { Area = AppConstants.PANELAREA });

@@ -3,6 +3,13 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//For .exe
+// Kestrel config’ini appsettings.json’dan oku
+// builder.WebHost.ConfigureKestrel((context, options) =>
+// {
+//     options.Configure(context.Configuration.GetSection("Kestrel"));
+// });
+
 // Add services to the container.
 builder.Services.AddControllersWithViews(options =>
 {
@@ -33,6 +40,7 @@ app.UseExceptionHandler("/Errors/Index?statusCode=500");
 app.UseStatusCodePagesWithReExecute("/Errors/Index", "?statusCode={0}");
 
 app.UseHttpsRedirection();
+
 app.UseRouting();
 
 app.UseAuthentication();
@@ -50,5 +58,20 @@ app.UseEndpoints(endpoints =>
 
     endpoints.MapDefaultControllerRoute();
 });
+
+// For .exe
+// var url = "http://localhost:7001"; // Açılacak URL
+// try
+// {
+//     Process.Start(new ProcessStartInfo
+//     {
+//         FileName = url,
+//         UseShellExecute = true // default tarayıcıyı kullanır
+//     });
+// }
+// catch
+// {
+//     // Hata olursa sessiz geç
+// }
 
 app.Run();

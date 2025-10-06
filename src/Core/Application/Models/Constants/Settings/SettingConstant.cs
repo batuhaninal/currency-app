@@ -2,12 +2,17 @@
 {
     public static class SettingConstant
     {
-        public readonly static string[] AllowedImages = [".png",".jpg",".jpeg"];
+        public readonly static string[] AllowedImages = [".png", ".jpg", ".jpeg"];
         // public readonly static string[] AllowedFileFormats = [".clx"];
         public static class PaginationSettings
         {
             public const int MaxPageSize = 100;
-            
+
         }
+
+        public const string PerUserRateLimiting = "per-user";
+        public const string RichRateLimiting = "rich";
+        public const string AnonymousRateLimiting = "anonymous";
+        public const string FixedRateLimiting = "fixed";
     }
 }

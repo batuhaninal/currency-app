@@ -23,7 +23,7 @@ namespace Client.Controllers
         {
             var result = await _userService.ProfileAsync();
             this.ShowResultMessage(result);
-            return View(result.Data);
+            return View(result.Data ?? new());
         }
 
         [HttpPost]

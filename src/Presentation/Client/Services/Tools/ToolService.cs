@@ -25,5 +25,13 @@ namespace Client.Services.Tools
             BaseResult<List<CurrencyToolResponse>> result = await this.GetAsync<List<CurrencyToolResponse>>(_httpClient, "currency-list", parameter.ToQueryString(), cancellationToken);
             return result;
         }
+
+        public async Task<BaseResult<List<CurrencyToolResponse>>> CurrencyToolWithoutFavs(bool isBroadcast = false, CancellationToken cancellationToken = default)
+        {
+            List<KeyValuePair<string, object>> parameter = new();
+            parameter.Add(new KeyValuePair<string, object>("isBroadcast", isBroadcast));
+            BaseResult<List<CurrencyToolResponse>> result = await this.GetAsync<List<CurrencyToolResponse>>(_httpClient, "currency-list-without-favs", parameter.ToArray(), cancellationToken);
+            return result;
+        }
     }
 }

@@ -26,6 +26,9 @@ namespace Client.Areas.Panel.Controllers
         public async Task<IActionResult> Index([FromQuery] CategoryBaseRequestParameter parameter)
         {
             var data = await _categoryService.ListAsync(parameter);
+
+            _ = this.ShowResultMessage(data);
+
             return View(data.Data ?? new());
         }
 
@@ -33,6 +36,8 @@ namespace Client.Areas.Panel.Controllers
         public async Task<PartialViewResult> UpdateOperation(int categoryId)
         {
             var data = await _categoryService.InfoAsync(categoryId);
+
+            _ = this.ShowResultMessage(data);
 
             return PartialView("_CategoryUpdatePopup", data.Data ?? new());
         }
@@ -46,7 +51,7 @@ namespace Client.Areas.Panel.Controllers
                 var result = await _categoryService.UpdateAsync(categoryId, categoryInput);
 
                 if (!result.Success)
-                    this.ShowResultMessage(result);
+                    _ = this.ShowResultMessage(result);
             }
 
             return RedirectToAction(nameof(CategoriesController.Index), "Categories", new { Area = AppConstants.PANELAREA });
@@ -60,7 +65,7 @@ namespace Client.Areas.Panel.Controllers
             {
                 var result = await _categoryService.AddAsync(categoryInput);
                 if (!result.Success)
-                    this.ShowResultMessage(result);
+                    _ = this.ShowResultMessage(result);
             }
 
             return RedirectToAction(nameof(CategoriesController.Index), "Categories", new { Area = AppConstants.PANELAREA });

@@ -14,6 +14,7 @@ using Application.CQRS.Queries.Currencies.Calculator;
 using Application.CQRS.Queries.Currencies.EUList;
 using Application.CQRS.Queries.Currencies.Info;
 using Application.CQRS.Queries.Currencies.List;
+using Application.CQRS.Queries.Tools.ToolWithoutFavs;
 using Application.CQRS.Queries.Currencies.WithHistoryInfo;
 using Application.CQRS.Queries.PriceInfo;
 using Application.CQRS.Queries.Tools;
@@ -95,6 +96,9 @@ namespace Application.CQRS.Queries
 
             services.AddScoped<EUCurrencyInfoQuery>();
             services.AddScoped<IQueryHandler<EUCurrencyInfoQuery, IBaseResult>, EUCurrencyInfoHandler>();
+
+            services.AddScoped<CurrencyToolWithoutFavsQuery>();
+            services.AddScoped<IQueryHandler<CurrencyToolWithoutFavsQuery, IBaseResult>, ToolWithoutFavsQueryHandler>();
             #endregion
 
             #region User Asset History

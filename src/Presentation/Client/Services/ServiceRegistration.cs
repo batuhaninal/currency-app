@@ -17,11 +17,12 @@ namespace Client.Services
         {
             services.AddHttpContextAccessor();
             services.AddScoped<TokenMiddleware>();
+            services.AddScoped<ClientCredentialMiddleware>();
 
             services.AddHttpClient<IAuthService, AuthService>(opt =>
             {
                 opt.BaseAddress = new Uri($"{AppConstants.APIURL}/auth/");
-            });
+            }).AddHttpMessageHandler<ClientCredentialMiddleware>();
 
             services.AddHttpClient<ICategoryService, CategoryService>(opt =>
             {
@@ -36,7 +37,7 @@ namespace Client.Services
             services.AddHttpClient<IToolService, ToolService>(opt =>
             {
                 opt.BaseAddress = new Uri($"{AppConstants.APIURL}/tools/");
-            });
+            }).AddHttpMessageHandler<ClientCredentialMiddleware>();
 
             services.AddHttpClient<IAssetService, AssetService>(opt =>
             {

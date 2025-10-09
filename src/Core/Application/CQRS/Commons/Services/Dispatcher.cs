@@ -54,7 +54,16 @@ namespace Application.CQRS.Commons.Services
             try
             {
                 var handler = _serviceProvider.GetRequiredService<IQueryHandler<TQuery, TResult>>();
-                var result = await handler.Handle(query, cancellationToken);
+                var pipelines = _serviceProvider.GetServices<IPipeline<TQuery, TResult>>().ToList();
+
+                Func<Task<TResult>> pipelineChain = () => handler.Handle(query, cancellationToken);
+                foreach (var pipeline in pipelines.AsEnumerable().Reverse())
+                {
+                    var next = pipelineChain;
+                    pipelineChain = () => pipeline.HandleAsync(query, cancellationToken, next);
+                }
+
+                var result = await pipelineChain();
                 _logger.LogInformation("Handled query {QueryType} successfully", typeof(TQuery).Name);
                 return result;
             }

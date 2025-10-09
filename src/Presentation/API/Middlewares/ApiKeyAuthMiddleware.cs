@@ -1,5 +1,6 @@
 using Application.Abstractions.Commons.Logger;
 using Application.Models.DTOs.Commons.Results;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace API.Middlewares
 {
@@ -18,6 +19,14 @@ namespace API.Middlewares
 
         public async Task InvokeAsync(HttpContext context)
         {
+            var path = context.Request.Path.Value;
+
+            if (path != null && path.StartsWith("/hubs/", StringComparison.OrdinalIgnoreCase))
+            {
+                await _next(context);
+                return;
+            }
+            
             if (!context.Request.Headers.TryGetValue("X-API-KEY", out var extractedApiKey))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -25,7 +34,7 @@ namespace API.Middlewares
                 await context.Response.WriteAsJsonAsync(new ResultDto(StatusCodes.Status401Unauthorized, false, null, "API Key Missed!"));
 
                 _logger.Error("401: API Key Missed");
-        
+
                 return;
             }
 

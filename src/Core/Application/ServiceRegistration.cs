@@ -1,4 +1,4 @@
-using Application.CQRS.Commons.Behaviors;
+using Application.CQRS.Commons.Behaviours;
 using Application.CQRS.Commands;
 using Application.CQRS.Commons;
 using Application.CQRS.Commons.Services;
@@ -15,7 +15,10 @@ namespace Application
         public static void BindApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<Dispatcher>();
+            // Pipeline sirasi onemli! Cunku dispatcherda DI uzerinde servis basvurularinin listesini alip tersine calistirarak calistiriyoruz.
             services.AddScoped(typeof(IPipeline<,>), typeof(ValidationBehaviour<,>));
+            services.AddScoped(typeof(IPipeline<,>), typeof(PerformanceBehaviour<,>));
+            
             services.AddValidatorsFromAssembly(typeof(AddCategoryCommand).Assembly);
             services.BindQueries();
             services.BindCommands();

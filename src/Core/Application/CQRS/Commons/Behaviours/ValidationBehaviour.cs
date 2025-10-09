@@ -3,7 +3,7 @@ using Application.CQRS.Commons.Interfaces;
 using Application.Models.DTOs.Commons.Results;
 using FluentValidation;
 
-namespace Application.CQRS.Commons.Behaviors
+namespace Application.CQRS.Commons.Behaviours
 {
     public sealed class ValidationBehaviour<TRequest, TResponse> : IPipeline<TRequest, TResponse>
         where TRequest : ICommand

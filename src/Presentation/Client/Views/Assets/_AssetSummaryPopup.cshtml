@@ -40,12 +40,12 @@
                         <tr>
                             <td>@item.CurrencyTitle</td>
                             <td>@item.TotalCount</td>
-                            <td>@item.CurrentPurchasePriceTotal.ToString("N2")</td>
-                            <td>@item.CurrentSalePriceTotal.ToString("N2")</td>
-                            <td>@item.PurchasedPurchasePriceTotal.ToString("N2")</td>
-                            <td>@item.PurchasedSalePriceTotal.ToString("N2")</td>
-                            <td>@item.TotalPurchasePrice.ToString("N2")</td>
-                            <td>@item.TotalSalePrice.ToString("N2")</td>
+                            <td><b style="color:#228D57;">@UIToolHelper.RenderTL(item.CurrentPurchasePriceTotal)</b></td>
+                            <td><b style="color:#228D57;">@UIToolHelper.RenderTL(item.CurrentSalePriceTotal)</b></td>
+                            <td><b style="color:#228D57;">@UIToolHelper.RenderTL(item.PurchasedPurchasePriceTotal)</b></td>
+                            <td><b style="color:#228D57;">@UIToolHelper.RenderTL(item.PurchasedSalePriceTotal)</b></td>
+                            <td><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalPurchasePrice)</b></td>
+                            <td><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalSalePrice)</b></td>
                         </tr>
                     }
                 </tbody>
@@ -53,12 +53,12 @@
                     <tr>
                         <th>#</th>
                         <th>Miktar</th>
-                        <th>@currencyPTotal.ToString("N2")</th>
-                        <th>@currencySTotal.ToString("N2")</th>
-                        <th>@cpTotal.ToString("N2")</th>
-                        <th>@csTotal.ToString("N2")</th>
-                        <th>@pTotal.ToString("N2")</th>
-                        <th>@sTotal.ToString("N2")</th>
+                        <th>Guncel Piyasa Alış<p><b style="color:#228D57;">@UIToolHelper.RenderTL(currencyPTotal)</b></p></th>
+                        <th>Guncel Piyasa Satış<p><b style="color:#228D57;">@UIToolHelper.RenderTL(currencySTotal)</b></p></th>
+                        <th>Eklendigi Tarih Piyasa Alış<p><b style="color:#228D57;">@UIToolHelper.RenderTL(cpTotal)</b></p></th>
+                        <th>Eklendigi Tarih Piyasa Satış<p><b style="color:#228D57;">@UIToolHelper.RenderTL(csTotal)</b></p></th>
+                        <th>Satin Alindigi Toplam Alış<p><b style="color:#228D57;">@UIToolHelper.RenderTL(pTotal)</b></p></th>
+                        <th>Satin Alindigi Toplam Satış<p><b style="color:#228D57;">@UIToolHelper.RenderTL(sTotal)</b></p></th>
                     </tr>
                 </tfoot>
             </table>

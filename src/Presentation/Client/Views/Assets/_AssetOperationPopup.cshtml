@@ -32,8 +32,8 @@
                                 <td>@asset.Title</td>
                                 <td>@asset.SubTitle</td>
                                 <td>@asset.Count</td>
-                                <td>@asset.PurchasePrice</td>
-                                <td>@asset.SalePrice</td>
+                                <td><b style="color:#228D57;">@UIToolHelper.RenderTL(asset.PurchasePrice)</b></td>
+                                <td><b style="color:#228D57;">@UIToolHelper.RenderTL(asset.SalePrice)</b></td>
                                 <td>
                                     <input type="number" class="form-control count-input" min="1" max="@asset.Count" />
                                 </td>
@@ -71,13 +71,15 @@
                     <tfoot>
                         <tr>
                             <th colspan="2" class="text-end">Toplam:</th>
-                            <th id="totalPurchase">0.00</th>
-                            <th id="totalSale">0.00</th>
+                            <th id="totalPurchase" style="color:#228D57;">@UIToolHelper.RenderTL(0)</th>
+                            <th id="totalSale" style="color:#228D57;">@UIToolHelper.RenderTL(0)</th>
                         </tr>
                     </tfoot>
                 </table>
                 <div class="text-end mt-2">
-                    <button type="button" class="btn btn-danger" id="clearAllBtn">Tümünü Çıkart</button>
+                    <span class="badge rounded-pill bg-danger p-2" id="clearAllBtn" role="button" title="Tum birimleri temizle">
+                        <i class="fa-solid fa-toilet"></i>
+                    </span>
                 </div>
             </div>
         </div>
@@ -172,7 +174,7 @@
     </td>
     <td class="purchase-cell">${(count * purchase).toFixed(2)}</td>
     <td class="sale-cell">${(count * sale).toFixed(2)}</td>
-    <td><button type="button" class="btn btn-sm btn-danger remove-row-btn">🗑</button></td>
+    <td><span class="badge rounded-pill bg-danger p-2 remove-row-btn" role="button" title="Tum birimleri temizle"><i class="fa-solid fa-trash"></i></span></td>
 `;
 
                     selectedTable.appendChild(newRow);
@@ -280,8 +282,8 @@
                 totalSale += sale;
             });
 
-            document.getElementById("totalPurchase").textContent = totalPurchase.toFixed(2);
-            document.getElementById("totalSale").textContent = totalSale.toFixed(2);
+            document.getElementById("totalPurchase").textContent = `₺${totalPurchase.toFixed(2)}`;
+            document.getElementById("totalSale").textContent = `₺${totalSale.toFixed(2)}`;
         }
     })();
 </script>

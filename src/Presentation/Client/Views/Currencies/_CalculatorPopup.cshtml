@@ -30,8 +30,8 @@
                                 <td>@asset.Category.Title</td>
                                 <td>@asset.Title</td>
                                 <td>@asset.SubTitle</td>
-                                <td>@asset.PurchasePrice</td>
-                                <td>@asset.SalePrice</td>
+                                <td><b style="color:#228D57;">@UIToolHelper.RenderTL(asset.PurchasePrice)</b></td>
+                                <td><b style="color:#228D57;">@UIToolHelper.RenderTL(asset.SalePrice)</b></td>
                                 <td>
                                     <input type="number" class="form-control count-input" min="1" />
                                 </td>
@@ -63,8 +63,8 @@
                     <tfoot>
                         <tr>
                             <th colspan="2" class="text-end">Toplam:</th>
-                            <th id="calculator-total-purchase" style="color:#228D57;">0.00</th>
-                            <th id="calculator-total-sale" style="color:#228D57;">0.00</th>
+                            <th id="calculator-total-purchase" style="color:#228D57;">@UIToolHelper.RenderTL(0)</th>
+                            <th id="calculator-total-sale" style="color:#228D57;">@UIToolHelper.RenderTL(0)</th>
                         </tr>
                     </tfoot>
                 </table>

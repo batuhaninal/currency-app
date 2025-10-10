@@ -20,8 +20,8 @@
                             }
                         </div>
                         <div class="ms-auto text-end">
-                            <div><strong>Alış:</strong> @item.Currency.PurchasePrice.ToString("N2")</div>
-                            <div><strong>Satış:</strong> @item.Currency.SalePrice.ToString("N2")</div>
+                            <div><strong>Alış: </strong><b style="color:#228D57;">@UIToolHelper.RenderTL(item.Currency.PurchasePrice)</b></div>
+                            <div><strong>Satış: </strong><b style="color:#228D57;">@UIToolHelper.RenderTL(item.Currency.SalePrice)</b></div>
                         </div>
                     }
                     else
@@ -34,17 +34,13 @@
                 <!--begin::Body-->
                 <div class="card-body">
                     <ul class="list-unstyled">
-                        <li><strong>Adet:</strong> @item.Count</li>
-                        <li><strong>Satin Alindigi Alis Toplam Deger:</strong> @UIToolHelper.RenderTL(item.TotalPurchaseValue)</li>
-                        <li><strong>Satin Alindigi Satis Toplam Deger:</strong> @UIToolHelper.RenderTL(item.TotalSaleValue)</li>
-                        <li><strong>Eklendiği Tarihteki Alış Bakiyesi:</strong>
-                            @UIToolHelper.RenderTL(item.TotalCurrentPurchaseValue)</li>
-                        <li><strong>Eklendiği Tarihteki Satış Bakiyesi:</strong> @UIToolHelper.RenderTL(item.TotalCurrentSaleValue)
-                        </li>
-                        <li><strong>Guncel Satış Bakiyesi:</strong> @UIToolHelper.RenderTL(item.Currency!.SalePrice * item.Count)
-                        </li>
-                        <li><strong>Guncel Alis Bakiyesi:</strong> @UIToolHelper.RenderTL(item.Currency!.PurchasePrice * item.Count)
-                        </li>
+                        <li><strong>Adet: </strong>@item.Count</li>
+                        <li><strong>Satin Alindigi Alis Toplam Deger: </strong><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalPurchaseValue)</b></li>
+                        <li><strong>Satin Alindigi Satis Toplam Deger: </strong><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalSaleValue)</b></li>
+                        <li><strong>Eklendiği Tarihteki Alış Bakiyesi: </strong><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalCurrentPurchaseValue)</b></li>
+                        <li><strong>Eklendiği Tarihteki Satış Bakiyesi: </strong><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalCurrentSaleValue)</b></li>
+                        <li><strong>Guncel Satış Bakiyesi: </strong><b style="color:#228D57;">@UIToolHelper.RenderTL(item.Currency!.SalePrice * item.Count)</b></li>
+                        <li><strong>Guncel Alis Bakiyesi: </strong><b style="color:#228D57;">@UIToolHelper.RenderTL(item.Currency!.PurchasePrice * item.Count)</b></li>
                     </ul>
                 </div>
                 <!--end::Body-->

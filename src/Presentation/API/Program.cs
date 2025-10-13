@@ -17,14 +17,16 @@ using System.Text.Json;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 using API.Middlewares.Extensions;
+using Application.Abstractions.Commons.Caching;
+using Application.Models.Constants.Settings;
 var builder = WebApplication.CreateBuilder(args);
 
 //For .exe
 // Kestrel config’ini appsettings.json’dan oku
-builder.WebHost.ConfigureKestrel((context, options) =>
-{
-    options.Configure(context.Configuration.GetSection("Kestrel"));
-});
+// builder.WebHost.ConfigureKestrel((context, options) =>
+// {
+//     options.Configure(context.Configuration.GetSection("Kestrel"));
+// });
 
 // Add services to the container.
 builder.Services.BindApplicationServices(builder.Configuration);
@@ -78,6 +80,25 @@ builder.Services.AddCors(options =>
               .AllowCredentials(); // signalR için önemli
     });
 });
+
+// builder.Services.AddOutputCache(opt =>
+// {
+//     opt.AddBasePolicy(builder => builder.Expire(TimeSpan.FromSeconds(30)));
+
+//     opt.AddPolicy(SettingConstant.Tool30sOutputCache, builder =>
+//     {
+//         builder.AddPolicy<CacheOutputCustomPolicy>();
+//         builder.SetVaryByQuery("IsActive", "OrderBy");
+//         builder.Expire(TimeSpan.FromSeconds(30));
+//     });
+
+//     opt.AddPolicy(SettingConstant.Tool1mOutputCache, builder =>
+//     {
+//         builder.AddPolicy<CacheOutputCustomPolicy>();
+//         builder.SetVaryByQuery("IsActive", "OrderBy");
+//         builder.Expire(TimeSpan.FromSeconds(60));
+//     });
+// });
 
 
 builder.Services.AddExceptionHandler<NotFoundExceptionHandler>();
@@ -139,6 +160,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseRateLimiter();
 app.UseCors();
+// app.UseOutputCache();
 app.MapHubs();
 
 app.Run();

@@ -6,10 +6,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 //For .exe
 // Kestrel config’ini appsettings.json’dan oku
-builder.WebHost.ConfigureKestrel((context, options) =>
-{
-    options.Configure(context.Configuration.GetSection("Kestrel"));
-});
+// builder.WebHost.ConfigureKestrel((context, options) =>
+// {
+//     options.Configure(context.Configuration.GetSection("Kestrel"));
+// });
 
 // Add services to the container.
 builder.Services.AddControllersWithViews(options =>
@@ -61,18 +61,18 @@ app.UseEndpoints(endpoints =>
 });
 
 // For .exe
-var url = "http://localhost:7001"; // Açılacak URL
-try
-{
-    Process.Start(new ProcessStartInfo
-    {
-        FileName = url,
-        UseShellExecute = true // default tarayıcıyı kullanır
-    });
-}
-catch
-{
-    // Hata olursa sessiz geç
-}
+// var url = "http://localhost:7001"; // Açılacak URL
+// try
+// {
+//     Process.Start(new ProcessStartInfo
+//     {
+//         FileName = url,
+//         UseShellExecute = true // default tarayıcıyı kullanır
+//     });
+// }
+// catch
+// {
+//     // Hata olursa sessiz geç
+// }
 
 app.Run();

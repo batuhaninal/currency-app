@@ -14,5 +14,7 @@
         public const string RichRateLimiting = "rich";
         public const string AnonymousRateLimiting = "anonymous";
         public const string FixedRateLimiting = "fixed";
+        public const string Tool30sOutputCache = "Tool30s";
+        public const string Tool1mOutputCache = "Tool1m";
     }
 }

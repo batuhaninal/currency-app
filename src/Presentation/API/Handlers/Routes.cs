@@ -47,6 +47,7 @@ using Application.CQRS.Queries.UserCurrencyFollows.UserCurrencyFavList;
 using Application.Models.Constants.Roles;
 using Application.Models.Constants.Settings;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace API.Handlers
 {
@@ -352,12 +353,14 @@ namespace API.Handlers
                     .WithName("Category Tool List")
                     .WithTags("Tools")
                     .RequireRateLimiting(SettingConstant.RichRateLimiting);
+                    // .CacheOutput(SettingConstant.Tool1mOutputCache);
 
             tool.MapGet("currency-list",
                     async ([FromServices] IToolHandler handler, [AsParameters] GetCurrencyToolListQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.CurrencyToolList(query, dispatcher, cancellationToken))
                     .WithName("Currency Tool List")
                     .WithTags("Tools")
                     .RequireRateLimiting(SettingConstant.RichRateLimiting);
+                    // .CacheOutput(SettingConstant.Tool1mOutputCache);
 
             tool.MapGet("currency-list-without-favs",
                 async ([FromServices] IToolHandler handler, [AsParameters] CurrencyToolWithoutFavsQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>

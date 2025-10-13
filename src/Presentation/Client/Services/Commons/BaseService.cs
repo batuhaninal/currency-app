@@ -125,8 +125,9 @@ namespace Client.Services.Commons
 
                 return new BaseResult<TResponse>((int)response.StatusCode, false, default, "Sunucudan beklenen formatta cevap alınamadı.");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine($"Hata: {ex.Message}, Inner Ex: {ex.InnerException}");
                 return new BaseResult<TResponse>((int)response.StatusCode, false, default, "Sunucu hatalı yanıt verdi.");
             }
         }

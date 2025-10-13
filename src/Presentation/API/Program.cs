@@ -21,10 +21,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 //For .exe
 // Kestrel config’ini appsettings.json’dan oku
-// builder.WebHost.ConfigureKestrel((context, options) =>
-// {
-//     options.Configure(context.Configuration.GetSection("Kestrel"));
-// });
+builder.WebHost.ConfigureKestrel((context, options) =>
+{
+    options.Configure(context.Configuration.GetSection("Kestrel"));
+});
 
 // Add services to the container.
 builder.Services.BindApplicationServices(builder.Configuration);

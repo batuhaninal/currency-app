@@ -1,6 +1,8 @@
+using Application.Abstractions.Commons.Caching;
 using Application.Abstractions.Commons.Results;
 using Application.Abstractions.Repositories.Commons;
 using Application.CQRS.Commons.Interfaces;
+using Application.Models.Constants.CachePrefixes;
 using Application.Models.Constants.Messages;
 using Application.Models.DTOs.Categories;
 using Application.Models.DTOs.Commons.Results;
@@ -16,11 +18,13 @@ namespace Application.CQRS.Commands.Currencies.Add
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<AddCurrencyCommandHandler> _logger;
+        private readonly ICacheService _cacheService;
 
-        public AddCurrencyCommandHandler(IUnitOfWork unitOfWork, ILogger<AddCurrencyCommandHandler> logger)
+        public AddCurrencyCommandHandler(IUnitOfWork unitOfWork, ILogger<AddCurrencyCommandHandler> logger, ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _cacheService = cacheService;
         }
 
         public async Task<IBaseResult> Handle(AddCurrencyCommand command, CancellationToken cancellationToken = default)
@@ -82,6 +86,7 @@ namespace Application.CQRS.Commands.Currencies.Add
                                         await uow.SaveChangesAsync(ct);
                                     }
                                 }
+                                await _cacheService.DeleteAllWithPrefixAsync(CachePrefix.CurrencyPrefix);
                                 CategoryRelationDto? category = await uow.CategoryReadRepository.Table.AsNoTracking().Where(x => x.Id == currency.CategoryId).Select(x => new CategoryRelationDto(x.Id, x.Title)).FirstOrDefaultAsync();
                                 result = new ResultDto(201, true, new CurrencyItemDto(currency.Id, currency.Title, currency.SubTitle, currency.TVCode, currency.XPath, currency.PurchasePrice, currency.SalePrice, currency.IsActive, category));
                             }

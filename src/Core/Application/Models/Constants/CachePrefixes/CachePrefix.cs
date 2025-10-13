@@ -2,44 +2,12 @@
 {
     public static class CachePrefix
     {
-        public static class Categories
-        {
-            public const string Prefix = "categories";
-            public const string All = $"{Prefix}.all";
-            public static string CreatePrefix(string operationName) => string.IsNullOrEmpty(operationName) ? $"{Prefix}.noOperationName" : $"{Prefix}.{operationName}";
-            public static string CreatePaginationPrefix(string operationName, int pageIndex, int pageSize) => $"{Prefix}.{operationName}.pageIndex={pageIndex}.pageSize={pageSize}";
-            public static string GetAllWithPagination(int pageIndex, int pageSize) => $"{All}.pageIndex={pageIndex}.pageSize={pageSize}";
-            public static string GetByParameter(string parameterName, string parameterValue) => $"{Prefix}.getbyid.{parameterName}={parameterValue}";
-        }
-
-        public static class Articles
-        {
-            public const string Prefix = "articles";
-            public const string All = $"{Prefix}.all";
-            public static string CreatePrefix(string operationName) => string.IsNullOrEmpty(operationName) ? $"{Prefix}.noOperationName" : $"{Prefix}.{operationName}";
-            public static string CreatePaginationPrefix(string operationName, int pageIndex, int pageSize) => $"{Prefix}.{operationName}.pageIndex={pageIndex}.pageSize={pageSize}";
-            public static string GetAllWithPagination(int pageIndex, int pageSize) => $"{All}.pageIndex={pageIndex}.pageSize={pageSize}";
-            public static string GetByParameter(string parameterName, string parameterValue) => $"{Prefix}.getbyid.{parameterName}={parameterValue}";
-        }
-
-        public static class Writer
-        {
-            public const string Prefix = "writers";
-            public const string All = $"{Prefix}.all";
-            public static string CreatePrefix(string operationName) => string.IsNullOrEmpty(operationName) ? $"{Prefix}.noOperationName" : $"{Prefix}.{operationName}";
-            public static string CreatePaginationPrefix(string operationName, int pageIndex, int pageSize) => $"{Prefix}.{operationName}.pageIndex={pageIndex}.pageSize={pageSize}";
-            public static string GetAllWithPagination(int pageIndex, int pageSize) => $"{All}.pageIndex={pageIndex}.pageSize={pageSize}";
-            public static string GetByParameter(string parameterName, string parameterValue) => $"{Prefix}.getbyid.{parameterName}={parameterValue}";
-        }
-
-        public static class User
-        {
-            public const string Prefix = "users";
-            public const string All = $"{Prefix}.all";
-            public static string CreatePrefix(string operationName) => string.IsNullOrEmpty(operationName) ? $"{Prefix}.noOperationName" : $"{Prefix}.{operationName}";
-            public static string CreatePaginationPrefix(string operationName, int pageIndex, int pageSize) => $"{Prefix}.{operationName}.pageIndex={pageIndex}.pageSize={pageSize}";
-            public static string GetAllWithPagination(int pageIndex, int pageSize) => $"{All}.pageIndex={pageIndex}.pageSize={pageSize}";
-            public static string GetByParameter(string parameterName, string parameterValue) => $"{Prefix}.getbyid.{parameterName}={parameterValue}";
-        }
+        public const string CategoryPrefix = "categories";
+        public const string CurrencyPrefix = "currencies";
+        public const string UserPrefix = "users";
+        public static string CreatePrefix(string prefix, string operationName) => string.IsNullOrEmpty(operationName) ? $"{prefix}.noOperationName" : $"{prefix}.{operationName}";
+        public static string CreatePaginationPrefix(string prefix, string operationName, int pageIndex, int pageSize) => $"{prefix}.{operationName}.pageIndex={pageIndex}.pageSize={pageSize}";
+        public static string GetAllWithPagination(string prefix, int pageIndex, int pageSize) => $"{prefix}.all.pageIndex={pageIndex}.pageSize={pageSize}";
+        public static string CreateByParameter(string prefix, string operationName, string parameterName, string parameterValue) => $"{prefix}.{operationName}.{parameterName}={parameterValue}";
     }
 }

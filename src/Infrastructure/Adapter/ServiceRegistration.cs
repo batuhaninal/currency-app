@@ -27,21 +27,21 @@ namespace Adapter
             services.AddSingleton(typeof(ILoggerService<>), typeof(LoggerService<>));
 
             services.AddScoped<IUserTokenService, UserTokenService>();
-            // services.AddSingleton<ICacheService>(serviceProvider =>
-            // {
-            //     var redisOptions = new RedisCacheOptions
-            //     {
-            //         ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions
-            //         {
-            //             EndPoints = { { configuration["Redis:Host"]!, int.Parse(configuration["Redis:Port"]!.ToString()) } },
-            //             Password = configuration["Redis:Password"],
-            //             DefaultDatabase = int.Parse(configuration["Redis:DbIndex"]!),
-            //             AbortOnConnectFail = false
-            //         }
-            //     };
+            services.AddSingleton<ICacheService>(serviceProvider =>
+            {
+                var redisOptions = new RedisCacheOptions
+                {
+                    ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions
+                    {
+                        EndPoints = { { configuration["Redis:Host"]!, int.Parse(configuration["Redis:Port"]!.ToString()) } },
+                        Password = configuration["Redis:Password"],
+                        DefaultDatabase = int.Parse(configuration["Redis:DbIndex"]!),
+                        AbortOnConnectFail = false
+                    }
+                };
 
-            //     return new CacheService(redisOptions.ConfigurationOptions);
-            // });
+                return new CacheService(redisOptions.ConfigurationOptions);
+            });
 
             services.AddHttpClient<ITradingViewService, TradingViewService>(cfg =>
             {

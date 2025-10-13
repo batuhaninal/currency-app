@@ -1,7 +1,9 @@
+using Application.Abstractions.Commons.Caching;
 using Application.Abstractions.Commons.Results;
 using Application.Abstractions.Notifiers;
 using Application.Abstractions.Repositories.Commons;
 using Application.CQRS.Commons.Interfaces;
+using Application.Models.Constants.CachePrefixes;
 using Application.Models.Constants.Messages;
 using Application.Models.DTOs.Categories;
 using Application.Models.DTOs.Commons.Results;
@@ -19,12 +21,14 @@ namespace Application.CQRS.Commands.Currencies.UpdateValue
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICurrencyNotifierService _currencyNotifierService;
         private readonly ILogger<UpdateCurrencyValueCommandHandler> _logger;
+        private readonly ICacheService _cacheService;
 
-        public UpdateCurrencyValueCommandHandler(IUnitOfWork unitOfWork, ILogger<UpdateCurrencyValueCommandHandler> logger, ICurrencyNotifierService currencyNotifierService)
+        public UpdateCurrencyValueCommandHandler(IUnitOfWork unitOfWork, ILogger<UpdateCurrencyValueCommandHandler> logger, ICurrencyNotifierService currencyNotifierService, ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _currencyNotifierService = currencyNotifierService;
+            _cacheService = cacheService;
         }
 
         public async Task<IBaseResult> Handle(UpdateCurrencyValueCommand command, CancellationToken cancellationToken = default)
@@ -93,6 +97,7 @@ namespace Application.CQRS.Commands.Currencies.UpdateValue
                                         await uow.SaveChangesAsync(ct);
                                     }
                                 }
+                                await _cacheService.DeleteAllWithPrefixAsync(CachePrefix.CurrencyPrefix);
                                 CategoryRelationDto? category = await uow.CategoryReadRepository.Table.AsNoTracking().Where(x => x.Id == currency.CategoryId).Select(x => new CategoryRelationDto(x.Id, x.Title)).FirstOrDefaultAsync();
                                 result = new ResultDto(200, true, new CurrencyItemDto(currency.Id, currency.Title, currency.SubTitle, currency.TVCode, currency.XPath, currency.PurchasePrice, currency.SalePrice, currency.IsActive, category));
                                 @event = new PriceUpdatedEvent(currency.Id, currency.Title, currency.PurchasePrice, currency.SalePrice);

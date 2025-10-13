@@ -46,6 +46,20 @@ services:
   #       - 5006:8081
   #   networks:
   #       - app-network
+  
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    container_name: currency-app-redis
+    environment:
+        REDIS_PASSWORD: Unr4vel!
+    command: redis-server --save 20 1 --loglevel warning --requirepass Unr4vel!
+    ports:
+      - "6379:6379"
+    volumes:
+      - reddit-data:/var/lib/redis/data
+    networks:
+    - app-network
 
 networks:
   app-network:
@@ -53,3 +67,4 @@ networks:
 
 volumes:
   postgres-template-data:
+  reddit-data:

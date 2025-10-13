@@ -1,6 +1,8 @@
+using Application.Abstractions.Commons.Caching;
 using Application.Abstractions.Commons.Results;
 using Application.Abstractions.Repositories.Commons;
 using Application.CQRS.Commons.Interfaces;
+using Application.Models.Constants.CachePrefixes;
 using Application.Models.DTOs.Categories;
 using Application.Models.DTOs.Commons.Results;
 using Application.Models.DTOs.Currencies;
@@ -12,10 +14,12 @@ namespace Application.CQRS.Commands.Currencies.Update
     public sealed class UpdateCurrencyCommandHandler : ICommandHandler<UpdateCurrencyCommand, IBaseResult>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICacheService _cacheService;
 
-        public UpdateCurrencyCommandHandler(IUnitOfWork unitOfWork)
+        public UpdateCurrencyCommandHandler(IUnitOfWork unitOfWork, ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
+            _cacheService = cacheService;
         }
 
         public async Task<IBaseResult> Handle(UpdateCurrencyCommand command, CancellationToken cancellationToken = default)
@@ -44,6 +48,8 @@ namespace Application.CQRS.Commands.Currencies.Update
                 currency.XPath = command.XPath;
 
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+                await _cacheService.DeleteAllWithPrefixAsync(CachePrefix.CurrencyPrefix);
 
                 CategoryRelationDto? category = await _unitOfWork
                     .CategoryReadRepository

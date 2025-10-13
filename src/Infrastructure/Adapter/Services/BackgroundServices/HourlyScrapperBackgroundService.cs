@@ -1,8 +1,10 @@
+using Application.Abstractions.Commons.Caching;
 using Application.Abstractions.Commons.Logger;
 using Application.Abstractions.Commons.Results;
 using Application.Abstractions.Notifiers;
 using Application.Abstractions.Repositories.Commons;
 using Application.Abstractions.Services.Externals;
+using Application.Models.Constants.CachePrefixes;
 using Application.Models.DTOs.CurrencyHistories;
 using Application.Models.DTOs.Externals;
 using Application.Models.Events;
@@ -20,13 +22,15 @@ namespace Adapter.Services.BackgroundServices
         // private readonly ILogger<HourlyScrapperBackgroundService> _logger;
         private readonly ICurrencyNotifierService _currencyNotifierService;
         private readonly ILoggerService<HourlyScrapperBackgroundService> _logger;
+        private readonly ICacheService _cacheService;
 
-        public HourlyScrapperBackgroundService(IWebScrappingService webScrappingService, IServiceProvider serviceProvider, ILoggerService<HourlyScrapperBackgroundService> logger, ICurrencyNotifierService currencyNotifierService)
+        public HourlyScrapperBackgroundService(IWebScrappingService webScrappingService, IServiceProvider serviceProvider, ILoggerService<HourlyScrapperBackgroundService> logger, ICurrencyNotifierService currencyNotifierService, ICacheService cacheService)
         {
             _webScrappingService = webScrappingService;
             _serviceProvider = serviceProvider;
             _logger = logger;
             _currencyNotifierService = currencyNotifierService;
+            _cacheService = cacheService;
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
@@ -67,6 +71,8 @@ namespace Adapter.Services.BackgroundServices
                             await Task.Delay(1_000, cancellationToken);
                         }
                     }
+
+                    await _cacheService.DeleteAllWithPrefixAsync(CachePrefix.CurrencyPrefix);
 
                     await Task.Delay(1_000 * 60 * 60, cancellationToken);
                     // await Task.Delay(1_000 * 60 * 1, cancellationToken);

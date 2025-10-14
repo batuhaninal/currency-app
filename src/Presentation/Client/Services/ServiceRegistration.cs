@@ -1,4 +1,5 @@
 using Client.Middlewares;
+using Client.Models.Commons;
 using Client.Models.Constants;
 using Client.Services.Assets;
 using Client.Services.Auth;
@@ -13,50 +14,54 @@ namespace Client.Services
 {
     public static class ServiceRegistration
     {
-        public static void BindClientService(this IServiceCollection services)
+        public static void BindClientService(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddHttpContextAccessor();
             services.AddScoped<TokenMiddleware>();
             services.AddScoped<ClientCredentialMiddleware>();
 
+            services.Configure<ServiceApiSetting>(configuration.GetSection("ServiceApiSettings"));
+
+            var serviceApiSetting = configuration.GetSection("ServiceApiSettings").Get<ServiceApiSetting>();
+
             services.AddHttpClient<IAuthService, AuthService>(opt =>
             {
-                opt.BaseAddress = new Uri($"{AppConstants.APIURL}/auth/");
+                opt.BaseAddress = new Uri($"{serviceApiSetting.ApiUrl}/api/auth/");
             }).AddHttpMessageHandler<ClientCredentialMiddleware>();
 
             services.AddHttpClient<ICategoryService, CategoryService>(opt =>
             {
-                opt.BaseAddress = new Uri($"{AppConstants.APIURL}/categories/");
+                opt.BaseAddress = new Uri($"{serviceApiSetting.ApiUrl}/api/categories/");
             }).AddHttpMessageHandler<TokenMiddleware>();
 
             services.AddHttpClient<ICurrencyService, CurrencyService>(opt =>
             {
-                opt.BaseAddress = new Uri($"{AppConstants.APIURL}/currencies/");
+                opt.BaseAddress = new Uri($"{serviceApiSetting.ApiUrl}/api/currencies/");
             }).AddHttpMessageHandler<TokenMiddleware>();
 
             services.AddHttpClient<IToolService, ToolService>(opt =>
             {
-                opt.BaseAddress = new Uri($"{AppConstants.APIURL}/tools/");
+                opt.BaseAddress = new Uri($"{serviceApiSetting.ApiUrl}/api/tools/");
             }).AddHttpMessageHandler<ClientCredentialMiddleware>();
 
             services.AddHttpClient<IAssetService, AssetService>(opt =>
             {
-                opt.BaseAddress = new Uri($"{AppConstants.APIURL}/assets/");
+                opt.BaseAddress = new Uri($"{serviceApiSetting.ApiUrl}/api/assets/");
             }).AddHttpMessageHandler<TokenMiddleware>();
 
             services.AddHttpClient<IUserService, UserService>(opt =>
             {
-                opt.BaseAddress = new Uri($"{AppConstants.APIURL}/users/");
+                opt.BaseAddress = new Uri($"{serviceApiSetting.ApiUrl}/api/users/");
             }).AddHttpMessageHandler<TokenMiddleware>();
 
             services.AddHttpClient<IUserAssetHistoryService, UserAssetHistoryService>(opt =>
             {
-                opt.BaseAddress = new Uri($"{AppConstants.APIURL}/user-asset-histories/");
+                opt.BaseAddress = new Uri($"{serviceApiSetting.ApiUrl}/api/user-asset-histories/");
             }).AddHttpMessageHandler<TokenMiddleware>();
 
             services.AddHttpClient<IUserCurrencyFollowService, UserCurrencyFollowService>(opt =>
             {
-                opt.BaseAddress = new Uri($"{AppConstants.APIURL}/user-currency-follows/");
+                opt.BaseAddress = new Uri($"{serviceApiSetting.ApiUrl}/api/user-currency-follows/");
             }).AddHttpMessageHandler<TokenMiddleware>();
         }
     }

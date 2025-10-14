@@ -17,7 +17,7 @@ builder.Services.AddControllersWithViews(options =>
     options.Filters.Add<BreadcrumbActionFilter>();
 });
 
-builder.Services.BindClientService();
+builder.Services.BindClientService(builder.Configuration);
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(opt =>

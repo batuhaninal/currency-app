@@ -10,6 +10,7 @@ using Application.Abstractions.Commons.Security;
 using Application.Abstractions.Commons.Tokens;
 using Application.Abstractions.Services.Externals;
 using Application.Models.Constants.APIs;
+using Application.Models.Constants.Settings;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +26,12 @@ namespace Adapter
             services.AddSingleton<IHashingService, HashingService>();
             services.AddSingleton<ITokenService, TokenService>();
             services.AddSingleton(typeof(ILoggerService<>), typeof(LoggerService<>));
+
+            services.Configure<ServiceApiSetting>(configuration.GetSection("ServiceApiSettings"));
+
+            var serviceApiSetting = configuration.GetSection("ServiceApiSettings").Get<ServiceApiSetting>();
+
+            ExternalApiUrls.DovizComXAU = serviceApiSetting.DovizCom.Path;
 
             services.AddScoped<IUserTokenService, UserTokenService>();
             services.AddSingleton<ICacheService>(serviceProvider =>
@@ -45,7 +52,7 @@ namespace Adapter
 
             services.AddHttpClient<ITradingViewService, TradingViewService>(cfg =>
             {
-                cfg.BaseAddress = new Uri(ExternalApiUrls.TradingView);
+                cfg.BaseAddress = new Uri(serviceApiSetting.TradingView.Path);
             });
 
             services.AddHttpClient<IWebScrappingService, WebScrappingService>();

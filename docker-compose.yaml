@@ -9,53 +9,61 @@ services:
        POSTGRES_USER: Unravel
        POSTGRES_DB: currency-app-db
     ports:
-      - 5432:5432
+      - 5432:5433
     volumes:
       - postgres-template-data:/var/lib/postgresql/data
     networks:
       - app-network
 
-  # currency.app.api:
-  #   container_name: currency.app.api
-  #   build:
-  #       context: .
-  #       dockerfile: src/Presentation/API/Dockerfile
-  #   restart: on-failure
-  #   environment:
-  #       - ASPNETCORE_ENVIRONMENT=Development
-  #       - "ConnectionStrings:PgSQL=Server=postgre;Port=5432;Database=currency-app-db;User Id=Unravel;Password=Unr4vel!;"
-  #       - "Token:Audience=Unravel"
-  #       - "Token:Issuer=Unravel"
-  #       - "Token:SecurityKey=myubersuberprivatesecuritykey12345!Unr4vel!"
-  #   ports:
-  #       - 5275:8080
-  #   depends_on:
-  #       - postgre
-  #   networks:
-  #       - app-network
+  currency.app.api:
+    container_name: currency.app.api
+    build:
+        context: .
+        dockerfile: src/Presentation/API/Dockerfile
+    restart: on-failure
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - "ConnectionStrings:PgSQL=Server=postgre;Port=5432;Database=currency-app-db;User Id=Unravel;Password=Unr4vel!;"
+        - "Token:Audience=Unravel"
+        - "Token:Issuer=Unravel"
+        - "Token:SecurityKey=myubersuberprivatesecuritykey12345!Unr4vel!"
+        - "Redis:Host=redis"
+        - "Redis:Port=6379"
+        - "Redis:Password=Unr4vel!"
+        - "Redis:DbIndex=1"
+        - "APIKEY:testapikeyforproduction123"
+        - "ServiceApiSettings:TradingView:Path=https://scanner.tradingview.com"
+        - "ServiceApiSettings:DovizCom:Path=https://altin.doviz.com"
+    ports:
+        - 5275:8080
+    depends_on:
+        - postgre
+    networks:
+        - app-network
 
-  # currency.app.mvc:
-  #   container_name: currency.app.mvc
-  #   build:
-  #       context: .
-  #       dockerfile: src/Presentation/Client/Dockerfile
-  #   restart: on-failure
-  #   environment:
-  #       - ASPNETCORE_ENVIRONMENT=Development
-  #   ports:
-  #       - 5006:8081
-  #   networks:
-  #       - app-network
+  currency.app.mvc:
+    container_name: currency.app.mvc
+    build:
+        context: .
+        dockerfile: src/Presentation/Client/Dockerfile
+    restart: on-failure
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - "APIKEY:testapikeyforproduction123"
+        - "ServiceApiSettings:APIUrl=http://currency.app.api:8080"
+    ports:
+        - 5006:8080
+    networks:
+        - app-network
   
   redis:
     image: redis:6.2-alpine
-    restart: always
     container_name: currency-app-redis
     environment:
         REDIS_PASSWORD: Unr4vel!
     command: redis-server --save 20 1 --loglevel warning --requirepass Unr4vel!
     ports:
-      - "6379:6379"
+      - "6379:6380"
     volumes:
       - reddit-data:/var/lib/redis/data
     networks:

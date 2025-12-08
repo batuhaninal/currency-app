@@ -1,7 +1,6 @@
 using System.Net;
 using Application.Abstractions.Commons.Results;
 using Application.Models.DTOs.Commons.Results;
-using Application.Utilities.Exceptions.Commons;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace API.Middlewares

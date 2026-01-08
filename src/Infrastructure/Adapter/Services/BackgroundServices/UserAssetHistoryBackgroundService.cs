@@ -20,23 +20,21 @@ namespace Adapter.Services.BackgroundServices
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
-            _logger.Info("background service started");
+            _logger.Info("background service starting");
             return base.StartAsync(cancellationToken);
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            await Task.Delay(1_000 * 30, stoppingToken);
             while (!stoppingToken.IsCancellationRequested)
             {
                 using (var scope = _serviceProvider.CreateScope())
                 {
                     IUnitOfWork unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-                    DateTime now = DateTime.UtcNow;
 
-                    _logger.Info(now.ToString());
+                    _logger.Info("background service execute starting");
 
-                    _logger.Info("background service execute started");
-
-                    if (DateTime.Now.Hour >= 21 && DateTime.Now.Hour <= 24)
+                    if (DateTime.UtcNow.Hour >= 15)
                     {
                         var userIds = await unitOfWork
                             .UserReadRepository
@@ -53,8 +51,9 @@ namespace Adapter.Services.BackgroundServices
                             await Task.Delay(1_000, stoppingToken);
                         }
 
-                        _logger.Info($"background service execution finished succesfully now going to wait at: {DateTime.UtcNow.AddHours(12)}");
-                        await Task.Delay(1_000 * 60 * 60 * 12, stoppingToken);
+                        _logger.Info($"background service execution finished succesfully now going to wait at: {DateTime.Now.AddHours(10)}");
+                        await Task.Delay(1_000 * 60 * 60 * 10, stoppingToken);
+                        continue;
                     }
 
                     _logger.Info("background service execute finished");

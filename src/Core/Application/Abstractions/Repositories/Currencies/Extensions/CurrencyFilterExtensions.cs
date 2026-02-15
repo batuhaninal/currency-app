@@ -69,7 +69,8 @@ namespace Application.Abstractions.Repositories.Currencies.Extensions
             string normalizedCondition = condition.TrimStart().TrimEnd().ToLower();
 
             return source.Where(s =>
-                s.Title.ToLower().Contains(normalizedCondition)
+                s.Title.ToLower().Contains(normalizedCondition) ||
+                s.CurrencyTags.Any(t=> t.Value.ToLower().Contains(normalizedCondition))
             );
         }
 

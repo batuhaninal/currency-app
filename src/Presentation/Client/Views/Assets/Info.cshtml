@@ -18,7 +18,7 @@
 </div>
 <div class="card-body bg-light">
     <div class="row g-3">
-        <div class="col-md-6"><strong>Adet:</strong> @Model.SelectedAsset.Count</div>
+        <div class="col-md-6"><strong>Adet:</strong> @UIToolHelper.RenderCount(Model.SelectedAsset.Count)</div>
         <div class="col-md-6"><strong>Para Birimi:</strong> @Model.SelectedAsset.Currency?.Title</div>
 
         <hr class="my-2" />
@@ -83,7 +83,7 @@
     </div>
     <div class="card-body">
         <div class="row g-3">
-            <div class="col-md-6"><strong>Toplam Adet:</strong> @Model.Count</div>
+            <div class="col-md-6"><strong>Toplam Adet:</strong> @UIToolHelper.RenderCount(Model.Count)</div>
             <div class="col-md-6"><strong>Para Birimi:</strong> @Model.Currency?.Title</div>
 
             <hr class="my-2" />

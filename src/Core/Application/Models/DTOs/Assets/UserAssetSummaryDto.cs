@@ -7,7 +7,7 @@ namespace Application.Models.DTOs.Assets
 
         }
 
-        public UserAssetSummaryDto(int currencyId, string currencyTitle, int totalCount, decimal currentPurchasePriceTotal, decimal currentSalePriceTotal, decimal purchasedPurchasePriceTotal, decimal purchasedSalePriceTotal, decimal totalPurchasePrice, decimal totalSalePrice)
+        public UserAssetSummaryDto(int currencyId, string currencyTitle, decimal totalCount, decimal currentPurchasePriceTotal, decimal currentSalePriceTotal, decimal purchasedPurchasePriceTotal, decimal purchasedSalePriceTotal, decimal totalPurchasePrice, decimal totalSalePrice)
         {
             CurrencyId = currencyId;
             CurrencyTitle = currencyTitle;
@@ -22,7 +22,7 @@ namespace Application.Models.DTOs.Assets
 
         public int CurrencyId { get; init; }
         public string CurrencyTitle { get; init; } = null!;
-        public int TotalCount { get; init; }
+        public decimal TotalCount { get; init; }
         public decimal CurrentPurchasePriceTotal { get; init; }
         public decimal CurrentSalePriceTotal { get; init; }
         public decimal PurchasedPurchasePriceTotal { get; init; }

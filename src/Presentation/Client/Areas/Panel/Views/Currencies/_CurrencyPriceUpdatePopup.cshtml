@@ -17,12 +17,12 @@
                     <div class="mb-3">
                         <label asp-for="PurchasePrice" class="form-label">Alış Fiyatı</label>
                         <input type="number" class="form-control" id="priceupdate-purchasePrice-popup"
-                            asp-for="PurchasePrice" step="0.01" min="0" max="9999999999999999.99" />
+                            asp-for="PurchasePrice" step="0.00000001" min="0" max="9999999999999999.99999999" />
                     </div>
                     <div class="mb-3">
                         <label asp-for="SalePrice" class="form-label">Satış Fiyatı</label>
                         <input type="number" class="form-control" id="priceupdate-salePrice-popup"
-                            asp-for="SalePrice" step="0.01" min="0" max="9999999999999999.99" />
+                            asp-for="SalePrice" step="0.00000001" min="0" max="9999999999999999.99999999" />
                     </div>
                 </div>
                 <div class="modal-footer">

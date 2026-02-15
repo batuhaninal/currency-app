@@ -26,22 +26,22 @@ namespace Persistence.Configurations.FluentMappings.PostgreSQL
                 c.Property(x => x.OldPurchasePrice)
                     .HasColumnName("old_purchase_price")
                     .IsRequired()
-                    .HasPrecision(18, 2);
+                    .HasPrecision(24, 8);
 
                 c.Property(x => x.NewPurchasePrice)
                     .HasColumnName("new_purchase_price")
                     .IsRequired()
-                    .HasPrecision(18, 2);
+                    .HasPrecision(24, 8);
 
                 c.Property(x => x.OldSalePrice)
                     .HasColumnName("old_sale_price")
                     .IsRequired()
-                    .HasPrecision(18, 2);
+                    .HasPrecision(24, 8);
 
                 c.Property(x => x.NewSalePrice)
                     .HasColumnName("new_sale_price")
                     .IsRequired()
-                    .HasPrecision(18, 2);
+                    .HasPrecision(24, 8);
 
                 c.Property(x=> x.CurrencyId).HasColumnName("currency_id").IsRequired();
 

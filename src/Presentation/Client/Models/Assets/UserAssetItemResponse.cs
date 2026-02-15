@@ -9,7 +9,7 @@ namespace Client.Models.Assets
 
         }
 
-        public UserAssetItemResponse(int assetId, int count, decimal purchasePrice, decimal salePrice, decimal currentPurchasePrice, decimal currentSalePrice, CurrencyRelationResponse? currency, DateOnly purchaseDate, DateTime createdDate, DateTime updatedDate)
+        public UserAssetItemResponse(int assetId, decimal count, decimal purchasePrice, decimal salePrice, decimal currentPurchasePrice, decimal currentSalePrice, CurrencyRelationResponse? currency, DateOnly purchaseDate, DateTime createdDate, DateTime updatedDate)
         {
             AssetId = assetId;
             Count = count;
@@ -24,7 +24,7 @@ namespace Client.Models.Assets
         }
 
         public int AssetId { get; init; }
-        public int Count { get; init; }
+        public decimal Count { get; init; }
         public decimal PurchasePrice { get; init; }
         public decimal SalePrice { get; init; }
         public decimal CurrentPurchasePrice { get; init; }

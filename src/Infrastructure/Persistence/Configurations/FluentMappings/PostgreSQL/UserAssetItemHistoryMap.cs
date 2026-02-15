@@ -24,26 +24,27 @@ namespace Persistence.Configurations.FluentMappings.PostgreSQL
 
                 c.Property(x => x.Count)
                     .HasColumnName("count")
-                    .IsRequired();
+                    .IsRequired()
+                    .HasPrecision(24, 8);
 
-                c.Property(x => x.TotalPurchasePrice).HasColumnName("total_purchase_price").IsRequired().HasPrecision(18, 2);
-                c.Property(x => x.TotalSalePrice).HasColumnName("total_sale_price").IsRequired().HasPrecision(18, 2);
+                c.Property(x => x.TotalPurchasePrice).HasColumnName("total_purchase_price").IsRequired().HasPrecision(24, 8);
+                c.Property(x => x.TotalSalePrice).HasColumnName("total_sale_price").IsRequired().HasPrecision(24, 8);
 
-                c.Property(x => x.ItemAvgPurchasePrice).HasColumnName("item_avg_purchase_price").IsRequired().HasPrecision(18, 2);
-                c.Property(x => x.ItemAvgSalePrice).HasColumnName("item_avg_sale_price").IsRequired().HasPrecision(18, 2);
+                c.Property(x => x.ItemAvgPurchasePrice).HasColumnName("item_avg_purchase_price").IsRequired().HasPrecision(24, 8);
+                c.Property(x => x.ItemAvgSalePrice).HasColumnName("item_avg_sale_price").IsRequired().HasPrecision(24, 8);
 
 
-                c.Property(x => x.TotalCurrentPurchasePrice).HasColumnName("total_current_purchase_price").IsRequired().HasPrecision(18, 2);
-                c.Property(x => x.TotalCurrentSalePrice).HasColumnName("total_current_sale_price").IsRequired().HasPrecision(18, 2);
+                c.Property(x => x.TotalCurrentPurchasePrice).HasColumnName("total_current_purchase_price").IsRequired().HasPrecision(24, 8);
+                c.Property(x => x.TotalCurrentSalePrice).HasColumnName("total_current_sale_price").IsRequired().HasPrecision(24, 8);
 
-                c.Property(x => x.ItemAvgCurrentPurchasePrice).HasColumnName("item_avg_current_purchase_price").IsRequired().HasPrecision(18, 2);
-                c.Property(x => x.ItemAvgCurrentSalePrice).HasColumnName("item_avg_current_sale_price").IsRequired().HasPrecision(18, 2);
+                c.Property(x => x.ItemAvgCurrentPurchasePrice).HasColumnName("item_avg_current_purchase_price").IsRequired().HasPrecision(24, 8);
+                c.Property(x => x.ItemAvgCurrentSalePrice).HasColumnName("item_avg_current_sale_price").IsRequired().HasPrecision(24, 8);
 
-                c.Property(x => x.TotalCostPurchasePrice).HasColumnName("total_cost_purchase_price").IsRequired().HasPrecision(18, 2);
-                c.Property(x => x.TotalCostSalePrice).HasColumnName("total_cost_sale_price").IsRequired().HasPrecision(18, 2);
+                c.Property(x => x.TotalCostPurchasePrice).HasColumnName("total_cost_purchase_price").IsRequired().HasPrecision(24, 8);
+                c.Property(x => x.TotalCostSalePrice).HasColumnName("total_cost_sale_price").IsRequired().HasPrecision(24, 8);
 
-                c.Property(x => x.ItemAvgCostPurchasePrice).HasColumnName("item_avg_cost_purchase_price").IsRequired().HasPrecision(18, 2);
-                c.Property(x => x.ItemAvgCostSalePrice).HasColumnName("item_avg_cost_sale_price").IsRequired().HasPrecision(18, 2);
+                c.Property(x => x.ItemAvgCostPurchasePrice).HasColumnName("item_avg_cost_purchase_price").IsRequired().HasPrecision(24, 8);
+                c.Property(x => x.ItemAvgCostSalePrice).HasColumnName("item_avg_cost_sale_price").IsRequired().HasPrecision(24, 8);
 
                 c.Property(x => x.CurrencyId).HasColumnName("currency_id").IsRequired();
 

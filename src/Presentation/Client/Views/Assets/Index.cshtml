@@ -119,13 +119,13 @@
                 @(item.Currency != null ? item.Currency.Title : "")
               </td>
               <td>
-                @item.Count
+                @UIToolHelper.RenderCount(item.Count)
               </td>
               <td>
                 @if (item.Currency != null)
                 {
                   <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.Currency.PurchasePrice)</b></p>
-                  <p>@string.Format("({0} x {1}) = ", item.Count, UIToolHelper.RenderTL(item.Currency.PurchasePrice))<b
+                  <p>@string.Format("({0} x {1}) = ", UIToolHelper.RenderCount(item.Count), UIToolHelper.RenderTL(item.Currency.PurchasePrice))<b
                       style="color:#228D57;">@UIToolHelper.RenderTL(item.Count * item.Currency.PurchasePrice)</b></p>
                 }
                 else
@@ -137,7 +137,7 @@
                 @if (item.Currency != null)
                 {
                   <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.Currency.SalePrice)</b></p>
-                  <p>@string.Format("({0} x {1}) = ", item.Count, UIToolHelper.RenderTL(item.Currency.SalePrice))<b
+                  <p>@string.Format("({0} x {1}) = ", UIToolHelper.RenderCount(item.Count), UIToolHelper.RenderTL(item.Currency.SalePrice))<b
                       style="color:#228D57;">@UIToolHelper.RenderTL(item.Count * item.Currency.SalePrice)</b></p>
                 }
                 else
@@ -147,22 +147,22 @@
               </td>
               <td>
                 <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.CurrentPurchasePrice)</b></p>
-                <p>@string.Format("({0} x {1}) = ", item.Count, UIToolHelper.RenderTL(item.CurrentPurchasePrice))<b
+                <p>@string.Format("({0} x {1}) = ", UIToolHelper.RenderCount(item.Count), UIToolHelper.RenderTL(item.CurrentPurchasePrice))<b
                     style="color:#228D57;">@UIToolHelper.RenderTL(item.Count * item.CurrentPurchasePrice)</b></p>
               </td>
               <td>
                 <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.CurrentSalePrice)</b></p>
-                <p>@string.Format("({0} x {1}) = ", item.Count, UIToolHelper.RenderTL(item.CurrentSalePrice))<b
+                <p>@string.Format("({0} x {1}) = ", UIToolHelper.RenderCount(item.Count), UIToolHelper.RenderTL(item.CurrentSalePrice))<b
                     style="color:#228D57;">@UIToolHelper.RenderTL(item.Count * item.CurrentSalePrice)</b></p>
               </td>
               <td>
                 <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.PurchasePrice)</b></p>
-                <p>@string.Format("({0} x {1}) = ", item.Count, UIToolHelper.RenderTL(item.PurchasePrice))<b
+                <p>@string.Format("({0} x {1}) = ", UIToolHelper.RenderCount(item.Count), UIToolHelper.RenderTL(item.PurchasePrice))<b
                     style="color:#228D57;">@UIToolHelper.RenderTL(item.Count * item.PurchasePrice)</b></p>
               </td>
               <td>
                 <p><b style="color:#228D57;">@UIToolHelper.RenderTL(item.SalePrice)</b></p>
-                <p>@string.Format("({0} x {1}) = ", item.Count, UIToolHelper.RenderTL(item.SalePrice))<b
+                <p>@string.Format("({0} x {1}) = ", UIToolHelper.RenderCount(item.Count), UIToolHelper.RenderTL(item.SalePrice))<b
                     style="color:#228D57;">@UIToolHelper.RenderTL(item.Count * item.SalePrice)</b></p>
               </td>
               <td>

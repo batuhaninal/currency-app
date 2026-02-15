@@ -4,7 +4,7 @@ namespace Domain.Entities
 {
     public class Asset : BaseEntity
     {
-        public int Count { get; set; }
+        public decimal Count { get; set; }
         public decimal PurchasePrice { get; set; }
         public decimal SalePrice { get; set; }
         public decimal CurrentPurchasePrice { get; set; }

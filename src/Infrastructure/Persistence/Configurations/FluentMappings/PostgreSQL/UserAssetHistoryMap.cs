@@ -22,14 +22,14 @@ namespace Persistence.Configurations.FluentMappings.PostgreSQL
 
                 c.Property(x => x.Date).HasColumnName("date").IsRequired();
 
-                c.Property(x => x.TotalPurchasePrice).HasColumnName("total_purchase_price").IsRequired().HasPrecision(18, 2);
-                c.Property(x => x.TotalSalePrice).HasColumnName("total_sale_price").IsRequired().HasPrecision(18, 2);
+                c.Property(x => x.TotalPurchasePrice).HasColumnName("total_purchase_price").IsRequired().HasPrecision(24, 8);
+                c.Property(x => x.TotalSalePrice).HasColumnName("total_sale_price").IsRequired().HasPrecision(24, 8);
 
-                c.Property(x => x.TotalCurrentPurchasePrice).HasColumnName("total_current_purchase_price").IsRequired().HasPrecision(18, 2);
-                c.Property(x => x.TotalCurrentSalePrice).HasColumnName("total_current_sale_price").IsRequired().HasPrecision(18, 2);
+                c.Property(x => x.TotalCurrentPurchasePrice).HasColumnName("total_current_purchase_price").IsRequired().HasPrecision(24, 8);
+                c.Property(x => x.TotalCurrentSalePrice).HasColumnName("total_current_sale_price").IsRequired().HasPrecision(24, 8);
 
-                c.Property(x => x.TotalCostPurchasePrice).HasColumnName("total_cost_purchase_price").IsRequired().HasPrecision(18, 2);
-                c.Property(x => x.TotalCostSalePrice).HasColumnName("total_cost_sale_price").IsRequired().HasPrecision(18, 2);
+                c.Property(x => x.TotalCostPurchasePrice).HasColumnName("total_cost_purchase_price").IsRequired().HasPrecision(24, 8);
+                c.Property(x => x.TotalCostSalePrice).HasColumnName("total_cost_sale_price").IsRequired().HasPrecision(24, 8);
 
                 c.Property(x => x.UserId).HasColumnName("user_id").IsRequired();
 

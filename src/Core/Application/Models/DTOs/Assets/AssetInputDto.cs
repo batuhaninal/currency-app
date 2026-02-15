@@ -9,7 +9,7 @@ namespace Application.Models.DTOs.Assets
             
         }
 
-        public AssetInputDto(int count, decimal purchaseValue, decimal currentValue, int currencyId, DateOnly purchaseDate, int userId)
+        public AssetInputDto(decimal count, decimal purchaseValue, decimal currentValue, int currencyId, DateOnly purchaseDate, int userId)
         {
             Count = count;
             PurchaseValue = purchaseValue;
@@ -20,7 +20,7 @@ namespace Application.Models.DTOs.Assets
             IsActive = true;
         }
 
-        public int Count { get; init; }
+        public decimal Count { get; init; }
         public decimal PurchaseValue { get; init; }
         [JsonIgnore]
         public decimal CurrentValue { get; init; }

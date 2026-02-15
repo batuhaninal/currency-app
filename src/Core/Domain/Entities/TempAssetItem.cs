@@ -8,7 +8,7 @@ namespace Domain.Entities
         public virtual TempAsset? TempAsset { get; set; }
         public int CurrencyId { get; set; }
         public virtual Currency? Currency { get; set; }
-        public int Count { get; set; }
+        public decimal Count { get; set; }
         public decimal CurrentPurchasePrice { get; set; }
         public decimal CurrentSalePrice { get; set; }
         public decimal? PurchasePrice { get; set; }

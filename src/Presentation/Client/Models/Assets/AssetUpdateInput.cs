@@ -7,7 +7,7 @@ namespace Client.Models.Assets
 
         }
 
-        public AssetUpdateInput(int count, decimal purchasePrice, decimal salePrice, DateOnly purchaseDate)
+        public AssetUpdateInput(decimal count, decimal purchasePrice, decimal salePrice, DateOnly purchaseDate)
         {
             Count = count;
             PurchasePrice = purchasePrice;
@@ -15,7 +15,7 @@ namespace Client.Models.Assets
             PurchaseDate = purchaseDate;
         }
 
-        public int Count { get; init; }
+        public decimal Count { get; init; }
         public decimal PurchasePrice { get; init; }
         public decimal SalePrice { get; init; }
         public DateOnly PurchaseDate { get; set; }

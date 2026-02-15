@@ -7,7 +7,7 @@ namespace Client.Models.Assets
             PurchaseDate = DateOnly.FromDateTime(DateTime.Now);
         }
 
-        public AssetAddInput(int currencyId, int count, decimal purchasePrice, decimal salePrice, DateOnly purchaseDate)
+        public AssetAddInput(int currencyId, decimal count, decimal purchasePrice, decimal salePrice, DateOnly purchaseDate)
         {
             CurrencyId = currencyId;
             Count = count;
@@ -17,7 +17,7 @@ namespace Client.Models.Assets
         }
 
         public int CurrencyId { get; init; }
-        public int Count { get; init; }
+        public decimal Count { get; init; }
         public decimal PurchasePrice { get; init; }
         public decimal SalePrice { get; init; }
         public DateOnly PurchaseDate { get; init; }

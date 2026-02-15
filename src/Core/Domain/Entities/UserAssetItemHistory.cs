@@ -8,7 +8,7 @@ namespace Domain.Entities
         public virtual UserAssetHistory? UserAssetHistory { get; set; }
         public int CurrencyId { get; set; }
         public virtual Currency? Currency { get; set; }
-        public int Count { get; set; }
+        public decimal Count { get; set; }
         public DateOnly Date { get; set; }
 
         public decimal TotalPurchasePrice { get; set; }

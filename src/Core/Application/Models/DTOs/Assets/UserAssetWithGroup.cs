@@ -11,7 +11,7 @@ namespace Application.Models.DTOs.Assets
 
         }
 
-        public UserAssetWithGroupDto(int currencyId, int count, CurrencyRelationDto? currency, decimal totalSaleValue, decimal totalPurchaseValue, decimal totalCurrentSaleValue, decimal totalCurrentPurchaseValue)
+        public UserAssetWithGroupDto(int currencyId, decimal count, CurrencyRelationDto? currency, decimal totalSaleValue, decimal totalPurchaseValue, decimal totalCurrentSaleValue, decimal totalCurrentPurchaseValue)
         {
             CurrencyId = currencyId;
             Count = count;
@@ -23,7 +23,7 @@ namespace Application.Models.DTOs.Assets
         }
 
         public int CurrencyId { get; init; }
-        public int Count { get; init; }
+        public decimal Count { get; init; }
         public CurrencyRelationDto? Currency { get; set; }
         public decimal TotalSaleValue { get; init; }
         public decimal TotalPurchaseValue { get; set; }

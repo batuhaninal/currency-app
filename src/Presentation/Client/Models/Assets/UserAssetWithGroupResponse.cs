@@ -9,7 +9,7 @@ namespace Client.Models.Assets
 
         }
 
-        public UserAssetWithGroupResponse(int currencyId, int count, CurrencyRelationResponse? currency, decimal totalSaleValue, decimal totalPurchaseValue, decimal totalCurrentSaleValue, decimal totalCurrentPurchaseValue, List<CurrencyHistoryItemResponse>? currencyHistories)
+        public UserAssetWithGroupResponse(int currencyId, decimal count, CurrencyRelationResponse? currency, decimal totalSaleValue, decimal totalPurchaseValue, decimal totalCurrentSaleValue, decimal totalCurrentPurchaseValue, List<CurrencyHistoryItemResponse>? currencyHistories)
         {
             CurrencyId = currencyId;
             Count = count;
@@ -22,7 +22,7 @@ namespace Client.Models.Assets
         }
 
         public int CurrencyId { get; init; }
-        public int Count { get; init; }
+        public decimal Count { get; init; }
         public CurrencyRelationResponse? Currency { get; set; }
         public decimal TotalSaleValue { get; init; }
         public decimal TotalPurchaseValue { get; set; }

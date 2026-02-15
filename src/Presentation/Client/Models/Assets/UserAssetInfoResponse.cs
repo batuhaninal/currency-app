@@ -9,7 +9,7 @@ namespace Client.Models.Assets
             SelectedAsset = new();
         }
         
-        public UserAssetInfoResponse(int currencyId, int count, CurrencyRelationResponse? currency, decimal totalSaleValue, decimal totalPurchaseValue, decimal totalCurrentSaleValue, decimal totalCurrentPurchaseValue)
+        public UserAssetInfoResponse(int currencyId, decimal count, CurrencyRelationResponse? currency, decimal totalSaleValue, decimal totalPurchaseValue, decimal totalCurrentSaleValue, decimal totalCurrentPurchaseValue)
         {
             CurrencyId = currencyId;
             Count = count;
@@ -21,7 +21,7 @@ namespace Client.Models.Assets
         }
 
         public int CurrencyId { get; init; }
-        public int Count { get; init; }
+        public decimal Count { get; init; }
         public CurrencyRelationResponse? Currency { get; set; }
         public decimal TotalSaleValue { get; init; }
         public decimal TotalPurchaseValue { get; set; }

@@ -11,7 +11,7 @@ namespace Application.Models.DTOs.Assets
             
         }
 
-        public AssetInfoDto(int assetId, int count, decimal purchasePrice, decimal salePrice, decimal currentPurchasePrice, decimal currentSalePrice, DateOnly purchaseDate, DateTime createdDate, DateTime updatedDate, bool isActive, CurrencyRelationDto? currency = null, UserRelationDto? user = null)
+        public AssetInfoDto(int assetId, decimal count, decimal purchasePrice, decimal salePrice, decimal currentPurchasePrice, decimal currentSalePrice, DateOnly purchaseDate, DateTime createdDate, DateTime updatedDate, bool isActive, CurrencyRelationDto? currency = null, UserRelationDto? user = null)
         {
             AssetId = assetId;
             Count = count;
@@ -28,7 +28,7 @@ namespace Application.Models.DTOs.Assets
         }
 
         public int AssetId { get; init; }
-        public int Count { get; init; }
+        public decimal Count { get; init; }
         public decimal PurchasePrice { get; init; }
         public decimal SalePrice { get; init; }
         public decimal CurrentPurchasePrice { get; init; }

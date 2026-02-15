@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Persistence.Contexts;
@@ -11,9 +12,11 @@ using Persistence.Contexts;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(CurrencyContext))]
-    partial class CurrencyContextModelSnapshot : ModelSnapshot
+    [Migration("20260215160810_precision_mig")]
+    partial class precision_mig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,8 +35,8 @@ namespace Persistence.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Count")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("count");
 
                     b.Property<DateTime>("CreatedDate")
@@ -45,13 +48,13 @@ namespace Persistence.Migrations
                         .HasColumnName("currency_id");
 
                     b.Property<decimal>("CurrentPurchasePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("current_purchase_price");
 
                     b.Property<decimal>("CurrentSalePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("current_sale_price");
 
                     b.Property<bool>("IsActive")
@@ -63,13 +66,13 @@ namespace Persistence.Migrations
                         .HasColumnName("purchase_date");
 
                     b.Property<decimal>("PurchasePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("purchase_price");
 
                     b.Property<decimal>("SalePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("sale_price");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -143,13 +146,13 @@ namespace Persistence.Migrations
                         .HasColumnName("is_active");
 
                     b.Property<decimal>("PurchasePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("purchase_price");
 
                     b.Property<decimal>("SalePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("sale_price");
 
                     b.Property<string>("SubTitle")
@@ -210,23 +213,23 @@ namespace Persistence.Migrations
                         .HasColumnName("is_active");
 
                     b.Property<decimal>("NewPurchasePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("new_purchase_price");
 
                     b.Property<decimal>("NewSalePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("new_sale_price");
 
                     b.Property<decimal>("OldPurchasePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("old_purchase_price");
 
                     b.Property<decimal>("OldSalePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("old_sale_price");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -418,33 +421,33 @@ namespace Persistence.Migrations
                         .HasColumnName("is_active");
 
                     b.Property<decimal>("TotalCostPurchasePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("total_cost_purchase_price");
 
                     b.Property<decimal>("TotalCostSalePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("total_cost_sale_price");
 
                     b.Property<decimal>("TotalCurrentPurchasePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("total_current_purchase_price");
 
                     b.Property<decimal>("TotalCurrentSalePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("total_current_sale_price");
 
                     b.Property<decimal>("TotalPurchasePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("total_purchase_price");
 
                     b.Property<decimal>("TotalSalePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("total_sale_price");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -472,8 +475,8 @@ namespace Persistence.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Count")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("count");
 
                     b.Property<DateTime>("CreatedDate")
@@ -493,63 +496,63 @@ namespace Persistence.Migrations
                         .HasColumnName("is_active");
 
                     b.Property<decimal>("ItemAvgCostPurchasePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("item_avg_cost_purchase_price");
 
                     b.Property<decimal>("ItemAvgCostSalePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("item_avg_cost_sale_price");
 
                     b.Property<decimal>("ItemAvgCurrentPurchasePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("item_avg_current_purchase_price");
 
                     b.Property<decimal>("ItemAvgCurrentSalePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("item_avg_current_sale_price");
 
                     b.Property<decimal>("ItemAvgPurchasePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("item_avg_purchase_price");
 
                     b.Property<decimal>("ItemAvgSalePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("item_avg_sale_price");
 
                     b.Property<decimal>("TotalCostPurchasePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("total_cost_purchase_price");
 
                     b.Property<decimal>("TotalCostSalePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("total_cost_sale_price");
 
                     b.Property<decimal>("TotalCurrentPurchasePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("total_current_purchase_price");
 
                     b.Property<decimal>("TotalCurrentSalePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("total_current_sale_price");
 
                     b.Property<decimal>("TotalPurchasePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("total_purchase_price");
 
                     b.Property<decimal>("TotalSalePrice")
-                        .HasPrecision(24, 8)
-                        .HasColumnType("numeric(24,8)")
+                        .HasPrecision(18, 8)
+                        .HasColumnType("numeric(18,8)")
                         .HasColumnName("total_sale_price");
 
                     b.Property<DateTime>("UpdatedDate")

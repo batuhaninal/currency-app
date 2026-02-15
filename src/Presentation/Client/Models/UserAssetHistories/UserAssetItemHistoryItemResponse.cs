@@ -9,7 +9,7 @@ namespace Client.Models.UserAssetHistories
             Currency = new();
         }
 
-        public UserAssetItemHistoryItemResponse(int userAssetItemHistoryId, CurrencyPriceInfoResponse currency, int count, DateOnly date, decimal totalPurchasePrice, decimal totalSalePrice, decimal itemAvgPurchasePrice, decimal itemAvgSalePrice, decimal totalCurrentPurchasePrice, decimal totalCurrentSalePrice, decimal itemAvgCurrentPurchasePrice, decimal itemAvgCurrentSalePrice, decimal totalCostPurchasePrice, decimal totalCostSalePrice, decimal itemAvgCostPurchasePrice, decimal itemAvgCostSalePrice, DateTime createdDate)
+        public UserAssetItemHistoryItemResponse(int userAssetItemHistoryId, CurrencyPriceInfoResponse currency, decimal count, DateOnly date, decimal totalPurchasePrice, decimal totalSalePrice, decimal itemAvgPurchasePrice, decimal itemAvgSalePrice, decimal totalCurrentPurchasePrice, decimal totalCurrentSalePrice, decimal itemAvgCurrentPurchasePrice, decimal itemAvgCurrentSalePrice, decimal totalCostPurchasePrice, decimal totalCostSalePrice, decimal itemAvgCostPurchasePrice, decimal itemAvgCostSalePrice, DateTime createdDate)
         {
             UserAssetItemHistoryId = userAssetItemHistoryId;
             Currency = currency;
@@ -32,7 +32,7 @@ namespace Client.Models.UserAssetHistories
 
         public int UserAssetItemHistoryId { get; init; }
         public CurrencyPriceInfoResponse Currency { get; init; } = null!;
-        public int Count { get; init; }
+        public decimal Count { get; init; }
         public DateOnly Date { get; init; }
 
         public decimal TotalPurchasePrice { get; init; }

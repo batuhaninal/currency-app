@@ -10,7 +10,7 @@ namespace Application.Models.DTOs.Assets
 
         }
 
-        public AssetItemDto(int assetId, int count, decimal purchaseValue, decimal currentValue, DateOnly purchaseDate, bool isActive, CurrencyRelationDto? currency = null)
+        public AssetItemDto(int assetId, decimal count, decimal purchaseValue, decimal currentValue, DateOnly purchaseDate, bool isActive, CurrencyRelationDto? currency = null)
         {
             AssetId = assetId;
             Count = count;
@@ -22,7 +22,7 @@ namespace Application.Models.DTOs.Assets
         }
 
         public int AssetId { get; init; }
-        public int Count { get; init; }
+        public decimal Count { get; init; }
         public decimal PurchaseValue { get; init; }
         public decimal CurrentValue { get; init; }
         public CurrencyRelationDto Currency { get; init; }

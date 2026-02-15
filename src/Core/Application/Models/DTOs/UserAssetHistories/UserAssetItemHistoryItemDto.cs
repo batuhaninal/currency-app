@@ -10,7 +10,7 @@ namespace Application.Models.DTOs.UserAssetHistories
 
         }
 
-        public UserAssetItemHistoryItemDto(int userAssetItemHistoryId, CurrencyPriceInfoDto? currency, int count, DateOnly date, decimal totalPurchasePrice, decimal totalSalePrice, decimal itemAvgPurchasePrice, decimal itemAvgSalePrice, decimal totalCurrentPurchasePrice, decimal totalCurrentSalePrice, decimal itemAvgCurrentPurchasePrice, decimal itemAvgCurrentSalePrice, decimal totalCostPurchasePrice, decimal totalCostSalePrice, decimal itemAvgCostPurchasePrice, decimal itemAvgCostSalePrice, DateTime createdDate)
+        public UserAssetItemHistoryItemDto(int userAssetItemHistoryId, CurrencyPriceInfoDto? currency, decimal count, DateOnly date, decimal totalPurchasePrice, decimal totalSalePrice, decimal itemAvgPurchasePrice, decimal itemAvgSalePrice, decimal totalCurrentPurchasePrice, decimal totalCurrentSalePrice, decimal itemAvgCurrentPurchasePrice, decimal itemAvgCurrentSalePrice, decimal totalCostPurchasePrice, decimal totalCostSalePrice, decimal itemAvgCostPurchasePrice, decimal itemAvgCostSalePrice, DateTime createdDate)
         {
             UserAssetItemHistoryId = userAssetItemHistoryId;
             Currency = currency ?? new CurrencyPriceInfoDto(0, ErrorMessage.PASSIVEorDELETED, null, 0, 0);
@@ -33,7 +33,7 @@ namespace Application.Models.DTOs.UserAssetHistories
 
         public int UserAssetItemHistoryId { get; init; }
         public CurrencyPriceInfoDto? Currency { get; init; }
-        public int Count { get; init; }
+        public decimal Count { get; init; }
         public DateOnly Date { get; init; }
 
         public decimal TotalPurchasePrice { get; init; }

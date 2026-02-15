@@ -40,8 +40,8 @@ namespace Persistence.Configurations.FluentMappings.PostgreSQL
                    .IsRequired(false)
                    .HasMaxLength(50);
 
-                c.Property(x => x.PurchasePrice).HasColumnName("purchase_price").IsRequired().HasPrecision(18, 2);
-                c.Property(x => x.SalePrice).HasColumnName("sale_price").IsRequired().HasPrecision(18, 2);
+                c.Property(x => x.PurchasePrice).HasColumnName("purchase_price").IsRequired().HasPrecision(24, 8);
+                c.Property(x => x.SalePrice).HasColumnName("sale_price").IsRequired().HasPrecision(24, 8);
 
                 c.Property(x => x.CategoryId).HasColumnName("category_id").IsRequired();
 

@@ -22,13 +22,14 @@ namespace Persistence.Configurations.FluentMappings.PostgreSQL
 
                 c.Property(x => x.Count)
                     .HasColumnName("count")
-                    .IsRequired();
+                    .IsRequired()
+                    .HasPrecision(24, 8);
 
-                c.Property(x => x.PurchasePrice).HasColumnName("purchase_price").IsRequired().HasPrecision(18, 2);
-                c.Property(x => x.CurrentPurchasePrice).HasColumnName("current_purchase_price").IsRequired().HasPrecision(18, 2);
+                c.Property(x => x.PurchasePrice).HasColumnName("purchase_price").IsRequired().HasPrecision(24, 8);
+                c.Property(x => x.CurrentPurchasePrice).HasColumnName("current_purchase_price").IsRequired().HasPrecision(24, 8);
 
-                c.Property(x => x.SalePrice).HasColumnName("sale_price").IsRequired().HasPrecision(18, 2);
-                c.Property(x => x.CurrentSalePrice).HasColumnName("current_sale_price").IsRequired().HasPrecision(18, 2);
+                c.Property(x => x.SalePrice).HasColumnName("sale_price").IsRequired().HasPrecision(24, 8);
+                c.Property(x => x.CurrentSalePrice).HasColumnName("current_sale_price").IsRequired().HasPrecision(24, 8);
 
                 c.Property(x => x.CurrencyId).HasColumnName("currency_id").IsRequired();
 

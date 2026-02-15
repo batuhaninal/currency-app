@@ -34,7 +34,7 @@
                 <!--begin::Body-->
                 <div class="card-body">
                     <ul class="list-unstyled">
-                        <li><strong>Adet: </strong>@item.Count</li>
+                        <li><strong>Adet: </strong>@UIToolHelper.RenderCount(item.Count)</li>
                         <li><strong>Satin Alindigi Alis Toplam Deger: </strong><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalPurchaseValue)</b></li>
                         <li><strong>Satin Alindigi Satis Toplam Deger: </strong><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalSaleValue)</b></li>
                         <li><strong>Eklendiği Tarihteki Alış Bakiyesi: </strong><b style="color:#228D57;">@UIToolHelper.RenderTL(item.TotalCurrentPurchaseValue)</b></li>

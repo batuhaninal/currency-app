@@ -31,7 +31,7 @@
                                 data-available="@asset.Count">
                                 <td>@asset.Title</td>
                                 <td>@asset.SubTitle</td>
-                                <td>@asset.Count</td>
+                                <td>@UIToolHelper.RenderCount(asset.Count)</td>
                                 <td><b style="color:#228D57;">@UIToolHelper.RenderTL(asset.PurchasePrice)</b></td>
                                 <td><b style="color:#228D57;">@UIToolHelper.RenderTL(asset.SalePrice)</b></td>
                                 <td>

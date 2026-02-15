@@ -12,7 +12,7 @@ namespace Application.CQRS.Commands.Assets.AddAsset
 
         }
 
-        public AddAssetCommand(int currencyId, int count, decimal purchasePrice, decimal salePrice, DateOnly purchaseDate)
+        public AddAssetCommand(int currencyId, decimal count, decimal purchasePrice, decimal salePrice, DateOnly purchaseDate)
         {
             CurrencyId = currencyId;
             Count = count;
@@ -22,7 +22,7 @@ namespace Application.CQRS.Commands.Assets.AddAsset
         }
 
         public int CurrencyId { get; init; }
-        public int Count { get; init; }
+        public decimal Count { get; init; }
         public decimal PurchasePrice { get; init; }
         public decimal SalePrice { get; init; }
         public DateOnly PurchaseDate { get; init; }

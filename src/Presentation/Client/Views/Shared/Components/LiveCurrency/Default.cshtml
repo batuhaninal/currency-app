@@ -11,12 +11,12 @@
             <div class="info-box-content">
                 <p class="text-muted mb-1">Alış Fiyatı</p>
                 <h4 class="text-success fw-bold">
-                    <span id="currency-purchase-@Model.CurrencyId">@Model.PurchasePrice</span> ₺
+                    <span id="currency-purchase-@Model.CurrencyId">@UIToolHelper.RenderTL(Model.PurchasePrice)</span>
                 </h4>
 
                 <p class="text-muted mt-3 mb-1">Satış Fiyatı</p>
                 <h4 class="text-danger fw-bold">
-                    <span id="currency-sale-@Model.CurrencyId">@Model.SalePrice</span> ₺
+                    <span id="currency-sale-@Model.CurrencyId">@UIToolHelper.RenderTL(Model.SalePrice)</span>
                 </h4>
             </div>
         </div>

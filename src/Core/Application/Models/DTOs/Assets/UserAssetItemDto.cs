@@ -10,7 +10,7 @@ namespace Application.Models.DTOs.Assets
 
         }
 
-        public UserAssetItemDto(int assetId, int count, decimal purchasePrice, decimal salePrice, decimal currentPurchasePrice, decimal currentSalePrice, CurrencyRelationDto? currency, DateOnly purchaseDate, DateTime createdDate, DateTime updatedDate)
+        public UserAssetItemDto(int assetId, decimal count, decimal purchasePrice, decimal salePrice, decimal currentPurchasePrice, decimal currentSalePrice, CurrencyRelationDto? currency, DateOnly purchaseDate, DateTime createdDate, DateTime updatedDate)
         {
             string message = ErrorMessage.PASSIVEorDELETED;
             AssetId = assetId;
@@ -28,7 +28,7 @@ namespace Application.Models.DTOs.Assets
         }
 
         public int AssetId { get; init; }
-        public int Count { get; init; }
+        public decimal Count { get; init; }
         public decimal PurchasePrice { get; init; }
         public decimal SalePrice { get; init; }
         public decimal CurrentPurchasePrice { get; init; }

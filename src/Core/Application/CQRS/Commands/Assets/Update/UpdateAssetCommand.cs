@@ -12,7 +12,7 @@ namespace Application.CQRS.Commands.Assets.Update
 
         }
 
-        public UpdateAssetCommand(int count, decimal purchasePrice, decimal salePrice, DateOnly purchaseDate)
+        public UpdateAssetCommand(decimal count, decimal purchasePrice, decimal salePrice, DateOnly purchaseDate)
         {
             Count = count;
             PurchasePrice = purchasePrice;
@@ -22,7 +22,7 @@ namespace Application.CQRS.Commands.Assets.Update
 
         [JsonIgnore]
         public int AssetId { get; set; }
-        public int Count { get; init; }
+        public decimal Count { get; init; }
         public decimal PurchasePrice { get; init; }
         public decimal SalePrice { get; init; }
         public DateOnly PurchaseDate { get; init; }

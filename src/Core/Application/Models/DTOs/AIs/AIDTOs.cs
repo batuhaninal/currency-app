@@ -10,4 +10,21 @@ namespace Application.Models.DTOs.AIs
         public string? AssetName { get; set; }
         public decimal? Amount { get; set; }
     }
+
+    public class AIRequest
+    {
+        public AIRequest()
+        {
+            
+        }
+
+        public AIRequest(int userId, string message)
+        {
+            UserId = userId;
+            Message = message;
+        }
+
+        public int UserId { get; init; }
+        public string Message { get; init; } = null!;
+    }
 }

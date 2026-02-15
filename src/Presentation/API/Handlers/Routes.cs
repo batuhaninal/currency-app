@@ -51,6 +51,7 @@ using Application.CQRS.Queries.UserCurrencyFollows.List;
 using Application.CQRS.Queries.UserCurrencyFollows.UserCurrencyFavList;
 using Application.Models.Constants.Roles;
 using Application.Models.Constants.Settings;
+using Application.Models.DTOs.AIs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 
@@ -500,7 +501,7 @@ namespace API.Handlers
             var aiHandlers = api.MapGroup("ai");
 
             aiHandlers.MapPost("parse",
-                async ([FromServices] IAIHandler handler, [FromBody] string message, [FromServices] IAiService service, CancellationToken cancellationToken) => await handler.Parse(message, service, cancellationToken))
+                async ([FromServices] IAIHandler handler,[FromBody] AIRequest message, [FromServices] IAIOrchestrator orchestrator, CancellationToken cancellationToken) => await handler.Parse(message.Message, message.UserId, orchestrator, cancellationToken))
                 .WithName("AI Parser")
                 .WithTags("AIs")
                 .RequireRateLimiting(SettingConstant.PerUserRateLimiting);

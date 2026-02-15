@@ -5,6 +5,6 @@ namespace Application.Abstractions.Handlers
 {
     public interface IAIHandler
     {
-        Task<IResult> Parse(string message, IAiService service, CancellationToken cancellationToken);
+        Task<IResult> Parse(string message, int userId, IAIOrchestrator orchestrator, CancellationToken cancellationToken);
     }
 }

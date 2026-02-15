@@ -5,11 +5,11 @@ namespace API.Handlers.v1
 {
     public sealed class AIHandler : IAIHandler
     {
-        public async Task<IResult> Parse(string message, IAiService service, CancellationToken cancellationToken)
+        public async Task<IResult> Parse(string message, int userId, IAIOrchestrator orchestrator, CancellationToken cancellationToken)
         {
-            var intent = await service.ParseAsync(message, cancellationToken);
+            var result = await orchestrator.ProcessAsync(message, userId, cancellationToken);
 
-            return Results.Ok(intent);
+            return Results.Json(result, statusCode: result.StatusCode);
         }
     }
 }

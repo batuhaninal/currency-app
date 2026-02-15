@@ -61,9 +61,15 @@ namespace Adapter
                 opt.BaseAddress = new Uri(serviceApiSetting.PHI3Mini.Path);
             });
 
-            services.AddHostedService<HourlyCurrencyBackgroundService>();
-            services.AddHostedService<HourlyScrapperBackgroundService>();
-            services.AddHostedService<UserAssetHistoryBackgroundService>();
+            // services.AddHostedService<HourlyCurrencyBackgroundService>();
+            // services.AddHostedService<HourlyScrapperBackgroundService>();
+            // services.AddHostedService<UserAssetHistoryBackgroundService>();
+
+            services.AddScoped<IAIExecutor, AIExecutor>();
+            services.AddScoped<IAIOrchestrator, AIOrchestrator>();
+
+            services.AddScoped<IAITagHandler, AddAssetTagHandler>();
+            services.AddScoped<IAITagHandler, DeleteAssetHandler>();
         }
     }
 }

@@ -33,11 +33,13 @@ namespace Adapter.Services.Externals
             if(intent.Amount is null || intent.Amount <= 0)
                 return new ResultDto(400, false, null, "Amount must be greater than zero");
 
+            string normalised = intent.AssetName.TrimStart().TrimEnd().ToLower();
+
             int currencyId = await _unitOfWork.
                 CurrencyTagReadRepository.
                 Table.
                 AsNoTracking().
-                Where(x=> x.Value.ToLower() == intent.AssetName.TrimStart().TrimEnd().ToLower()).
+                Where(x=> x.Value.ToLower() == normalised).
                 Select(x=> x.CurrencyId).
                 FirstOrDefaultAsync(cancellationToken);
 

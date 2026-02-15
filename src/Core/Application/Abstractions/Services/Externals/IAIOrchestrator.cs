@@ -4,6 +4,6 @@ namespace Application.Abstractions.Services.Externals
 {
     public interface IAIOrchestrator
     {
-        Task<IBaseResult> HandleAsync(string userMessage, int userId);
+        Task<IBaseResult> ProcessAsync(string userInput, int userId, CancellationToken cancellationToken = default);
     }
 }

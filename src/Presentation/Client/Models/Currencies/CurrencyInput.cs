@@ -28,4 +28,27 @@ namespace Client.Models.Currencies
         public int CategoryId { get; init; }
         public bool IsActive { get; init; }
     }
+
+    public sealed record CurrencyTagInput
+    {
+        public CurrencyTagInput()
+        {
+
+        }
+
+        public CurrencyTagInput(int currencyId, string value)
+        {
+            CurrencyId = currencyId;
+            Value = value;
+        }
+
+
+        public CurrencyTagInput(int currencyId)
+        {
+            CurrencyId = currencyId;
+        }
+        public int CurrencyId { get; init; }
+
+        public string Value { get; init; } = null!;
+    }
 }

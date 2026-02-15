@@ -22,6 +22,7 @@ namespace Persistence.Contexts
         public DbSet<UserAssetHistory> UserAssetHistories { get; set; } = null!;
         public DbSet<UserAssetItemHistory> UserAssetItemHistories { get; set; } = null!;
         public DbSet<UserCurrencyFollow> UserCurrencyFollows { get; set; } = null!;
+        public DbSet<CurrencyTag> CurrencyTags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,6 +36,7 @@ namespace Persistence.Contexts
             modelBuilder.ConfigureUserAssetHistoryMap();
             modelBuilder.ConfigureUserAssetItemHistoryMap();
             modelBuilder.ConfigureUserCurrencyFollowMap();
+            modelBuilder.ConfigureCurrencyTagMap();
 
             base.OnModelCreating(modelBuilder);
         }

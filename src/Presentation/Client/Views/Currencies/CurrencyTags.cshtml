@@ -1,0 +1,112 @@
+@model List<CurrencyTagToolResponse>
+@{
+    Layout = "_Layout";
+    var query = Context.Request.Query.ToDictionary(k => k.Key.ToLower(), v => v.Value);
+
+    string currencyId = query.TryGetValue("currencyid", out var minPVal) ? minPVal.ToString() : "";
+}
+
+<div class="row">
+  <div class="card mb-4">
+    <div class="card-header">
+      <div class="d-flex justify-content-between">
+        <div class="btn-group mb-2" role="group" aria-label="Basic mixed styles example">
+          @if(User.IsInRole("admin")){
+            <span class="badge rounded-pill bg-success p-2" role="button" data-currency-id="@currencyId" id="add-currency-tag-btn" title="Tag ekle">
+              <i class="fa-solid fa-plus"></i>
+            </span>
+          }
+          <a asp-area="panel" asp-controller="Currencies" asp-action="Index"  class="badge rounded-pill bg-danger p-2 border-0" id="filter-currency-btn" title="Filtreleri temizle">
+            <i class="fa-solid fa-filter"></i>
+          </a>
+        </div>
+        <h3 class="card-title">Birimler Tablosu</h3>
+        @await Html.PartialAsync("_SearchTool", new SearchModel())
+      </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+      @if (Model != null && Model.Any())
+                {
+                    <div class="table-responsive mb-3">
+                        <table class="table table-sm table-bordered">
+                            <thead class="table-primary">
+                                <tr class="text-center align-middle">
+                                    <th>#</th>
+                                    <th>Tag</th>
+                                    <th>Islemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr class="text-center align-middle">
+                                        <td>@item.CurrencyTagId</td>
+                                        <td>@item.Value</td>
+                                        <td>
+                                          @if(User.IsInRole("admin"))
+                                          {
+                                              <div class="d-inline-flex gap-1">
+                                                <span class="badge rounded-pill bg-warning p-2 update-currency-tag-btn"
+                                                      role="button" data-currency-tag-id="@item.CurrencyTagId"
+                                                      title="@item.Value tag guncelle">
+                                                    <i class="fa-solid fa-pencil"></i>
+                                                </span>
+                                                <span class="badge rounded-pill bg-danger p-2 delete-currency-tag-btn" role="button"
+                                                      data-currency-tag-id="@item.CurrencyTagId" title="@item.Value tagli birimi sil">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </span>
+                                            </div>
+                                          }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot class="table-primary">
+                                <tr class="text-center align-middle">
+                                    <th>#</th>
+                                    <th>Tag</th>
+                                    <th>Islemler</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">Varlık özeti bulunamadı.</p>
+                }
+    </div>
+    <!-- /.card-body -->
+    @* <div class="card-footer clearfix">
+      @await Html.PartialAsync("_PaginationTool", Model)
+    </div> *@
+  </div>
+</div>
+
+<div id="empty-container"></div>
+
+@section Scripts {
+  <script>
+    $(document).ready(function () {
+        const d = $("#empty-container");
+        $(".update-currency-tag-btn").off("click").on("click", function () {
+          const id = $(this).data("currency-tag-id");
+          const fetchUrl = '@Url.Action("UpdateTagOperation", "Currencies", new { Area = "panel" })';
+          openPopup(d, '#update-currency-tag-popup', fetchUrl + "?currencyTagId=" + id)
+        });
+
+        $(".delete-currency-tag-btn").off("click").on("click", function () {
+          const id = $(this).data("currency-tag-id");
+          const fetchUrl = '@Url.Action("DeleteTagOperation", "Currencies", new { Area = "panel" })';
+          deletePopup(fetchUrl + "?currencyTagId=" + id)
+        });
+
+        $("#add-currency-tag-btn").off("click").on("click", function () {
+          const id = $(this).data("currency-id");
+          const fetchUrl = '@Url.Action("AddTagOperation", "Currencies", new { Area = "panel" })';
+          openPopup(d, '#add-currency-tag-popup', fetchUrl + "?currencyId=" + id)
+        });
+    });
+</script>
+}

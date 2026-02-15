@@ -106,9 +106,16 @@
                   <a class="badge rounded-pill bg-info p-2" asp-area="" asp-controller="Currencies" asp-action="Info" asp-route-currencyId="@item.CurrencyId" title="@item.Title adli birim fiyat gecmisi">
                     <i class="fa-solid fa-landmark"></i>
                   </a>
+                   <a class="badge rounded-pill bg-info p-2" asp-area="" asp-controller="Currencies" asp-action="CurrencyTags" asp-route-currencyId="@item.CurrencyId" title="@item.Title adli birim tagleri">
+                    <i class="fa-solid fa-tags"></i>
+                  </a>
+                  <span class="badge rounded-pill bg-success p-2 add-currency-tag-btn" role="button"
+                    data-currency-id="@item.CurrencyId" title="@item.Title adli birime tag ekle">
+                    <i class="fa-solid fa-tag"></i>
+                  </span>
                   <span class="badge rounded-pill bg-dark p-2 update-currencyPrice-btn" role="button"
                     data-currency-id="@item.CurrencyId" title="@item.Title adli birim fiyatini guncelle">
-                    <i class="fa-solid fa-tag"></i>
+                    <i class="fa-solid fa-dollar-sign"></i>
                   </span>
                   <span class="badge rounded-pill bg-warning p-2 update-currency-btn" role="button"
                     data-currency-id="@item.CurrencyId" title="@item.Title adli birimi guncelle">
@@ -173,6 +180,12 @@
         const id = $(this).data("currency-id");
         const fetchUrl = '@Url.Action("DeleteOperation", "Currencies", new { Area = "panel" })';
         deletePopup(fetchUrl + "?currencyId=" + id)
+      });
+
+      $(".add-currency-tag-btn").off("click").on("click", function () {
+          const id = $(this).data("currency-id");
+          const fetchUrl = '@Url.Action("AddTagOperation", "Currencies", new { Area = "panel" })';
+          openPopup(d, '#add-currency-tag-popup', fetchUrl + "?currencyId=" + id)
       });
 
       $('#filter-currency-popup').on('shown.bs.modal', function () {

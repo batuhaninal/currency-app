@@ -120,6 +120,22 @@ namespace Application.Models.Constants.Messages
         };
         #endregion
 
+        #region CurrencyTag
+        public static string CURRENCYTAGEXIST => CurrentLanguage switch
+        {
+            Language.TR => "Birim tag bulunamadi!",
+            Language.EN => "Currency tag is not found!",
+            _ => "Currency tag is not found!"
+        };
+
+        public static string CURRENCYTAGVALUEDUPLICATE => CurrentLanguage switch
+        {
+            Language.TR => "Birim tag ismi zaten kullanimda!",
+            Language.EN => "Currency tag title already exist!",
+            _ => "Currency tag is not exist!"
+        };
+        #endregion
+
         #region Asset
         public static string ASSETEXIST => CurrentLanguage switch
         {

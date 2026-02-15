@@ -9,5 +9,6 @@ namespace Client.Services.Tools
         Task<BaseResult<List<CategoryToolResponse>>> CategoryTools(ToolRequestParameter parameter, CancellationToken cancellationToken = default);
         Task<BaseResult<List<CurrencyToolResponse>>> CurrencyTools(ToolRequestParameter parameter, CancellationToken cancellationToken = default);
         Task<BaseResult<List<CurrencyToolResponse>>> CurrencyToolWithoutFavs(bool isBroadcast, CancellationToken cancellationToken = default);
+        Task<BaseResult<List<CurrencyTagToolResponse>>> CurrencyTagListAsync(int currencyId, CancellationToken cancellationToken = default);
     }
 }

@@ -15,6 +15,7 @@ namespace API.Handlers
             services.AddScoped<IToolHandler, ToolHandler>();
             services.AddScoped<IUserAssetHistoryHandler, UserAssetHistoryHandler>();
             services.AddScoped<IUserCurrencyFollowHandler, UserCurrencyFollowHandler>();
+            services.AddScoped<IAIHandler, AIHandler>();
         }
     }
 }

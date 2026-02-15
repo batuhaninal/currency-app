@@ -34,6 +34,8 @@ namespace Application.Abstractions.Repositories.Commons
         IUserAssetItemHistoryWriteRepository UserAssetItemHistoryWriteRepository { get; }
         IUserCurrencyFollowReadRepository UserCurrencyFollowReadRepository { get; }
         IUserCurrencyFollowWriteRepository UserCurrencyFollowWriteRepository { get; }
+        ICurrencyTagReadRepository CurrencyTagReadRepository { get; }
+        ICurrencyTagWriteRepository CurrencyTagWriteRepository { get; }
 
         // Rules
         IAssetRule AssetRule { get; }
@@ -45,6 +47,7 @@ namespace Application.Abstractions.Repositories.Commons
         IUserRoleRule UserRoleRule { get; }
         IUserAssetHistoryRule UserAssetHistoryRule { get; }
         IUserCurrencyFollowRule UserCurrencyFollowRule { get; }
+        ICurrencyTagRule CurrencyTagRule { get; }
 
         IDatabaseTransaction BeginTransaction();
         Task<TResult> ExecuteWithRetryAsync<TResult>(

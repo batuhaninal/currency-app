@@ -101,4 +101,23 @@ namespace Application.Models.DTOs.Currencies
         public List<CurrencyHistoryItemDto>? CurrencyHistoriesMonthly { get; set; }
         public List<CurrencyHistoryItemDto>? CurrencyHistoriesYearly { get; set; }
     }
+
+    public sealed record CurrencyTagInfoDto
+    {
+        public CurrencyTagInfoDto()
+        {
+            
+        }
+
+        public CurrencyTagInfoDto(int currencyTagId, string value, CurrencyRelationDto? currency)
+        {
+            CurrencyTagId = currencyTagId;
+            Value = value;
+            Currency = currency;
+        }
+
+        public int CurrencyTagId { get; init; }
+        public string Value { get; init; }
+        public CurrencyRelationDto? Currency { get; init; }
+    }
 }

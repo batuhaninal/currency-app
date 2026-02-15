@@ -11,6 +11,7 @@ using Application.Abstractions.Repositories.Users;
 using Application.Abstractions.Rules;
 using Persistence.Contexts;
 using Persistence.Repositories.Categories;
+using Persistence.Repositories.Currencies;
 using Persistence.Repositories.Roles;
 using Persistence.Repositories.UserAssetHistories;
 using Persistence.Repositories.UserCurrencyFollows;
@@ -45,6 +46,8 @@ namespace Persistence.Repositories.Commons
         private readonly UserAssetItemHistoryWriteRepository _userAssetItemHistoryWriteRepository;
         private readonly UserCurrencyFollowReadRepository _userCurrencyFollowReadRepository;
         private readonly UserCurrencyFollowWriteRepository _userCurrencyFollowWriteRepository;
+        private readonly CurrencyTagReadRepository _currencyTagReadRepository;
+        private readonly CurrencyTagWriteRepository _currencyTagWriteRepository;
         #endregion
 
         #region Rule Interfaces
@@ -58,6 +61,7 @@ namespace Persistence.Repositories.Commons
         private readonly UserRoleRule _userRoleRule;
         private readonly UserAssetHistoryRule _userAssetHistoryRule;
         private readonly UserCurrencyFollowRule _userCurrencyRule;
+        private readonly CurrencyTagRule _currencyTagRule;
         #endregion
 
         public UnitOfWork(CurrencyContext context)
@@ -104,6 +108,9 @@ namespace Persistence.Repositories.Commons
         public IUserAssetItemHistoryWriteRepository UserAssetItemHistoryWriteRepository => _userAssetItemHistoryWriteRepository ?? new UserAssetItemHistoryWriteRepository(_context);
         public IUserCurrencyFollowReadRepository UserCurrencyFollowReadRepository => _userCurrencyFollowReadRepository ?? new UserCurrencyFollowReadRepository(_context);
         public IUserCurrencyFollowWriteRepository UserCurrencyFollowWriteRepository => _userCurrencyFollowWriteRepository ?? new UserCurrencyFollowWriteRepository(_context);
+        public ICurrencyTagReadRepository CurrencyTagReadRepository => _currencyTagReadRepository ?? new CurrencyTagReadRepository(_context);
+
+        public ICurrencyTagWriteRepository CurrencyTagWriteRepository => _currencyTagWriteRepository ?? new CurrencyTagWriteRepository(_context);
         #endregion
 
         #region Rule Instances
@@ -123,6 +130,8 @@ namespace Persistence.Repositories.Commons
 
         public IUserAssetHistoryRule UserAssetHistoryRule => _userAssetHistoryRule ?? new UserAssetHistoryRule(UserAssetHistoryReadRepository);
         public IUserCurrencyFollowRule UserCurrencyFollowRule => _userCurrencyRule ?? new UserCurrencyFollowRule(UserCurrencyFollowReadRepository);
+
+        public ICurrencyTagRule CurrencyTagRule => _currencyTagRule ?? new CurrencyTagRule(CurrencyTagReadRepository);
 
         #endregion
 

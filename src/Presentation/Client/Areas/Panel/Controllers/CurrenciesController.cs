@@ -16,11 +16,13 @@ namespace Client.Areas.Panel.Controllers
     public sealed class CurrenciesController : BaseController
     {
         private readonly ICurrencyService _currencyService;
+        private readonly ICurrencyTagService _currencyTagService;
         private readonly IToolService _toolService;
 
-        public CurrenciesController(ICurrencyService currencyService, IToolService toolService)
+        public CurrenciesController(ICurrencyService currencyService, ICurrencyTagService currencyTagService, IToolService toolService)
         {
             _currencyService = currencyService;
+            _currencyTagService = currencyTagService;
             _toolService = toolService;
         }
 
@@ -57,6 +59,34 @@ namespace Client.Areas.Panel.Controllers
             if (CheckModelStateValid(ModelState))
             {
                 var result = await _currencyService.UpdateAsync(currencyId, input);
+
+                if (!result.Success)
+                    _ = this.ShowResultMessage(result);
+            }
+
+            return RedirectToAction(nameof(CurrenciesController.Index), "Currencies", new { Area = AppConstants.PANELAREA });
+        }
+
+        [HttpGet]
+        public async Task<PartialViewResult> UpdateTagOperation(int currencyTagId)
+        {
+            var data = await _currencyTagService.InfoAsync(currencyTagId);
+
+            var result = await _toolService.CurrencyTools(new());
+            _ = this.ShowResultMessage(result);
+
+            ViewBag.CurrencyTool = result.Data ?? new();
+
+            return PartialView("_CurrencyTagUpdatePopup", data.Data ?? new());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateTagOperation([FromQuery] int currencyTagId, [FromForm] CurrencyTagInput input)
+        {
+            if (CheckModelStateValid(ModelState))
+            {
+                var result = await _currencyTagService.UpdateAsync(currencyTagId, input);
 
                 if (!result.Success)
                     _ = this.ShowResultMessage(result);
@@ -113,6 +143,26 @@ namespace Client.Areas.Panel.Controllers
             return RedirectToAction(nameof(CurrenciesController.Index), "Currencies", new { Area = AppConstants.PANELAREA });
         }
 
+        [HttpGet]
+        public async Task<PartialViewResult> AddTagOperation(int currencyId)
+        {
+            return PartialView("_CurrencyTagAddPopup", new CurrencyTagInput(currencyId));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddTagOperation([FromForm] CurrencyTagInput input)
+        {
+            if (CheckModelStateValid(ModelState))
+            {
+                var result = await _currencyTagService.AddAsync(input);
+                if (!result.Success)
+                    _ = this.ShowResultMessage(result);
+            }
+
+            return RedirectToAction(nameof(CurrenciesController.Index), "Currencies", new { Area = AppConstants.PANELAREA });
+        }
+
         [HttpPost]
         public async Task<JsonResult> ChangeStatusOperation([FromQuery] int currencyId)
         {
@@ -124,6 +174,13 @@ namespace Client.Areas.Panel.Controllers
         public async Task<JsonResult> DeleteOperation([FromQuery] int currencyId)
         {
             var result = await _currencyService.DeleteAsync(currencyId);
+            return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> DeleteTagOperation([FromQuery] int currencyTagId)
+        {
+            var result = await _currencyTagService.DeleteAsync(currencyTagId);
             return Json(result);
         }
     }

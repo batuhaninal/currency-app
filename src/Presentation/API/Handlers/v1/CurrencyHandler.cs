@@ -3,6 +3,9 @@ using Application.Abstractions.Handlers;
 using Application.CQRS.Commands.Currencies.Add;
 using Application.CQRS.Commands.Currencies.ChangeStatus;
 using Application.CQRS.Commands.Currencies.Delete;
+using Application.CQRS.Commands.Currencies.Tags.Add;
+using Application.CQRS.Commands.Currencies.Tags.Delete;
+using Application.CQRS.Commands.Currencies.Tags.Update;
 using Application.CQRS.Commands.Currencies.Update;
 using Application.CQRS.Commands.Currencies.UpdateValue;
 using Application.CQRS.Commons.Services;
@@ -11,6 +14,7 @@ using Application.CQRS.Queries.Currencies.Calculator;
 using Application.CQRS.Queries.Currencies.EUList;
 using Application.CQRS.Queries.Currencies.Info;
 using Application.CQRS.Queries.Currencies.List;
+using Application.CQRS.Queries.Currencies.Tags.Info;
 using Application.CQRS.Queries.Currencies.WithHistoryInfo;
 using Application.CQRS.Queries.PriceInfo;
 
@@ -21,6 +25,12 @@ namespace API.Handlers.v1
         public async Task<IResult> Add(AddCurrencyCommand command, Dispatcher dispatcher, CancellationToken cancellationToken)
         {
             IBaseResult result = await dispatcher.SendCommandAsync<AddCurrencyCommand, IBaseResult>(command, cancellationToken);
+            return Results.Json(result, statusCode: result.StatusCode);
+        }
+
+        public async Task<IResult> AddTag(AddCurrencyTagCommand command, Dispatcher dispatcher, CancellationToken cancellationToken)
+        {
+            IBaseResult result = await dispatcher.SendCommandAsync<AddCurrencyTagCommand, IBaseResult>(command, cancellationToken);
             return Results.Json(result, statusCode: result.StatusCode);
         }
 
@@ -39,6 +49,12 @@ namespace API.Handlers.v1
         public async Task<IResult> Delete(DeleteCurrencyCommand command, Dispatcher dispatcher, CancellationToken cancellationToken)
         {
             IBaseResult result = await dispatcher.SendCommandAsync<DeleteCurrencyCommand, IBaseResult>(command, cancellationToken);
+            return Results.Json(result, statusCode: result.StatusCode);
+        }
+
+        public async Task<IResult> DeleteTag(DeleteCurrencyTagCommand command, Dispatcher dispatcher, CancellationToken cancellationToken)
+        {
+            IBaseResult result = await dispatcher.SendCommandAsync<DeleteCurrencyTagCommand, IBaseResult>(command, cancellationToken);
             return Results.Json(result, statusCode: result.StatusCode);
         }
 
@@ -78,9 +94,21 @@ namespace API.Handlers.v1
             return Results.Json(result, statusCode: result.StatusCode);
         }
 
+        public async Task<IResult> TagInfo(CurrencyTagInfoQuery query, Dispatcher dispatcher, CancellationToken cancellationToken)
+        {
+            IBaseResult result = await dispatcher.SendQueryAsync<CurrencyTagInfoQuery, IBaseResult>(query, cancellationToken);
+            return Results.Json(result, statusCode: result.StatusCode);
+        }
+
         public async Task<IResult> Update(UpdateCurrencyCommand command, Dispatcher dispatcher, CancellationToken cancellationToken)
         {
             IBaseResult result = await dispatcher.SendCommandAsync<UpdateCurrencyCommand, IBaseResult>(command, cancellationToken);
+            return Results.Json(result, statusCode: result.StatusCode);
+        }
+
+        public async Task<IResult> UpdateTag(UpdateCurrencyTagCommand command, Dispatcher dispatcher, CancellationToken cancellationToken)
+        {
+            IBaseResult result = await dispatcher.SendCommandAsync<UpdateCurrencyTagCommand, IBaseResult>(command, cancellationToken);
             return Results.Json(result, statusCode: result.StatusCode);
         }
 

@@ -9,6 +9,9 @@ using Application.CQRS.Commands.Categories.Update;
 using Application.CQRS.Commands.Currencies.Add;
 using Application.CQRS.Commands.Currencies.ChangeStatus;
 using Application.CQRS.Commands.Currencies.Delete;
+using Application.CQRS.Commands.Currencies.Tags.Add;
+using Application.CQRS.Commands.Currencies.Tags.Delete;
+using Application.CQRS.Commands.Currencies.Tags.Update;
 using Application.CQRS.Commands.Currencies.Update;
 using Application.CQRS.Commands.Currencies.UpdateValue;
 using Application.CQRS.Commands.UpdateProfile;
@@ -71,6 +74,17 @@ namespace Application.CQRS.Commands
 
             services.AddScoped<UpdateCurrencyValueCommand>();
             services.AddScoped<ICommandHandler<UpdateCurrencyValueCommand, IBaseResult>, UpdateCurrencyValueCommandHandler>();
+
+            #region Tags
+            services.AddScoped<AddCurrencyTagCommand>();
+            services.AddScoped<ICommandHandler<AddCurrencyTagCommand, IBaseResult>, AddCurrencyTagCommandHandler>();
+
+            services.AddScoped<UpdateCurrencyTagCommand>();
+            services.AddScoped<ICommandHandler<UpdateCurrencyTagCommand, IBaseResult>, UpdateCurrencyTagCommandHandler>();
+
+            services.AddScoped<DeleteCurrencyTagCommand>();
+            services.AddScoped<ICommandHandler<DeleteCurrencyTagCommand, IBaseResult>, DeleteCurrencyTagCommandHandler>();
+            #endregion
             #endregion
 
             #region Category

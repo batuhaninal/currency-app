@@ -1,0 +1,35 @@
+@using System.Text.Json
+@model CurrencyTagInput
+@{
+
+}
+
+<div class="modal fade" id="add-currency-tag-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class='modal-header bg-success'>
+                <h5 class="modal-title">Tag Ekle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-area="Panel" asp-controller="Currencies" asp-action="AddTagOperation" method="post">
+                <input type="hidden" asp-for="CurrencyId" />
+                <div class="modal-body" id="modal-body">
+                    <div class="mb-3">
+                        <label asp-for="Value" class="form-label">Tag Adı</label>
+                        <input type="text" class="form-control" id="currency-tag-value-add" asp-for="Value" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                    <button type="submit" class="btn btn-success">Ekle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+    });
+</script>

@@ -3,7 +3,7 @@ using Domain.Entities;
 using Persistence.Contexts;
 using Persistence.Repositories.Commons;
 
-namespace Persistence
+namespace Persistence.Repositories.Currencies
 {
     public class CurrencyWriteRepository : WriteRepository<Currency>, ICurrencyWriteRepository
     {

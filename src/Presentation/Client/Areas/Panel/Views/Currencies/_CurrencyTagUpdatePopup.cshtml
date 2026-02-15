@@ -1,0 +1,43 @@
+@using System.Text.Json
+@model CurrencyTagInfoResponse
+@{
+    List<CurrencyToolResponse>? data = ViewBag.CurrencyTool as List<CurrencyToolResponse>;
+    SelectList currencyTool = new SelectList(data, "CurrencyId", "Title");
+}
+
+<div class="modal fade" id="update-currency-tag-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class='modal-header bg-warning'>
+                <h5 class="modal-title">Tag Guncelle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-area="Panel" asp-controller="Currencies" asp-action="UpdateTagOperation" asp-route-currencyTagId="@Model.CurrencyTagId" method="post">
+                <div class="modal-body" id="modal-body">
+                    @await Html.PartialAsync("_DropdownTool", new DropdownModel("Birim Seciniz", "currency-dropdown",
+                    "CurrencyId[]", "js-currency-tool", currencyTool, false, new [] {Model.Currency.CurrencyId.ToString()}))
+                    <div class="mb-3">
+                        <label asp-for="Value" class="form-label">Tag Adı</label>
+                        <input type="text" class="form-control" id="currency-tag-value-add" asp-for="Value" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                    <button type="submit" class="btn btn-warning">Guncelle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.js-currency-tool').select2({
+            dropdownParent: $('#update-currency-tag-popup'),
+            width: '100%',
+            placeholder: "Kategori seçiniz",
+            allowClear: true
+        });
+    });
+</script>

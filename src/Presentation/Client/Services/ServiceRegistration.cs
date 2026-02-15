@@ -39,6 +39,11 @@ namespace Client.Services
                 opt.BaseAddress = new Uri($"{serviceApiSetting.ApiUrl}/api/currencies/");
             }).AddHttpMessageHandler<TokenMiddleware>();
 
+            services.AddHttpClient<ICurrencyTagService, CurrencyTagService>(opt =>
+            {
+                opt.BaseAddress = new Uri($"{serviceApiSetting.ApiUrl}/api/currencies/tags/");
+            }).AddHttpMessageHandler<TokenMiddleware>();
+
             services.AddHttpClient<IToolService, ToolService>(opt =>
             {
                 opt.BaseAddress = new Uri($"{serviceApiSetting.ApiUrl}/api/tools/");

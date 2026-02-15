@@ -26,6 +26,8 @@ using Application.CQRS.Queries.UserCurrencyFollows.List;
 using Application.CQRS.Queries.UserCurrencyFollows.UserCurrencyFavList;
 using Application.CQRS.Queries.Users.GetProfile;
 using Microsoft.Extensions.DependencyInjection;
+using Application.CQRS.Queries.Currencies.Tags.Tool;
+using Application.CQRS.Queries.Currencies.Tags.Info;
 
 namespace Application.CQRS.Queries
 {
@@ -99,6 +101,14 @@ namespace Application.CQRS.Queries
 
             services.AddScoped<CurrencyToolWithoutFavsQuery>();
             services.AddScoped<IQueryHandler<CurrencyToolWithoutFavsQuery, IBaseResult>, ToolWithoutFavsQueryHandler>();
+
+            #region Tags
+            services.AddScoped<CurrencyTagToolQuery>();
+            services.AddScoped<IQueryHandler<CurrencyTagToolQuery, IBaseResult>, CurrencyTagToolQueryHandler>();
+
+            services.AddScoped<CurrencyTagInfoQuery>();
+            services.AddScoped<IQueryHandler<CurrencyTagInfoQuery, IBaseResult>, CurrencyTagInfoQueryHandler>();
+            #endregion
             #endregion
 
             #region User Asset History

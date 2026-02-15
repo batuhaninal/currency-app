@@ -56,6 +56,10 @@ namespace Adapter
             });
 
             services.AddHttpClient<IWebScrappingService, WebScrappingService>();
+            services.AddHttpClient<IAiService, OllamaAIService>(opt =>
+            {
+                opt.BaseAddress = new Uri(serviceApiSetting.PHI3Mini.Path);
+            });
 
             services.AddHostedService<HourlyCurrencyBackgroundService>();
             services.AddHostedService<HourlyScrapperBackgroundService>();

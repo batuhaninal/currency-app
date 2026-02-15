@@ -1,4 +1,5 @@
 using Application.Abstractions.Handlers;
+using Application.Abstractions.Services.Externals;
 using Application.CQRS.Commands.Assets.AddAsset;
 using Application.CQRS.Commands.Assets.Delete;
 using Application.CQRS.Commands.Assets.Update;
@@ -9,6 +10,9 @@ using Application.CQRS.Commands.Categories.Update;
 using Application.CQRS.Commands.Currencies.Add;
 using Application.CQRS.Commands.Currencies.ChangeStatus;
 using Application.CQRS.Commands.Currencies.Delete;
+using Application.CQRS.Commands.Currencies.Tags.Add;
+using Application.CQRS.Commands.Currencies.Tags.Delete;
+using Application.CQRS.Commands.Currencies.Tags.Update;
 using Application.CQRS.Commands.Currencies.Update;
 using Application.CQRS.Commands.Currencies.UpdateValue;
 using Application.CQRS.Commands.UpdateProfile;
@@ -34,6 +38,7 @@ using Application.CQRS.Queries.Currencies.Calculator;
 using Application.CQRS.Queries.Currencies.EUList;
 using Application.CQRS.Queries.Currencies.Info;
 using Application.CQRS.Queries.Currencies.List;
+using Application.CQRS.Queries.Currencies.Tags.Tool;
 using Application.CQRS.Queries.Currencies.WithHistoryInfo;
 using Application.CQRS.Queries.PriceInfo;
 using Application.CQRS.Queries.Tools;
@@ -287,6 +292,43 @@ namespace API.Handlers
                 .RequireAuthorization(AppRoles.Admin)
                 .RequireRateLimiting(SettingConstant.PerUserRateLimiting);
 
+            var currencyTagPanel = currency.MapGroup("tags/panel");
+
+            currencyTagPanel.MapPost("",
+                async ([FromServices] ICurrencyHandler handler, [FromBody] AddCurrencyTagCommand command, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.AddTag(command, dispatcher, cancellationToken))
+                .WithName("Add Currency Tag")
+                .WithTags("Currency Tags")
+                .RequireAuthorization(AppRoles.Admin)
+                .RequireRateLimiting(SettingConstant.PerUserRateLimiting);
+
+            currencyTagPanel.MapGet("{currencyTagId}",
+                async ([FromServices] ICurrencyHandler handler, [FromRoute(Name = "currencyTagId")] int currencyTagId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.TagInfo(new(currencyTagId), dispatcher, cancellationToken))
+                .WithName("Currency Tag Info")
+                .WithTags("Currency Tags")
+                .RequireAuthorization()
+                .RequireRateLimiting(SettingConstant.PerUserRateLimiting);
+
+            currencyTagPanel.MapPut("{currencyTagId}",
+                async ([FromServices] ICurrencyHandler handler, [FromRoute(Name = "currencyTagId")] int currencyTagId, [FromBody] UpdateCurrencyTagCommand command, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
+                {
+                    command.CurrencyTagId = currencyTagId;
+                    return await handler.UpdateTag(command, dispatcher, cancellationToken);
+                })
+                .WithName("Update Currency Tag")
+                .WithTags("Currency Tags")
+                .RequireAuthorization(AppRoles.Admin)
+                .RequireRateLimiting(SettingConstant.PerUserRateLimiting);
+
+            currencyTagPanel.MapDelete("{currencyTagId}",
+                async ([FromServices] ICurrencyHandler handler, [FromRoute(Name = "currencyTagId")] int currencyTagId, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
+                {
+                    return await handler.DeleteTag(new DeleteCurrencyTagCommand(currencyTagId), dispatcher, cancellationToken);
+                })
+                .WithName("Delete Currency Tag")
+                .WithTags("Currency Tags")
+                .RequireAuthorization(AppRoles.Admin)
+                .RequireRateLimiting(SettingConstant.PerUserRateLimiting);
+
             var category = api.MapGroup("categories");
 
             var categoryPanel = category.MapGroup("panel");
@@ -353,21 +395,28 @@ namespace API.Handlers
                     .WithName("Category Tool List")
                     .WithTags("Tools")
                     .RequireRateLimiting(SettingConstant.RichRateLimiting);
-                    // .CacheOutput(SettingConstant.Tool1mOutputCache);
+            // .CacheOutput(SettingConstant.Tool1mOutputCache);
 
             tool.MapGet("currency-list",
                     async ([FromServices] IToolHandler handler, [AsParameters] GetCurrencyToolListQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) => await handler.CurrencyToolList(query, dispatcher, cancellationToken))
                     .WithName("Currency Tool List")
                     .WithTags("Tools")
                     .RequireRateLimiting(SettingConstant.RichRateLimiting);
-                    // .CacheOutput(SettingConstant.Tool1mOutputCache);
+            // .CacheOutput(SettingConstant.Tool1mOutputCache);
 
             tool.MapGet("currency-list-without-favs",
                 async ([FromServices] IToolHandler handler, [AsParameters] CurrencyToolWithoutFavsQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
                     await handler.CurrencyToolWithoutFavs(query, dispatcher, cancellationToken))
                     .WithName("Currency Tool Without Favs")
-                    .WithTags("Currencies")
+                    .WithTags("Tools")
                     .RequireAuthorization()
+                    .RequireRateLimiting(SettingConstant.RichRateLimiting);
+
+            tool.MapGet("currency-tag-tool",
+                async ([FromServices] IToolHandler handler, [AsParameters] CurrencyTagToolQuery query, [FromServices] Dispatcher dispatcher, CancellationToken cancellationToken) =>
+                    await handler.CurrencyTagToolList(query, dispatcher, cancellationToken))
+                    .WithName("Currency Tag Tool")
+                    .WithTags("Tools")
                     .RequireRateLimiting(SettingConstant.RichRateLimiting);
 
             var userAssetHistory = api.MapGroup("user-asset-histories");
@@ -446,6 +495,14 @@ namespace API.Handlers
                 .WithName("User Currency Follow Info")
                 .WithTags("User Currency Follows")
                 .RequireAuthorization()
+                .RequireRateLimiting(SettingConstant.PerUserRateLimiting);
+
+            var aiHandlers = api.MapGroup("ai");
+
+            aiHandlers.MapPost("parse",
+                async ([FromServices] IAIHandler handler, [FromBody] string message, [FromServices] IAiService service, CancellationToken cancellationToken) => await handler.Parse(message, service, cancellationToken))
+                .WithName("AI Parser")
+                .WithTags("AIs")
                 .RequireRateLimiting(SettingConstant.PerUserRateLimiting);
         }
     }

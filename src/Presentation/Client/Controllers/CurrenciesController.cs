@@ -67,5 +67,13 @@ namespace Client.Controllers
 
             return View(result.Data ?? new());
         }
+
+        [HttpGet]
+        public async Task<IActionResult> CurrencyTags([FromQuery] int currencyId)
+        {
+            var result = await _toolService.CurrencyTagListAsync(currencyId);
+            _ = this.ShowResultMessage(result);
+            return View(result.Data ?? new());
+        }
     }
 }

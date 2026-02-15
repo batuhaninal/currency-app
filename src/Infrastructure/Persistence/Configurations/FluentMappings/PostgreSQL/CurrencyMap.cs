@@ -70,6 +70,40 @@ namespace Persistence.Configurations.FluentMappings.PostgreSQL
                     .HasForeignKey(f => f.CurrencyId)
                     .IsRequired()
                     .OnDelete(DeleteBehavior.Cascade);
+
+                c.HasMany(x => x.CurrencyTags)
+                    .WithOne(ucf => ucf.Currency)
+                    .HasForeignKey(f => f.CurrencyId)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+        }
+
+        public static void ConfigureCurrencyTagMap(this ModelBuilder builder)
+        {
+            builder.Entity<CurrencyTag>(c =>
+            {
+                c.HasKey(x => x.Id);
+
+                c.ToTable("currency_tags");
+
+                c.Property(x => x.Id).HasColumnName("id").ValueGeneratedOnAdd();
+
+
+                c.Property(c => c.CreatedDate).HasColumnName("created_date").IsRequired();
+                c.Property(c => c.UpdatedDate).HasColumnName("updated_date").IsRequired();
+                c.Property(c => c.IsActive).HasColumnName("is_active").IsRequired();
+
+                c.Property(x => x.Value)
+                    .HasColumnName("value")
+                    .IsRequired()
+                    .HasMaxLength(75);
+
+                c.Property(x => x.CurrencyId)
+                    .HasColumnName("currency_id")
+                    .IsRequired();
+
+                c.HasOne(x => x.Currency);
             });
         }
     }

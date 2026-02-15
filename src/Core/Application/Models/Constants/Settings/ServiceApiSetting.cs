@@ -4,6 +4,7 @@ namespace Application.Models.Constants.Settings
     {
         public ServiceApi TradingView { get; set; }
         public ServiceApi DovizCom { get; set; }
+        public ServiceApi PHI3Mini { get; set; }
     }
 
     public class ServiceApi
